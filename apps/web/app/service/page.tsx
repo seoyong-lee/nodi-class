@@ -22,7 +22,7 @@ const STEPS = [
 
 const section = 'max-w-page mx-auto pt-section px-gutter break-keep';
 const hero = 'max-w-page mx-auto pt-section max-[720px]:pt-20 px-gutter break-keep';
-const sectionLast = `${section} pb-section`;
+const sectionLast = `${section} pt-12 pb-section`;
 
 export default function ServicePage() {
   return (

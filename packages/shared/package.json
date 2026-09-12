@@ -4,7 +4,11 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./constants": "./src/constants.ts",
+    "./products": "./src/products.ts",
+    "./schemas": "./src/schemas.ts",
+    "./token": "./src/token.ts"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",

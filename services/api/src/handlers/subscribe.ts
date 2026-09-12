@@ -25,12 +25,8 @@ import {
 } from '../lib/response.js';
 import { checkTurnstile } from '../lib/turnstile.js';
 import { sendMail } from '../mail/send.js';
-import { confirmMail } from '../mail/templates/confirm.js';
 import { resourceMail } from '../mail/templates/resource.js';
-import {
-  resourcePath,
-  type FooterContext,
-} from '../mail/templates/layout.js';
+import { type FooterContext } from '../mail/templates/layout.js';
 
 function footerFrom(
   env: ReturnType<typeof getEnv>,
@@ -41,7 +37,9 @@ function footerFrom(
     unsubToken,
     bizName: env.bizName,
     bizOwner: env.bizOwner,
+    bizRegNo: env.bizRegNo,
     bizAddress: env.bizAddress,
+    bizEmail: env.bizEmail,
   };
 }
 
@@ -98,28 +96,23 @@ export async function handler(
       meta: { slug, state: result.state },
     });
 
+    const gateToken = createGateToken(email, env.gateSecret);
+    const confirmToken = createConfirmToken(email, slug, env.gateSecret);
+    const confirmUrl = `${confirmApiBase(env.siteUrl)}/confirm?t=${encodeURIComponent(confirmToken)}`;
     const footer = footerFrom(env, result.subscriber.unsubToken);
 
-    if (result.state === 'active') {
-      const gateToken = createGateToken(email, env.gateSecret);
-      const path = resourcePath(slug);
-      const resourceUrl = `${env.siteUrl}/unlock?t=${encodeURIComponent(gateToken)}&next=${encodeURIComponent(path)}`;
-      await sendMail({
-        to: email,
-        content: resourceMail({ slug, resourceUrl, footer }),
-        unsubToken: result.subscriber.unsubToken,
-        template: 'resource',
-      });
-    } else {
-      const confirmToken = createConfirmToken(email, slug, env.gateSecret);
-      const link = `${confirmApiBase(env.siteUrl)}/confirm?t=${encodeURIComponent(confirmToken)}`;
-      await sendMail({
-        to: email,
-        content: confirmMail({ confirmUrl: link, footer }),
-        unsubToken: result.subscriber.unsubToken,
-        template: 'confirm',
-      });
-    }
+    await sendMail({
+      to: email,
+      content: resourceMail({ slug, confirmUrl, footer }),
+      unsubToken: result.subscriber.unsubToken,
+      template: 'resource',
+    });
+
+    await putEvent({
+      email,
+      event: 'gate.opened',
+      meta: { slug },
+    });
 
     log('info', 'subscribe.ok', {
       ...emailHashField(email),
@@ -128,7 +121,11 @@ export async function handler(
       waitlist: slug === COURSE_WAITLIST_SLUG,
     });
 
-    return accepted({ ok: true, state: result.state });
+    return accepted({
+      ok: true,
+      state: result.state,
+      gateToken,
+    });
   } catch (err) {
     log('error', 'subscribe.error', {
       err: err instanceof Error ? err.message : 'unknown',

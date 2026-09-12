@@ -25,6 +25,9 @@ export type { ResourceCardProps } from './components/cards/ResourceCard';
 export { Thumb16x9 } from './components/cards/Thumb16x9';
 export type { Thumb16x9Props } from './components/cards/Thumb16x9';
 
+export { ThumbBook } from './components/cards/ThumbBook';
+export type { ThumbBookProps } from './components/cards/ThumbBook';
+
 export { VideoCard } from './components/cards/VideoCard';
 export type { VideoCardProps } from './components/cards/VideoCard';
 

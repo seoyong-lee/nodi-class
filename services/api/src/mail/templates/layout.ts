@@ -31,7 +31,9 @@ export type FooterContext = {
   unsubToken: string;
   bizName: string;
   bizOwner: string;
+  bizRegNo: string;
   bizAddress: string;
+  bizEmail: string;
 };
 
 export function unsubUrl(siteUrl: string, unsubToken: string): string {
@@ -51,11 +53,12 @@ export function listUnsubHeaders(
 
 export function footerText(ctx: FooterContext): string {
   const lines = [
-    '노디 AI 클래스',
-    '운영 Cascades',
+    '노디 AI 클래스 · 운영 Cascades',
     ctx.bizName ? `상호 ${ctx.bizName}` : '',
     ctx.bizOwner ? `대표 ${ctx.bizOwner}` : '',
+    ctx.bizRegNo ? `사업자등록번호 ${ctx.bizRegNo}` : '',
     ctx.bizAddress ? ctx.bizAddress : '',
+    ctx.bizEmail ? `문의 ${ctx.bizEmail}` : '',
     `수신거부: ${unsubUrl(ctx.siteUrl, ctx.unsubToken)}`,
   ].filter(Boolean);
   return lines.join('\n');
@@ -63,11 +66,12 @@ export function footerText(ctx: FooterContext): string {
 
 export function footerHtml(ctx: FooterContext): string {
   const rows = [
-    '노디 AI 클래스',
-    '운영 Cascades',
+    '노디 AI 클래스 · 운영 Cascades',
     ctx.bizName ? `상호 ${ctx.bizName}` : '',
     ctx.bizOwner ? `대표 ${ctx.bizOwner}` : '',
+    ctx.bizRegNo ? `사업자등록번호 ${ctx.bizRegNo}` : '',
     ctx.bizAddress ? ctx.bizAddress : '',
+    ctx.bizEmail ? `문의 ${ctx.bizEmail}` : '',
   ].filter(Boolean);
   const url = unsubUrl(ctx.siteUrl, ctx.unsubToken);
   return `

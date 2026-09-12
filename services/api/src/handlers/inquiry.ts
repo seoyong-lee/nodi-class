@@ -93,7 +93,9 @@ export async function handler(
       unsubToken: ackUnsub,
       bizName: env.bizName,
       bizOwner: env.bizOwner,
+      bizRegNo: env.bizRegNo,
       bizAddress: env.bizAddress,
+      bizEmail: env.bizEmail,
     };
 
     await sendMail({

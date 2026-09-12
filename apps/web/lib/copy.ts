@@ -1,10 +1,20 @@
-export const CONSENT_LABEL = '개인정보 수집·이용에 동의합니다';
+/** EmailGate checkbox label — unchecked by default, required. PLAN §3. */
+export const SUBSCRIBE_CONSENT_LABEL =
+  '이메일 수집·이용과 메일 수신에 동의합니다.';
 
-export const GATE_SUBMITTED_LABEL =
-  '입력한 이메일로 확인 링크를 보냈습니다. 메일의 링크를 누르면 바로 열립니다.';
+/** Shown under the checkbox. PLAN §3. */
+export const SUBSCRIBE_CONSENT_DETAIL =
+  '자료 전달, 새 자료·강의·서비스 소식 안내 목적으로 이메일 주소와 동의 기록(시각·경로·문서 버전)을 수집합니다. 수신 해지 시까지 보관하며, 모든 메일의 수신거부 링크로 언제든 해지할 수 있습니다. 해지하면 자료 페이지도 닫힙니다.';
 
-export const GATE_ACTIVE_LABEL =
-  '이미 등록된 주소입니다. 메일로 링크를 다시 보냈습니다.';
+export const PRIVACY_LINK_LABEL = '개인정보 처리방침';
+
+/** Inquiry form — project review, not mail subscription. */
+export const INQUIRY_CONSENT_LABEL = '개인정보 수집·이용에 동의합니다.';
+
+/** Shown briefly if unlock navigation is delayed; unlocked page uses 메일로도 보냈습니다. */
+export const GATE_SUBMITTED_LABEL = '메일로도 보냈습니다';
+
+export const GATE_ACTIVE_LABEL = '메일로도 보냈습니다';
 
 export const FORM_ERROR_LABEL = '요청을 처리하지 못했습니다.';
 

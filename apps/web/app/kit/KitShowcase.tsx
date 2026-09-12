@@ -135,7 +135,7 @@ export function KitShowcase() {
       </section>
 
       <section className="flex flex-col gap-block-tight">
-        <h2 className="m-0 text-h3 font-bold text-strong">ResourceCard · Thumb16x9</h2>
+        <h2 className="m-0 text-h3 font-bold text-strong">ResourceCard · ThumbBook · Thumb16x9</h2>
         <div className="grid grid-cols-2 gap-block-tight max-[800px]:grid-cols-1">
           <ResourceCard
             title="클로드 PPT 실전 가이드북"
@@ -170,7 +170,8 @@ export function KitShowcase() {
           title="한 번 등록하면 모든 자료가 열립니다"
           description="영상에서 쓴 파일과 체크리스트를 한 번에 보내드립니다."
           buttonLabel="받기"
-          consent="자료 전달과 새 자료 안내 목적으로만 사용하고, 언제든 수신을 해지할 수 있습니다."
+          consent="이메일 수집·이용과 메일 수신에 동의합니다."
+          consentDetail="자료 전달, 새 자료·강의·서비스 소식 안내 목적으로 이메일 주소와 동의 기록(시각·경로·문서 버전)을 수집합니다. 수신 해지 시까지 보관하며, 모든 메일의 수신거부 링크로 언제든 해지할 수 있습니다. 해지하면 자료 페이지도 닫힙니다."
           submittedLabel="입력한 이메일로 확인 링크를 보냈습니다. 메일의 링크를 누르면 바로 열립니다."
           submitted={submitted}
           onSubmit={() => setSubmitted(true)}

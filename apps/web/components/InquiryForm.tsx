@@ -3,7 +3,7 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { Button, Input } from '@nodi/design-system';
 import { postInquiry } from '../lib/api';
-import { CONSENT_LABEL, FORM_ERROR_LABEL, INQUIRY_DONE_LABEL } from '../lib/copy';
+import { FORM_ERROR_LABEL, INQUIRY_CONSENT_LABEL, INQUIRY_DONE_LABEL } from '../lib/copy';
 import { getTurnstileToken } from '../lib/turnstile';
 
 const honeypotClass =
@@ -116,7 +116,7 @@ export function InquiryForm() {
           onChange={(e) => setConsent(e.target.checked)}
           required
         />
-        {CONSENT_LABEL}
+        {INQUIRY_CONSENT_LABEL}
       </label>
       {error ? (
         <p className="m-0 text-label text-strong break-keep" role="alert">

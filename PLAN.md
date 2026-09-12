@@ -105,10 +105,11 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 | SectionHeading | content | `index: '01'`, `label`, `title`, `align?: 'left'\|'center'` | 라벨 12px 0.08em은 영문에만. 한글 라벨은 자간 0 |
 | BeforeAfter | content | `beforeCaption`, `afterCaption`, `before: ReactNode`, `after: ReactNode` | 375에서 1열 |
 | ProductCard | cards | `label`, `title`, `summary`, `rows: {label,value}[3]`, `ctaLabel`, `ctaHref?`, `ctaVariant?: 'primary'\|'secondary'` | rows는 정확히 3개. VOD CTA=primary, 워크숍·서비스 CTA=secondary |
-| ResourceCard | cards | `title`, `slug`, `locked: boolean`, `thumbnail?`, `openLabel?`, `badge?` | badge=유형 칩(`가이드북`/`프롬프트`/`체크리스트`/`요약본`). 잠금 시 자물쇠, 열림 시 openLabel |
+| ResourceCard | cards | `title`, `slug`, `locked: boolean`, `thumbnail?`, `openLabel?`, `badge?` | badge=유형 칩(`가이드북`/`프롬프트`/`체크리스트`/`요약본`). 잠금 시 자물쇠, 열림 시 openLabel. 썸네일은 ThumbBook(4:5). 그리드 3열 |
+| ThumbBook | cards | `src?`, `alt?` | 책 커버 4:5. mockup 여백은 scale로 크롭 |
 | Thumb16x9 | cards | `src?`, `alt?` | 이미지 없으면 `--surface-raised` 플레이스홀더 |
 | VideoCard | cards | `title`, `note`, `href`, `thumbnail?` | 조회수 표시 없음. 유튜브 임베드는 클릭 후 로드(iframe 지연) |
-| EmailGate | blocks | `title`, `description?`, `buttonLabel`, `consent`, `submittedLabel`, `submitted: boolean`, `onSubmit(email, extra)`, `extraField?`(select 1개), `layout?: 'inline'\|'stack'` | stack=필드·버튼 전폭(홈 CTA). 375에서 입력 100% + 버튼 full width. **입력창이 카드 밖으로 넘치지 않게** |
+| EmailGate | blocks | `title`, `description?`, `buttonLabel`, `consent`, `consentDetail?`, `submittedLabel`, `submitted: boolean`, `onSubmit(email, extra)`, `extraField?`(select 1개), `layout?: 'inline'\|'stack'` | 동의 체크 기본 해제·필수. consent=한 줄 라벨, consentDetail=수집·목적·보관·해지(자료 페이지 닫힘)·처리방침 링크. stack=필드·버튼 전폭(홈 CTA). 375에서 입력 100% + 버튼 full width. **입력창이 카드 밖으로 넘치지 않게** |
 | SiteFooter | blocks | `operator`, `business: string[]`, `links: {label,href}[]`, `socialLinks: {label,href,icon}[]` | 사업자 정보 값은 env에서 |
 
 ### 2.3 이관하면서 정리할 것 (디자인 파일에 남아 있는 결함)
@@ -139,25 +140,25 @@ CI 없이 `pnpm lint`에서 걸리게만 한다.
 | 블록 | 내용 |
 |---|---|
 | 히어로(중앙) | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` / `이제 AI로 직접 만들 수 있습니다` (2줄, `<br>`, keep-all, 마침표 없음) / 서브 `노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.` + `내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.` / Primary `무료 자료 받기`(→ `/free`) · Secondary `유튜브에서 보기` |
-| 01 / 무료 자료 (`id="free"`) | 제목 `AI로 만들 때 필요한 기준과 방법을 모았습니다` / ResourceCard 4개 (§4 슬러그 순, Badge=유형 칩 + 잠금 아이콘). **이 섹션에 EmailGate 없음** |
+| 01 / 무료 자료 (`id="free"`) | 제목 `바로 써볼 수 있는 자료, 부담 없이 무료로 가져가세요` / ResourceCard 4개 (§4 슬러그 순, Badge=유형 칩 + 잠금 아이콘). **이 섹션에 EmailGate 없음** |
 | 02 / 이렇게 달라집니다 | BeforeAfter(캡션 `만들기 전` / `기준을 준 뒤`) / 캡션 `같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.` / 이미지는 `public/img/before.png`, `after.png` |
 | 03 / 클래스 | 제목 `직접 만들어봤다면, 이제 기준을 배워보세요` / ProductCard ×3 (§3.5, VOD primary · 워크숍·서비스 secondary) |
 | 04 / 만든 사람 | 프로필(4:5, `--surface-raised`) + `직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어`(Bold 20px) / `컴퓨터소프트웨어공학 석사` / `비전공자 대상 풀스택 개발 부트캠프 강사` / 소형 `유튜브 노디 AI 운영` |
-| 최종 CTA(2열) | eyebrow `무료 자료` / 제목 `내 사업에 바로 써볼 무료 자료부터 시작해보세요.` / 설명 `노디 AI에서 소개한 프롬프트·가이드·체크리스트를 한곳에 정리했습니다.` + EmailGate(제목 `무료 자료 받아보기`, 서브 `이메일을 한 번 등록하면 모든 무료 자료를 확인할 수 있습니다.`, 버튼 `무료 자료 받기`, select 라벨 `지금 만들고 있는 것은 무엇인가요?`, extraField=§5.2). 데스크톱 좌 카피·우 폼 카드(~520px), ≤768px 1열 |
+| 최종 CTA(2열) | eyebrow `무료 자료` / 제목 `내 사업에 바로 써볼 무료 자료부터 시작해보세요.` / 설명 `노디 AI에서 소개한 프롬프트·가이드·체크리스트를 한곳에 정리했습니다.` + EmailGate(제목 `무료 자료 받아보기`, 서브 `이메일을 한 번 등록하면 모든 무료 자료를 확인할 수 있습니다.`, 버튼 `무료 자료 받기`, select 라벨 `지금 만들고 있는 것은 무엇인가요?`, extraField=§5.2, **동의=§3.7**). 데스크톱 좌 카피·우 폼 카드(~520px), ≤768px 1열 |
 
 ### 3.2 `/free` 목록 · `/free/[slug]` 자료 상세
-- `/free`: 라벨 `무료 자료` / h1 `AI로 만들 때 필요한` / `기준과 방법을 모았습니다` / 서브 `더 나은 결과물을 만들고, 고치고, 반복해서 활용할 수 있도록 실전 프롬프트·가이드·체크리스트를 무료로 제공합니다.` / ResourceCard 그리드(유형 Badge + 잠금 상태는 쿠키).
+- `/free`: 라벨 `무료 자료` / h1 `바로 써볼 수 있는 자료,` `부담 없이 무료로 가져가세요` / 서브 `AI 활용에 도움이 되는 프롬프트·가이드·체크리스트를 모았습니다.` + `필요한 자료를 골라 무료로 받아보세요.` / ResourceCard 그리드(유형 Badge + 잠금 상태는 쿠키).
 - `/free/[slug]` 정적 경로: `generateStaticParams`로 API(또는 로컬 MDX) 슬러그 전부.
-- 상단: 라벨(frontmatter `series`), h1(frontmatter `title`), 서브(frontmatter `summary`), 우측 VideoCard(frontmatter `youtube`).
+- 상단: 라벨(frontmatter `series`), h1(frontmatter `title`), 서브(frontmatter `summary`), 우측 책 커버 이미지(`resourceThumbnail`) + 유형 Badge 안내 문구. (Step 1에서 VideoCard 비활성)
 - 목차: 본문 `##` 헤딩을 파싱해 번호 리스트로 자동 생성.
 - 본문 게이트: frontmatter `freeParts: 1` 만큼(기본 Part 00 하나) 공개, 이후는 잠금.
-  - 잠금(쿠키 없음): 공개 파트 → **EmailGate**(제목 `이메일을 남기면 지금 바로 열립니다`, 서브 `같은 주소로 다음 자료도 보내드립니다`, 버튼 `열기`) → 나머지 파트를 blur 6px + 오버레이로 렌더(텍스트는 DOM에 넣지 않는다. 스켈레톤 블록만. 크롤·복사 방지).
+  - 잠금(쿠키 없음): 공개 파트 → **EmailGate**(제목 `이메일을 남기면 지금 바로 열립니다`, 서브 `같은 주소로 다음 자료도 보내드립니다`, 버튼 `열기`, **동의=§3.7**) → 나머지 파트를 blur 6px + 오버레이로 렌더(텍스트는 DOM에 넣지 않는다. 스켈레톤 블록만. 크롤·복사 방지).
   - 열림(쿠키 유효): 게이트 자리에 체크 아이콘 + `메일로도 보냈습니다` → 본문 전체.
 - 하단: `다른 자료` ResourceCard 2개 (현재 slug 제외, 최근순).
-- 게이트 제출 성공 시 UI: 버튼 비활성 + `입력한 이메일로 확인 링크를 보냈습니다. 메일의 링크를 누르면 바로 열립니다.` (메일 클릭 전엔 안 열린다 — §6.1)
+- 게이트 제출 성공 시: `/unlock`로 쿠키 발급 후 그 자리에서 열림 상태로 전환. 소형 문구 `메일로도 보냈습니다` (§6.1). 메일 링크 클릭은 해금이 아니라 `pending→active`만.
 
 ### 3.3 `/course` 클래스
-- 히어로(좌측): 라벨 `VOD · 준비 중` / h1 `클로드 디자인 실전` / 서브 `내 사업에 필요한 디자인, 이제 직접 만들 수 있습니다.` + `클로드로 결과물을 만드는 방법부터 좋은 디자인을 고르고, 고치고, 반복해서 활용하는 기준까지 배웁니다.` / EmailGate(제목 `출시 알림 받기`, 서브 `클래스가 오픈되면 이메일로 가장 먼저 안내드립니다.`, 버튼 `출시 알림 신청하기`, tag=`course-waitlist`)
+- 히어로(좌측): 라벨 `VOD · 준비 중` / h1 `클로드 디자인 실전` / 서브 `내 사업에 필요한 디자인, 이제 직접 만들 수 있습니다.` + `클로드로 결과물을 만드는 방법부터 좋은 디자인을 고르고, 고치고, 반복해서 활용하는 기준까지 배웁니다.` / EmailGate(제목 `출시 알림 받기`, 서브 `클래스가 오픈되면 이메일로 가장 먼저 안내드립니다.`, 버튼 `출시 알림 신청하기`, tag=`course-waitlist`, **동의=§3.7**)
 - 01 / 커리큘럼: 카드 4 — `보는 기준` / `좋은 디자인을 찾고 분석하는 법` · `만드는 기준` / `내 브랜드의 디자인 기준을 만들고 적용하는 법` · `고치는 기준` / `AI가 만든 결과물을 비교하고 개선하는 법` · `확장하는 방법` / `한 번 만든 기준을 랜딩페이지·PPT·SNS까지 확장하는 법`
 - 02 / 수강 후 완성하는 것: `내 브랜드 레퍼런스 보드` / `계속 재사용할 수 있는 디자인 시스템` / `내 사업에 활용할 랜딩페이지 완성본` / `다음 작업에도 활용할 수 있는 프롬프트 템플릿`
 - 03 / 수강 안내: `현재 클래스를 준비하고 있습니다.` + `출시 일정과 얼리버드 수강료는 알림 신청자에게 가장 먼저 안내드립니다.` (숫자 없음)
@@ -194,11 +195,19 @@ export const products = {
 | 라우트 | 내용 |
 |---|---|
 | `/unlock` | 쿼리 `t=`(§6.2 토큰) 검증 → 쿠키 발급 → `next` 슬러그로 리다이렉트. 실패 시 `/free/[slug]?expired=1` |
-| `/unsubscribe` | 쿼리 `t=` → API `POST /unsubscribe` 호출 → `수신을 해지했습니다.` 한 줄 |
-| `/privacy` | 개인정보처리방침 (수집 항목: 이메일·선택 정보·유입 경로·동의 시각 / 목적: 자료 전달·새 자료 안내 / 보관: 해지 시까지 / 처리 위탁: AWS) |
-| `/terms` | 이용약관 (Step 1은 무료 서비스 범위만) |
+| `/unsubscribe` | 쿼리 `t=` → API `POST /unsubscribe` + 접근 쿠키 삭제 → `수신을 해지했습니다.` 한 줄. **해지하면 자료 페이지도 닫힘**(§3.7) |
+| `/privacy` | 개인정보처리방침 — 수집(이메일·선택정보·source·동의기록) / 목적(자료 전달·새 자료·강의·서비스 소식·구독 열람) / 보관(해지 시까지, IP·UA 90일) / 위탁(AWS 서울·Turnstile 미국 국외 고지) / 권리·14세 미만·안전조치·변경 고지. 문서 버전=`CONSENT_VERSION`. 국외 이전 **동의 박스 없음**(SES 서울). GA4 없음 |
+| `/terms` | 이용약관(짧게): 무료 구독 범위, 저작권(재배포·판매 금지 / 본인 사업 사용 자유), 면책, 준거법. 계정·탈퇴·유료 조항 없음(Step 2) |
 | `/refund` | 환불 정책 — Step 1은 "현재 유료 상품이 없습니다" 한 줄. Step 2에서 채움 |
 | `/not-found` | 시스템 톤으로 한 줄 |
+
+### 3.7 구독 동의 (EmailGate 공통, 박스 1개·기본 해제·필수)
+폼의 정체는 **메일 구독**이다. 구독하면 자료가 메일로 오고 사이트도 열린다. 메일 수신이 서비스 자체이므로 동의 하나로 끝난다.
+
+- 체크 라벨: `이메일 수집·이용과 메일 수신에 동의합니다.`
+- 상세: `자료 전달, 새 자료·강의·서비스 소식 안내 목적으로 이메일 주소와 동의 기록(시각·경로·문서 버전)을 수집합니다. 수신 해지 시까지 보관하며, 모든 메일의 수신거부 링크로 언제든 해지할 수 있습니다. 해지하면 자료 페이지도 닫힙니다.` + 링크 `[개인정보 처리방침]`(→`/privacy`)
+- "해지하면 자료 페이지도 닫힙니다"가 자료=구독의 일부임을 성립시킨다(선택 동의 거부 문제 없음).
+- 법률 자문 아님 — 최종 문안은 별도 검토.
 
 ---
 
@@ -261,6 +270,7 @@ downloads:            # 선택. 있으면 열림 상태에서 presigned 링크 �
 | `building` | S | §5.2 select 값 |
 | `tags` | SS | `resource:claude-ppt-guidebook`, `course-waitlist` … (요청한 자료·대기 등록 누적) |
 | `consentAt` | S | ISO, 폼 제출 시각 |
+| `consentVersion` | S | 처리방침 문서 버전(`CONSENT_VERSION`, 예: `2026-09-12`) |
 | `confirmedAt` | S | 메일 링크 클릭 시각 |
 | `unsubscribedAt` | S | |
 | `unsubToken` | S | 랜덤 32자, 수신거부 링크용 (교체 없음) |
@@ -338,13 +348,13 @@ export const ResourceUpsertInput = z.object({
 ## 6. 게이트·인증 메커니즘
 
 ### 6.1 흐름
-1. 폼 제출 → `POST /subscribe` → Turnstile 검증 → 허니팟 검증 → `subscribers` upsert(`status`가 이미 `active`면 그대로) → `tags`에 `resource:<slug>` 추가 → **확인 메일** 발송(§7.1) → `202 { ok: true, state: 'pending' | 'active' }`
-2. 이미 `active`인 이메일이면 확인 메일 대신 **자료 링크 메일**(§7.2)을 보내고 `state:'active'` 반환. 프론트는 이 경우 `이미 등록된 주소입니다. 메일로 링크를 다시 보냈습니다.` 표시.
-3. 메일의 링크 → `GET /confirm?t=<token>` (Lambda) → 토큰 검증 → `status=active`, `confirmedAt` → **자료 링크 메일**(§7.2) 발송 → `302 https://<site>/unlock?t=<gateToken>&next=/free/<slug>`
-4. `/unlock`(Next Route Handler) → gateToken 검증 → 쿠키 `nodi_access` 설정 → `next`로 302
-5. `/free/[slug]` 서버 컴포넌트가 쿠키를 검증해 열림/잠금 렌더
+1. 폼 제출 → `POST /subscribe` → Turnstile·허니팟·형식 검사 → `subscribers` upsert(`active`면 유지, 아니면 `pending`) → `tags`에 `resource:<slug>` 누적 → **자료 메일 1통** 발송(링크는 `/confirm?t=`) → `202 { ok, state, gateToken }` + `gate.opened(slug)` 이벤트
+2. 프론트는 `gateToken`으로 즉시 `/unlock?t=&next=/free/<slug>`(또는 `/course`) → 쿠키 발급 → **그 자리에서 열림**. 메일을 기다리지 않는다.
+3. 메일의 링크 → `GET /confirm?t=` → `status=active`, `confirmedAt` → `302` → `/free/<slug>`(또는 `/course`). **해금이 아니라 리스트 품질용 active 전환.** 쿠키가 없는 기기에서는 잠금 UI가 남을 수 있고, 그때는 폼을 다시 내면 쿠키가 발급된다.
+4. 이후 다른 자료는 쿠키(90일)로 폼 없이 바로 열림. 어떤 자료를 열었는지는 `gate.opened(slug)`(이메일 해시)로 집계.
+5. **캠페인·새 자료 안내·VOD 알림은 `active`만.** `pending`에는 보내지 않는다(바운스·평판).
 
-메일 클릭 전에는 절대 열리지 않는다. 이게 더블 옵트인이자 광고성 메일 동의 증빙이다.
+즉시 해금(전환)과 메일 클릭 active(리스트 품질)를 분리한다. 확인 메일과 자료 메일은 한 통(`resource`)으로 합친다.
 
 ### 6.2 토큰 (`packages/shared/src/token.ts`, HMAC-SHA256)
 - 형식 `v1.<payload-base64url>.<sig-base64url>`
@@ -361,17 +371,21 @@ export const ResourceUpsertInput = z.object({
 
 ## 7. 이메일 (SES v2)
 
-### 7.1 템플릿 4종 (`services/api/src/mail/templates/*.ts`, 텍스트+HTML)
+### 7.1 템플릿 3종 (`services/api/src/mail/templates/*.ts`, 텍스트+HTML)
 | 키 | 제목 | 본문 골자 |
 |---|---|---|
-| `confirm` | `[노디 AI 클래스] 자료를 열려면 이 링크를 눌러주세요` | 한 줄 안내 + 버튼(민트) + 만료 7일 + 푸터 |
-| `resource` | `[노디 AI 클래스] <자료 제목>` | 자료 링크(`/free/<slug>` + gateToken) + 있으면 다운로드 presigned URL(1시간) + 푸터 |
+| `resource` | `[노디 AI 클래스] <자료 제목>` | **(광고) 없음**. 안내 + 버튼(민트). 링크는 `/confirm?t=`(active 전환 후 `/free/<slug>`로 리다이렉트). 있으면 다운로드 presigned URL(1시간) + 푸터. (`confirm` 템플릿은 폐기·이 한 통으로 합침) |
 | `inquiry-notify` (나에게) | `[검토 요청] <이름> · <결과물 도메인>` | 폼 내용 전부 + DynamoDB 키 |
 | `inquiry-ack` (신청자) | `[노디 AI 클래스] 검토 요청을 받았습니다` | `2영업일 내 회신드립니다` + 푸터 |
 
-푸터 공통: 발신자 표시(노디 AI 클래스 · 운영 Cascades · 사업자정보 · 주소) + 수신거부 링크. 이모지·느낌표 없음. HTML은 테이블 레이아웃, 다크 아님(메일 클라이언트 호환) — 민트 버튼 하나만.
+푸터 공통: `노디 AI 클래스 · 운영 Cascades · 상호/대표/사업자번호/주소 · 문의 · [수신거부]`. 이모지·느낌표 없음. HTML은 테이블 레이아웃, 다크 아님(메일 클라이언트 호환) — 민트 버튼 하나만.
+
+발송 제목 규칙:
+- 자료 전달·새 자료 안내: 제목에 `(광고)` 없음
+- VOD 판매·할인·워크숍 모집(캠페인): 제목 앞에 `(광고)` — 누락 시 과태료 대상. Step 2 `scripts/send.ts`에서 강제
 
 ### 7.2 발송 설정
+- **리전 `ap-northeast-2`(서울) 고정** — 이메일이 국외로 나가지 않음. 국외 이전 동의 박스 없음(처리방침 고지로 충분: Turnstile만 미국).
 - 발신 도메인 `mail.<NODI_DOMAIN>` (메인 도메인 평판 분리). From `노디 AI 클래스 <hello@mail.<domain>>`, Reply-To `contact@cascades.studio`.
 - DKIM(Easy DKIM) + SPF + DMARC(`p=none`으로 시작) 레코드는 CDK가 Route53에 생성.
 - Configuration set `nodi-transactional` + SNS 토픽으로 bounce/complaint 수신 → Lambda `ses-events`가 `status=unsubscribed`, `bounceAt` 기록.
@@ -385,8 +399,8 @@ Base: `https://api.<NODI_DOMAIN>` (커스텀 도메인, ACM 인증서 us-east-1 
 
 | 메서드 | 경로 | 핸들러 | 입력 | 응답 |
 |---|---|---|---|---|
-| POST | `/subscribe` | `subscribe.ts` | `SubscribeInput` JSON | `202 { ok, state}` / `400 {error:'invalid'}` / `403 {error:'bot'}` / `429` |
-| GET | `/confirm` | `confirm.ts` | `?t=` | `302` → `/unlock…` / `302` → `/free/<slug>?expired=1` |
+| POST | `/subscribe` | `subscribe.ts` | `SubscribeInput` JSON | `202 { ok, state, gateToken }` / `400 {error:'invalid'}` / `403 {error:'bot'}` / `429` |
+| GET | `/confirm` | `confirm.ts` | `?t=` | `302` → `/free/<slug>`(active 전환) / `302` → `/free/<slug>?expired=1` |
 | POST | `/inquiry` | `inquiry.ts` | `InquiryInput` | `202 {ok}` |
 | POST | `/unsubscribe` | `unsubscribe.ts` | `{t}` | `200 {ok}` (토큰 불일치도 200 — 열거 방지) |
 | POST | `/internal/ses-events` | `ses-events.ts` | SNS | SNS 구독, 외부 노출 안 함 |
@@ -402,19 +416,21 @@ Base: `https://api.<NODI_DOMAIN>` (커스텀 도메인, ACM 인증서 us-east-1 
 
 ## 9. 인프라 (`infra/`, CDK v2)
 
-### 9.1 단일 스택 (`stackName: nodi-class`)
+### 9.1 단일 스택 (`stackName: nodi-class`, **리전 `ap-northeast-2` 고정**)
 ```
-NodiClassStack (nodi-class)
+NodiClassStack (nodi-class) @ ap-northeast-2
   DynamoDB ×4 (subscribers / inquiries / events / resources), PITR, RETAIN
   SES mail.<domain> + DKIM·SPF·DMARC, configuration set, SNS bounce/complaint
   Lambda ×8 (subscribe/confirm/inquiry/unsubscribe/ses-events/resources-list|get|put)
   HTTP API + 스로틀, 선택적 커스텀 도메인 api.<domain>
 ```
 - AWS 리소스 이름 prefix: `nodi-class-` (테이블·Lambda·API·SNS 등).
+- **스택 env.region은 항상 `ap-northeast-2`** (`infra/bin/nodi.ts`). SES·데이터가 서울에 머문다.
 - Route53 호스티드 존은 **CDK 밖에서 이미 존재**한다고 가정 (`fromLookup` 또는 `-c hostedZoneId=`).
 - 비밀: `/nodi-class/GATE_SECRET`, `/nodi-class/TURNSTILE_SECRET`, `/nodi-class/ADMIN_API_KEY` — SSM SecureString, 콘솔에서 수동 생성. CDK는 참조만.
 - 출력: `ApiUrl`, 테이블 이름 → Amplify / `.env.local`에 손으로 옮긴다.
 - 웹 호스팅은 Amplify(스택에 웹 리소스 없음).
+- GA4·카카오 로그인 없음(Step 1).
 
 ### 9.2 호스팅 (Step 1)
 Amplify Hosting을 콘솔에서 GitHub 연결로 세팅한다 (모노레포 설정: appRoot `apps/web`, 빌드 `pnpm install --frozen-lockfile && pnpm --filter @nodi/web build`). 환경 변수는 §10. 커스텀 도메인 `<NODI_DOMAIN>` + `www` 리다이렉트. CDK로 옮기는 건 TODO.
@@ -489,18 +505,18 @@ NOTIFY_EMAIL=contact@cascades.studio
 - DoD: 테이블 3개 존재, SES identity Verified, DKIM 3레코드 Success — **배포 후 확인**
 
 ### S1-6 api
-- [x] 핸들러 5개 + `mail/` 템플릿 4종 + `db/` 리포지토리 + Turnstile 클라이언트
+- [x] 핸들러 5개 + `mail/` 템플릿 3종(resource·inquiry×2) + `db/` 리포지토리 + Turnstile 클라이언트
 - [x] 단위 테스트: subscribe(신규/기존active/허니팟/bot), confirm(정상/만료), inquiry, unsubscribe
 - [x] `NodiClassStack` API 라우트·Lambda — 배포·커스텀 도메인은 **사람/자격증명 필요**
 - DoD: `curl`로 4개 엔드포인트 시나리오 통과, 실메일 2통 — **배포 후 확인**
 
 ### S1-7 web 연결
-- [x] EmailGate `onSubmit` → `/subscribe` 호출, 상태 UI 3종(대기/기존/오류)
+- [x] EmailGate `onSubmit` → `/subscribe` 호출 → `gateToken`으로 `/unlock` 즉시 해금
 - [x] `/unlock`, `/unsubscribe` 라우트 핸들러
 - [x] `/free/[slug]` 열림 상태 렌더, 다운로드 버튼(presigned는 스텁 `#` — S3 연동 TODO)
 - [x] 서비스 폼 → `/inquiry`
 - [x] Turnstile 위젯(보이지 않는 모드)
-- DoD: E2E 완주 — **API·SES 배포 후 브라우저 확인**
+- DoD: 폼 → 즉시 열림 → 메일 클릭 → active → 시크릿 창에서 잠금 확인 — **API·SES 배포 후 브라우저 확인**
 
 ### S1-8 배포·연결
 - [x] `amplify.yml` + `DEPLOY.md` 체크리스트 작성
@@ -548,7 +564,9 @@ NOTIFY_EMAIL=contact@cascades.studio
 - [ ] **회원 자료**: S3 프라이빗 + CloudFront 서명 쿠키. 1차 presigned URL 방식을 이걸로 흡수.
 - [ ] **견적 상담**: 채팅 만들지 않음. 문의 폼 + 이메일 스레드 + 상담 예약 임베드(Cal.com/whattime).
 - [ ] **블로그**: `content/posts/*.mdx`, `draft` 프론트매터가 공개 설정, `next-sitemap`, OG 이미지 자동 생성, JSON-LD. CMS 없음.
-- [ ] **캠페인 발송**: `scripts/send.ts` — `active` 대상 SES v2 일괄 발송, 템플릿은 MDX, 발송 로그 `nodi-events`. UI 없음.
+- [ ] **캠페인 발송**: `scripts/send.ts` — `active` 대상 SES v2 일괄 발송, 템플릿은 MDX, 발송 로그 `nodi-events`. UI 없음. **영리 광고 메일은 제목 `(광고)` 필수**.
+- [ ] **2년 재동의 확인 배치**: 동의 후 2년 경과 구독자에게 "계속 받으시겠습니까" 1통 자동 발송(정보통신망법 50조).
+- [ ] **GA4 도입 여부**: Step 1은 `nodi-events`+`source`로 전환율 집계. GA4는 Google 국외 처리 고지가 늘므로 필요해질 때만.
 - [ ] **운영**: 메일 발송 실패 재시도(SQS DLQ), `ip/ua` 90일 후 삭제 배치, Amplify 호스팅 CDK 이관, CDK 출력 → web env 자동화.
 - [ ] **환불 정책·이용약관** 유료 조항 채우기.
 

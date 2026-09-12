@@ -1,4 +1,4 @@
-import { BUILDING_OPTIONS } from '@nodi/shared';
+import { BUILDING_OPTIONS } from '@nodi/shared/constants';
 
 export const BUILDING_EXTRA_FIELD = {
   name: 'building',

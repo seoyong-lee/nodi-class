@@ -1,6 +1,6 @@
 import { Badge } from '../core/Badge';
 import { Icon } from '../core/Icon';
-import { Thumb16x9 } from './Thumb16x9';
+import { ThumbBook } from './ThumbBook';
 
 export type ResourceCardProps = {
   title: string;
@@ -24,13 +24,11 @@ export function ResourceCard({
 
   return (
     <a
-      className="flex flex-col gap-inline bg-card border border-line rounded p-3 pb-5 transition-ui text-inherit no-underline hover:border-line-strong hover:bg-raised"
+      className="flex flex-col gap-inline bg-card border border-line rounded overflow-hidden pb-5 transition-ui text-inherit no-underline hover:border-line-strong hover:bg-raised"
       href={href}
     >
-      <div className={locked ? 'opacity-[0.55]' : undefined}>
-        <Thumb16x9 src={thumbnail} alt="" />
-      </div>
-      <div className="flex flex-col gap-inline px-2">
+      <ThumbBook src={thumbnail} alt="" />
+      <div className="flex flex-col gap-inline px-4">
         <h3 className="m-0 text-body font-bold leading-[var(--leading-tight)] tracking-[var(--tracking-heading)] text-strong break-keep">
           {title}
         </h3>

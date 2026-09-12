@@ -13,7 +13,9 @@ export type ApiEnv = {
   sesConfigurationSet?: string;
   bizName: string;
   bizOwner: string;
+  bizRegNo: string;
   bizAddress: string;
+  bizEmail: string;
 };
 
 export function getEnv(env: NodeJS.ProcessEnv = process.env): ApiEnv {
@@ -50,6 +52,8 @@ export function getEnv(env: NodeJS.ProcessEnv = process.env): ApiEnv {
     sesConfigurationSet: env.SES_CONFIGURATION_SET,
     bizName: env.BIZ_NAME ?? '',
     bizOwner: env.BIZ_OWNER ?? '',
+    bizRegNo: env.BIZ_REG_NO ?? '',
     bizAddress: env.BIZ_ADDRESS ?? '',
+    bizEmail: env.BIZ_EMAIL ?? env.MAIL_REPLY_TO ?? 'contact@cascades.studio',
   };
 }

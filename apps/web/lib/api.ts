@@ -9,6 +9,7 @@ export function getApiBaseUrl(): string {
 export type SubscribeResponse = {
   ok: true;
   state: 'pending' | 'active';
+  gateToken: string;
 };
 
 export type ApiErrorBody = {
@@ -18,7 +19,7 @@ export type ApiErrorBody = {
 export async function postSubscribe(
   body: Record<string, unknown>,
 ): Promise<
-  | { ok: true; state: 'pending' | 'active' }
+  | { ok: true; state: 'pending' | 'active'; gateToken: string }
   | { ok: false; status: number; error?: string }
 > {
   const res = await fetch(`${getApiBaseUrl()}/subscribe`, {
@@ -29,7 +30,10 @@ export async function postSubscribe(
 
   if (res.status === 202) {
     const data = (await res.json()) as SubscribeResponse;
-    return { ok: true, state: data.state };
+    if (!data.gateToken) {
+      return { ok: false, status: 502, error: 'missing_gate' };
+    }
+    return { ok: true, state: data.state, gateToken: data.gateToken };
   }
 
   let error: string | undefined;

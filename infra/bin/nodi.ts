@@ -8,6 +8,9 @@ import {
 } from '../src/config';
 import { NodiClassStack } from '../src/stacks/nodi-class-stack';
 
+/** SES·Dynamo·Lambda all stay in Seoul (PLAN §7.2 · §9.1). */
+const AWS_REGION = 'ap-northeast-2';
+
 const app = new cdk.App();
 const domain = requireDomain(app);
 const hostedZoneId = optionalHostedZoneId(app);
@@ -19,22 +22,11 @@ const notifyEmail =
   process.env.NOTIFY_EMAIL ??
   'contact@cascades.studio';
 
-const awsEnv =
-  process.env.CDK_DEFAULT_ACCOUNT && process.env.CDK_DEFAULT_REGION
-    ? {
-        account: process.env.CDK_DEFAULT_ACCOUNT,
-        region: process.env.CDK_DEFAULT_REGION,
-      }
-    : undefined;
-
-// fromLookup requires account+region on the stack; attributes path does not.
+const account = process.env.CDK_DEFAULT_ACCOUNT;
 const stackEnv =
-  hostedZoneId != null
-    ? awsEnv
-    : {
-        account: process.env.CDK_DEFAULT_ACCOUNT,
-        region: process.env.CDK_DEFAULT_REGION,
-      };
+  account != null
+    ? { account, region: AWS_REGION }
+    : { region: AWS_REGION };
 
 new NodiClassStack(app, 'NodiClassStack', {
   stackName: STACK_NAME,
@@ -43,7 +35,7 @@ new NodiClassStack(app, 'NodiClassStack', {
   enableCustomDomain,
   notifyEmail,
   env: stackEnv,
-  description: `Nodi class infra (${NAME_PREFIX})`,
+  description: `Nodi class infra (${NAME_PREFIX}, ${AWS_REGION})`,
 });
 
 app.synth();

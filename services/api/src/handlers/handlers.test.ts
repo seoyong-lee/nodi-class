@@ -115,7 +115,7 @@ describe('subscribe', () => {
     clearMemoryRateLimit();
   });
 
-  it('returns 202 pending for new subscriber and sends confirm mail', async () => {
+  it('returns 202 with gateToken and sends resource mail for new subscriber', async () => {
     vi.mocked(upsertSubscriber).mockResolvedValue({
       created: true,
       state: 'pending',
@@ -127,6 +127,7 @@ describe('subscribe', () => {
         source: 'claude-ppt-guidebook',
         tags: ['resource:claude-ppt-guidebook'],
         consentAt: new Date().toISOString(),
+        consentVersion: '2026-09-12',
         unsubToken: 'a'.repeat(32),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -139,16 +140,20 @@ describe('subscribe', () => {
       httpEvent({ body: JSON.stringify(baseSubscribe) }),
     );
     expect(res).toMatchObject({ statusCode: 202 });
-    expect(JSON.parse((res as { body: string }).body)).toEqual({
-      ok: true,
-      state: 'pending',
-    });
+    const body = JSON.parse((res as { body: string }).body) as {
+      ok: boolean;
+      state: string;
+      gateToken: string;
+    };
+    expect(body).toMatchObject({ ok: true, state: 'pending' });
+    expect(typeof body.gateToken).toBe('string');
+    expect(body.gateToken.length).toBeGreaterThan(10);
     expect(sendMail).toHaveBeenCalledWith(
-      expect.objectContaining({ template: 'confirm' }),
+      expect.objectContaining({ template: 'resource' }),
     );
   });
 
-  it('returns 202 active for existing active and sends resource mail', async () => {
+  it('returns 202 active with gateToken and sends resource mail', async () => {
     vi.mocked(upsertSubscriber).mockResolvedValue({
       created: false,
       state: 'active',
@@ -161,6 +166,7 @@ describe('subscribe', () => {
         tags: ['resource:claude-ppt-guidebook'],
         consentAt: new Date().toISOString(),
         confirmedAt: new Date().toISOString(),
+        consentVersion: '2026-09-12',
         unsubToken: 'b'.repeat(32),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -173,10 +179,13 @@ describe('subscribe', () => {
       httpEvent({ body: JSON.stringify(baseSubscribe) }),
     );
     expect(res).toMatchObject({ statusCode: 202 });
-    expect(JSON.parse((res as { body: string }).body)).toEqual({
-      ok: true,
-      state: 'active',
-    });
+    const body = JSON.parse((res as { body: string }).body) as {
+      ok: boolean;
+      state: string;
+      gateToken: string;
+    };
+    expect(body).toMatchObject({ ok: true, state: 'active' });
+    expect(typeof body.gateToken).toBe('string');
     expect(sendMail).toHaveBeenCalledWith(
       expect.objectContaining({ template: 'resource' }),
     );
@@ -211,7 +220,7 @@ describe('confirm', () => {
     vi.clearAllMocks();
   });
 
-  it('activates, sends resource mail, redirects to unlock', async () => {
+  it('activates and redirects to resource path without sending mail', async () => {
     const token = createConfirmToken(
       'user@example.com',
       'claude-ppt-guidebook',
@@ -226,6 +235,7 @@ describe('confirm', () => {
       tags: ['resource:claude-ppt-guidebook'],
       consentAt: new Date().toISOString(),
       confirmedAt: new Date().toISOString(),
+      consentVersion: '2026-09-12',
       unsubToken: 'c'.repeat(32),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -237,12 +247,8 @@ describe('confirm', () => {
     expect(res).toMatchObject({ statusCode: 302 });
     const location = (res as { headers?: { location?: string } }).headers
       ?.location;
-    expect(location).toMatch(
-      new RegExp(`^${SITE}/unlock\\?t=.*&next=${encodeURIComponent('/free/claude-ppt-guidebook')}`),
-    );
-    expect(sendMail).toHaveBeenCalledWith(
-      expect.objectContaining({ template: 'resource' }),
-    );
+    expect(location).toBe(`${SITE}/free/claude-ppt-guidebook`);
+    expect(sendMail).not.toHaveBeenCalled();
   });
 
   it('redirects to free slug with expired=1 when token expired', async () => {
@@ -335,6 +341,7 @@ describe('unsubscribe', () => {
       source: 'x',
       tags: [],
       consentAt: '',
+      consentVersion: '2026-09-12',
       unsubToken: 'd'.repeat(32),
       createdAt: '',
       updatedAt: '',

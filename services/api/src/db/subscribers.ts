@@ -1,5 +1,6 @@
 import { GetCommand, PutCommand, UpdateCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { randomBytes } from 'node:crypto';
+import { CONSENT_VERSION } from '@nodi/shared';
 import { getDocClient } from './client.js';
 import { getEnv } from '../lib/env.js';
 
@@ -14,6 +15,7 @@ export type Subscriber = {
   building?: string;
   tags: string[];
   consentAt: string;
+  consentVersion: string;
   confirmedAt?: string;
   unsubscribedAt?: string;
   bounceAt?: string;
@@ -115,12 +117,14 @@ export async function upsertSubscriber(
       tags: [...tags],
       building: input.building ?? existing.building,
       source: existing.source || input.source || input.slug,
+      consentAt: now,
+      consentVersion: CONSENT_VERSION,
       updatedAt: now,
       gsi1pk: `STATUS#${status}`,
       ...(input.ip ? { ip: input.ip } : {}),
       ...(input.ua ? { ua: input.ua } : {}),
       ...(status === 'pending' && existing.status === 'unsubscribed'
-        ? { consentAt: now, unsubscribedAt: undefined }
+        ? { unsubscribedAt: undefined }
         : {}),
     };
 
@@ -148,6 +152,7 @@ export async function upsertSubscriber(
     building: input.building,
     tags: [tag],
     consentAt: now,
+    consentVersion: CONSENT_VERSION,
     unsubToken,
     ip: input.ip,
     ua: input.ua,

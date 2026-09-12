@@ -1,7 +1,8 @@
 import { Suspense } from 'react';
-import { Button, Icon, ResourceCard, VideoCard } from '@nodi/design-system';
-import { resourceBadge } from '@nodi/shared';
+import { Button, Icon, ResourceCard } from '@nodi/design-system';
+import { resourceBadge, resourceThumbnail } from '@nodi/shared';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import { EmailGateForm } from '../../../components/EmailGateForm';
 import { LockedSkeleton } from '../../../components/LockedSkeleton';
 import { MdxContent } from '../../../components/MdxContent';
@@ -44,11 +45,13 @@ export default async function FreeResourcePage({ params }: Props) {
     doc.parts.length === 0 ||
     (doc.parts.length === 1 && doc.raw.trim() === '준비 중') ||
     doc.raw.trim() === '준비 중';
+  const badge = resourceBadge(slug);
+  const cover = resourceThumbnail(slug);
 
   return (
     <main>
       <section className={hero}>
-        <div className="grid grid-cols-[1fr_420px] gap-16 items-start break-keep max-[960px]:grid-cols-1 max-[960px]:gap-6">
+        <div className="grid grid-cols-[1fr_280px] gap-16 items-start break-keep max-[960px]:grid-cols-1 max-[960px]:gap-6">
           <div className="flex flex-col gap-6">
             <span className="text-label text-muted">{doc.frontmatter.series}</span>
             <h1 className="m-0 font-hero text-hero font-bold text-strong max-[720px]:text-hero-m">
@@ -56,13 +59,26 @@ export default async function FreeResourcePage({ params }: Props) {
             </h1>
             <p className="m-0 max-w-[30em] text-body">{doc.frontmatter.summary}</p>
           </div>
-          {doc.frontmatter.youtube ? (
-            <VideoCard
-              title={doc.frontmatter.title}
-              note="이 영상에서 소개했습니다"
-              href={doc.frontmatter.youtube}
-            />
-          ) : null}
+          <aside className="flex flex-col gap-inline bg-card border border-line rounded overflow-hidden pb-5 min-w-0 max-[960px]:max-w-[240px]">
+            <div className="relative aspect-[4/5] w-full overflow-hidden bg-raised">
+              <Image
+                className="object-cover object-center scale-125"
+                src={cover}
+                alt=""
+                fill
+                sizes="280px"
+                priority
+              />
+            </div>
+            <div className="flex flex-col gap-1 px-4">
+              <span className="text-body font-bold text-strong break-keep">
+                {doc.frontmatter.title}
+              </span>
+              <span className="text-caption text-muted break-keep">
+                {badge} · 바로 써볼 수 있는 무료 자료입니다
+              </span>
+            </div>
+          </aside>
         </div>
       </section>
 
@@ -163,6 +179,7 @@ export default async function FreeResourcePage({ params }: Props) {
                 slug={resource.frontmatter.slug}
                 locked={!unlocked}
                 badge={resourceBadge(resource.frontmatter.slug)}
+                thumbnail={resourceThumbnail(resource.frontmatter.slug)}
               />
             ))}
           </div>

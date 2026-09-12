@@ -3,10 +3,13 @@ export const CONFIRM_TTL_SEC = 7 * 24 * 3600;
 export const GATE_TTL_SEC = 5 * 60;
 export const ACCESS_TTL_SEC = 90 * 24 * 3600;
 
+/** Privacy policy / consent copy version stamped on subscribe (`consentVersion`). */
+export const CONSENT_VERSION = '2026-09-12';
+
 export const RESOURCE_SLUGS = [
   'claude-ppt-guidebook',
   'claude-prompt-set',
-  'claude-design-landing-checklist',
+  // 'claude-design-landing-checklist',
   'ai-design-5-principles',
 ] as const;
 
@@ -14,7 +17,7 @@ export const RESOURCE_SLUGS = [
 export const RESOURCE_BADGE: Record<(typeof RESOURCE_SLUGS)[number], string> = {
   'claude-ppt-guidebook': '가이드북',
   'claude-prompt-set': '프롬프트',
-  'claude-design-landing-checklist': '체크리스트',
+  // 'claude-design-landing-checklist': '체크리스트',
   'ai-design-5-principles': '요약본',
 };
 
@@ -23,6 +26,14 @@ export function resourceBadge(slug: string): string {
     return RESOURCE_BADGE[slug as (typeof RESOURCE_SLUGS)[number]];
   }
   return '무료 자료';
+}
+
+const PPT_THUMB = '/img/book-ppt.png';
+const PLACEHOLDER_THUMB = '/img/book-placeholder.png';
+
+/** Book-cover thumbnail — PPT guidebook has art, others share a book placeholder. */
+export function resourceThumbnail(slug: string): string {
+  return slug === 'claude-ppt-guidebook' ? PPT_THUMB : PLACEHOLDER_THUMB;
 }
 
 export const BUILDING_OPTIONS = [

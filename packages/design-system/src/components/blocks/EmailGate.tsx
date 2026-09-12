@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState, type FormEvent, type ReactNode } from 'react';
 import { cn } from '../../lib/cn';
 import { Button } from '../core/Button';
 import { Input } from '../core/Input';
@@ -15,7 +15,10 @@ export type EmailGateProps = {
   title: string;
   description?: string;
   buttonLabel: string;
+  /** Checkbox label (required, default unchecked). */
   consent: string;
+  /** Detail under the checkbox; may include a privacy link node. */
+  consentDetail?: ReactNode;
   submittedLabel: string;
   submitted: boolean;
   onSubmit: (email: string, extra?: string) => void | Promise<void>;
@@ -31,6 +34,7 @@ export function EmailGate({
   description,
   buttonLabel,
   consent,
+  consentDetail,
   submittedLabel,
   submitted,
   onSubmit,
@@ -40,12 +44,14 @@ export function EmailGate({
 }: EmailGateProps) {
   const [email, setEmail] = useState('');
   const [extra, setExtra] = useState(extraField?.options[0]?.value ?? '');
+  const [agreed, setAgreed] = useState(false);
   const selectId = useId();
+  const consentId = useId();
   const stacked = layout === 'stack';
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (submitting) return;
+    if (submitting || !agreed) return;
     await onSubmit(email, extraField ? extra : undefined);
   }
 
@@ -119,6 +125,32 @@ export function EmailGate({
             </div>
           ) : null}
           <div
+            className={cn(
+              'flex flex-col gap-2 break-keep',
+              stacked ? 'w-full' : 'flex-[1_1_100%] w-full',
+            )}
+          >
+            <label
+              className="flex items-start gap-[10px] text-label text-muted leading-[1.7] [color-scheme:dark] [&_input]:mt-[2px] [&_input]:w-4 [&_input]:h-4 [&_input]:accent-accent [&_input]:shrink-0"
+              htmlFor={consentId}
+            >
+              <input
+                id={consentId}
+                type="checkbox"
+                name="consent"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                required
+              />
+              <span>{consent}</span>
+            </label>
+            {consentDetail ? (
+              <p className="m-0 pl-[26px] text-label text-muted leading-[1.7]">
+                {consentDetail}
+              </p>
+            ) : null}
+          </div>
+          <div
             className={
               stacked
                 ? 'w-full [&_button]:w-full [&_button]:min-w-[12rem]'
@@ -136,9 +168,6 @@ export function EmailGate({
           </div>
         </form>
       )}
-      <p className="m-0 text-label leading-[1.7] text-muted max-w-measure break-keep">
-        {consent}
-      </p>
     </section>
   );
 }

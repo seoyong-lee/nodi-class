@@ -2,15 +2,16 @@
 
 import { useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { COURSE_WAITLIST_SLUG } from '@nodi/shared/constants';
 import { EmailGate, type EmailGateExtraField } from '@nodi/design-system';
 import { postSubscribe } from '../lib/api';
 import {
-  CONSENT_LABEL,
   FORM_ERROR_LABEL,
-  GATE_ACTIVE_LABEL,
   GATE_SUBMITTED_LABEL,
+  SUBSCRIBE_CONSENT_LABEL,
 } from '../lib/copy';
 import { getTurnstileToken } from '../lib/turnstile';
+import { SubscribeConsentDetail } from './SubscribeConsentDetail';
 
 type Props = {
   title: string;
@@ -22,10 +23,13 @@ type Props = {
   layout?: 'inline' | 'stack';
 };
 
-type GateOutcome = 'pending' | 'active';
-
 const honeypotClass =
   'absolute opacity-0 left-0 top-0 h-px w-px overflow-hidden pointer-events-none';
+
+function unlockNextPath(slug: string): string {
+  if (slug === COURSE_WAITLIST_SLUG) return '/course';
+  return `/free/${slug}`;
+}
 
 export function EmailGateForm({
   title,
@@ -37,7 +41,6 @@ export function EmailGateForm({
 }: Props) {
   const searchParams = useSearchParams();
   const [submitted, setSubmitted] = useState(false);
-  const [outcome, setOutcome] = useState<GateOutcome>('pending');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [website, setWebsite] = useState('');
@@ -80,8 +83,10 @@ export function EmailGateForm({
         return;
       }
 
-      setOutcome(result.state);
+      const next = unlockNextPath(slug);
+      const unlock = `/unlock?t=${encodeURIComponent(result.gateToken)}&next=${encodeURIComponent(next)}`;
       setSubmitted(true);
+      window.location.assign(unlock);
     } catch {
       setError(FORM_ERROR_LABEL);
     } finally {
@@ -106,10 +111,9 @@ export function EmailGateForm({
         title={title}
         description={description}
         buttonLabel={buttonLabel}
-        consent={CONSENT_LABEL}
-        submittedLabel={
-          outcome === 'active' ? GATE_ACTIVE_LABEL : GATE_SUBMITTED_LABEL
-        }
+        consent={SUBSCRIBE_CONSENT_LABEL}
+        consentDetail={<SubscribeConsentDetail />}
+        submittedLabel={GATE_SUBMITTED_LABEL}
         submitted={submitted}
         submitting={submitting}
         onSubmit={handleSubmit}

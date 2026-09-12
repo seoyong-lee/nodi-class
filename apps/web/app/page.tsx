@@ -49,7 +49,7 @@ export default function HomePage() {
         <SectionHeading
           index="01"
           label="무료 자료"
-          title="AI로 만들 때 필요한 기준과 방법을 모았습니다"
+          title="바로 써볼 수 있는 자료, 무료로 가져가세요"
         />
         <Suspense fallback={<div className="mt-block min-h-[280px] max-[720px]:mt-block-tight" />}>
           <ResourceCardsGrid />

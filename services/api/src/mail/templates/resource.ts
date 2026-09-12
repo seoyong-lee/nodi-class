@@ -7,18 +7,21 @@ import {
   resourceTitle,
 } from './layout.js';
 
+/** 자료 전달 메일 — 제목에 (광고) 없음 (PLAN §7.1). */
 export function resourceMail(opts: {
   slug: string;
-  resourceUrl: string;
+  /** `/confirm?t=` — activates subscriber then redirects to the resource. */
+  confirmUrl: string;
   downloadUrl?: string;
   footer: FooterContext;
 }): MailContent {
   const title = resourceTitle(opts.slug);
   const subject = `[노디 AI 클래스] ${title}`;
   const lines = [
-    `${title} 자료 링크입니다.`,
+    `${title}을(를) 요청해 주셔서 감사합니다.`,
+    '사이트에서는 이미 열려 있습니다. 아래 링크를 누르면 메일 수신이 확인됩니다.',
     '',
-    opts.resourceUrl,
+    opts.confirmUrl,
   ];
   if (opts.downloadUrl) {
     lines.push('', `다운로드: ${opts.downloadUrl}`);
@@ -26,8 +29,9 @@ export function resourceMail(opts: {
   lines.push('', footerText(opts.footer));
 
   const htmlParts = [
-    `<p>${title} 자료 링크입니다.</p>`,
-    mintButton(opts.resourceUrl, '자료 보기'),
+    `<p>${title}을(를) 요청해 주셔서 감사합니다.</p>`,
+    '<p>사이트에서는 이미 열려 있습니다. 아래 버튼을 누르면 메일 수신이 확인됩니다.</p>',
+    mintButton(opts.confirmUrl, '메일 확인하기'),
   ];
   if (opts.downloadUrl) {
     htmlParts.push(
