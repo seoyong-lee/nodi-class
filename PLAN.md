@@ -50,10 +50,10 @@ nodi-class/
 │   ├── design-system/          ← 토큰 CSS + React 컴포넌트 (Claude Design _ds 이관)
 │   └── shared/                 ← zod 스키마·타입·상수 (web과 lambda가 함께 씀)
 ├── services/
-│   └── api/                    ← Lambda 핸들러 (subscribe / confirm / inquiry / unsubscribe)
+│   └── api/                    ← Lambda 핸들러 (subscribe / confirm / inquiry / unsubscribe / resources)
 ├── infra/                      ← AWS CDK v2 (TypeScript)
 ├── content/
-│   └── resources/              ← 무료 자료 MDX (slug별 폴더)
+│   └── resources/              ← 시드용 MDX (런타임은 DynamoDB)
 └── design/                     ← Claude Design 원본 zip 해제본 (읽기 전용, 참고용)
 ```
 
@@ -104,7 +104,7 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 | Icon | core | `name` (lucide 이름), `size?` | lucide-react 사용, 색은 `currentColor` |
 | SectionHeading | content | `index: '01'`, `label`, `title`, `align?: 'left'\|'center'` | 라벨 12px 0.08em은 영문에만. 한글 라벨은 자간 0 |
 | BeforeAfter | content | `beforeCaption`, `afterCaption`, `before: ReactNode`, `after: ReactNode` | 375에서 1열 |
-| ProductCard | cards | `label`, `title`, `summary`, `rows: {label,value}[3]`, `ctaLabel`, `ctaHref?`, `ctaVariant?: 'primary'\|'secondary'` | rows는 정확히 3개. 홈·클래스 상품 카드 CTA는 모두 **primary** |
+| ProductCard | cards | `label`, `title`, `summary`, `rows: {label,value}[3]`, `ctaLabel`, `ctaHref?`, `ctaVariant?: 'primary'\|'secondary'` | rows는 정확히 3개. VOD CTA=primary, 워크숍·서비스 CTA=secondary |
 | ResourceCard | cards | `title`, `slug`, `locked: boolean`, `thumbnail?`, `openLabel?`, `fromVideo?`(기본 true) | `fromVideo` 시 Badge `영상에서 소개`. 잠금 시 자물쇠 아이콘, 열림 시 openLabel |
 | Thumb16x9 | cards | `src?`, `alt?` | 이미지 없으면 `--surface-raised` 플레이스홀더 |
 | VideoCard | cards | `title`, `note`, `href`, `thumbnail?` | 조회수 표시 없음. 유튜브 임베드는 클릭 후 로드(iframe 지연) |
@@ -112,7 +112,7 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 | SiteFooter | blocks | `operator`, `business: string[]`, `links: {label,href}[]`, `socialLinks: {label,href,icon}[]` | 사업자 정보 값은 env에서 |
 
 ### 2.3 이관하면서 정리할 것 (디자인 파일에 남아 있는 결함)
-- [ ] 4개 페이지 `h1` 인라인 `font-family:'IBM Plex Sans KR'` 와 `letter-spacing:-0.035em` 제거 → 시스템 `--font-sans`, `--tracking-hero`(-0.02em), `--leading-hero`. `<head>`의 Google Fonts 링크 삭제.
+- [x] 4개 페이지 `h1`은 시안대로 `IBM Plex Sans KR` Bold + `--tracking-hero`(-0.035em) + `--leading-hero`(1.2). 본문·UI는 Pretendard. `public/fonts/IBMPlexSansKR-Bold.woff2` self-host.
 - [ ] 홈 375 `h1`이 긴 버전("코딩·디자인 몰라도, 내 사업에 필요한…")으로 남아 있음 → 1440과 동일한 2줄 카피(§3.1)로 통일. 모바일 36px.
 - [x] 홈 03 상품 카드 3개 버튼 → VOD·워크숍·서비스 모두 primary.
 - [ ] `/free` 잠금 상태에서 게이트 아래 Part 01~ 스켈레톤/본문을 `filter: blur(6px)` + 오버레이로 이어서 보여줄 것 (게이트 뒤가 비어 있으면 안 됨).
@@ -131,7 +131,7 @@ CI 없이 `pnpm lint`에서 걸리게만 한다.
 
 라우트는 App Router. 모든 페이지는 서버 컴포넌트 기본, 폼만 클라이언트 컴포넌트.
 
-공통 레이아웃: 상단 내비 `[노디 AI`(Bold) + `클래스`(Regular) 워드마크] · 무료 자료(/#free) · 클래스(/course) · 서비스(/service) · [유튜브 ↗](secondary sm)`. 현재 페이지 항목만 `--accent` 색. 푸터는 `SiteFooter`.
+공통 레이아웃: 상단 내비 [로고 마크 + `노디 AI`(Bold) + `클래스`(Regular) 워드마크] · 무료 자료(/#free) · 클래스(/course) · 서비스(/service) · [유튜브 ↗](secondary sm)`. 현재 페이지 항목만 `--accent` 색. favicon·OG는 `public/brand/*`. 푸터는 `SiteFooter`.
 
 ### 3.1 `/` 홈
 > 홈 레이아웃·카피는 `design/Home.dc.html` 1440 확정안을 따른다. (구 PLAN 3줄 h1·중간 EmailGate는 폐기.)
@@ -141,14 +141,14 @@ CI 없이 `pnpm lint`에서 걸리게만 한다.
 | 히어로(중앙) | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` / `이제 AI로 직접 만들 수 있습니다` (2줄, `<br>`, keep-all, 마침표 없음) / 서브 `노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.` + `내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.` / Primary `무료 자료 받기`(→ `#free`) · Secondary `유튜브에서 보기` |
 | 01 / 무료 자료 (`id="free"`) | 제목 `영상에서 쓴 자료, 내 사업에 바로 써보세요` / ResourceCard 4개 (§4 슬러그 순, Badge `영상에서 소개` + 잠금 아이콘). **이 섹션에 EmailGate 없음** |
 | 02 / 이렇게 달라집니다 | BeforeAfter(캡션 `만들기 전` / `기준을 준 뒤`) / 캡션 `같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.` / 이미지는 `public/img/before.png`, `after.png` |
-| 03 / 클래스 | 제목 `직접 만들어봤다면, 이제 기준을 배워보세요` / ProductCard ×3 (§3.5, CTA 모두 primary) |
-| 04 / 만든 사람 | 프로필(1:1 정사각, `--surface-raised`) + `직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어`(Bold 20px) / `컴퓨터소프트웨어공학 석사` / `비전공자 대상 풀스택 개발 부트캠프 강사` / 소형 `유튜브 노디 AI 운영` |
+| 03 / 클래스 | 제목 `직접 만들어봤다면, 이제 기준을 배워보세요` / ProductCard ×3 (§3.5, VOD primary · 워크숍·서비스 secondary) |
+| 04 / 만든 사람 | 프로필(4:5, `--surface-raised`) + `직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어`(Bold 20px) / `컴퓨터소프트웨어공학 석사` / `비전공자 대상 풀스택 개발 부트캠프 강사` / 소형 `유튜브 노디 AI 운영` |
 | 최종 CTA(중앙) | `무료 자료로 먼저 직접 만들어보세요` + EmailGate(제목 `한 번 등록하면 모든 자료가 열립니다`, 버튼 `받기`, extraField=§5.2) |
 
 ### 3.2 `/free/[slug]` 자료 상세
-- 정적 경로: `generateStaticParams`로 `content/resources/*` 슬러그 전부.
+- 정적 경로: `generateStaticParams`로 API(또는 로컬 MDX) 슬러그 전부.
 - 상단: 라벨(frontmatter `series`), h1(frontmatter `title`), 서브(frontmatter `summary`), 우측 VideoCard(frontmatter `youtube`).
-- 목차: MDX `##` 헤딩을 파싱해 번호 리스트로 자동 생성.
+- 목차: 본문 `##` 헤딩을 파싱해 번호 리스트로 자동 생성.
 - 본문 게이트: frontmatter `freeParts: 1` 만큼(기본 Part 00 하나) 공개, 이후는 잠금.
   - 잠금(쿠키 없음): 공개 파트 → **EmailGate**(제목 `이메일을 남기면 지금 바로 열립니다`, 서브 `같은 주소로 다음 자료도 보내드립니다`, 버튼 `열기`) → 나머지 파트를 blur 6px + 오버레이로 렌더(텍스트는 DOM에 넣지 않는다. 스켈레톤 블록만. 크롤·복사 방지).
   - 열림(쿠키 유효): 게이트 자리에 체크 아이콘 + `메일로도 보냈습니다` → 본문 전체.
@@ -181,11 +181,11 @@ export const products = {
   workshop: { label: '워크숍 · 준비 중', title: '라이브 첨삭',
               summary: '직접 만든 결과물을 가져오면 화면을 보며 함께 고칩니다',
               rows: [['누구에게','VOD 수료 후 실제 프로젝트가 있는 분'],['남는 것','고친 결과물 + 기준표'],['가격','추후 안내']],
-              cta: { label: '알림 받기', href: '/course', variant: 'primary' } },
+              cta: { label: '알림 받기', href: '/course', variant: 'secondary' } },
   service:  { label: '서비스', title: 'AI 결과물 마무리',
               summary: 'AI로 만든 초안을, 내놓을 수 있는 결과물로 마무리합니다',
               rows: [['누구에게','직접 해보다 한계를 느낀 분'],['남는 것','내놓을 수 있는 완성본'],['가격','300만원부터']],
-              cta: { label: '프로젝트 검토 요청하기', href: '/service', variant: 'primary' } },
+              cta: { label: '프로젝트 검토 요청하기', href: '/service', variant: 'secondary' } },
 } as const;
 ```
 
@@ -201,7 +201,9 @@ export const products = {
 
 ---
 
-## 4. 콘텐츠 (`content/resources`)
+## 4. 콘텐츠 (DynamoDB `nodi-class-resources` + MDX 시드)
+
+**런타임 소스 of truth는 DynamoDB.** `content/resources/*/index.mdx`는 시드·로컬 폴백용.
 
 ```
 content/resources/
@@ -213,7 +215,14 @@ content/resources/
 └── ai-design-5-principles/
 ```
 
-frontmatter:
+API:
+- `GET /resources` — published 목록 (body 제외)
+- `GET /resources/{slug}` — 단건 (published만)
+- `PUT /resources/{slug}` — upsert (`x-admin-key` = SSM `/nodi-class/ADMIN_API_KEY`)
+
+시드: `API_URL=… ADMIN_API_KEY=… pnpm seed:resources`
+
+frontmatter (시드 입력):
 ```yaml
 ---
 slug: claude-ppt-guidebook
@@ -232,12 +241,15 @@ downloads:            # 선택. 있으면 열림 상태에서 presigned 링크 �
 - 본문은 `## Part 00. 먼저 알아두기` 형식의 `##` 헤딩으로 파트를 나눈다. 목차와 게이트 분리는 이 헤딩 기준.
 - 기존 노션 페이지 2개를 MDX로 옮긴다: `cascades-studio.notion.site/PPT-3d540dc0dcc08009bc18cce26662df57`, `.../3cf40dc0dcc080db9593fb7631b44953`. 나머지 2개 슬러그는 frontmatter만 만들고 본문은 `준비 중` (카드는 노출하되 클릭 시 `/free/[slug]`에서 알림 게이트만).
 - 코드블록(프롬프트)은 복사 버튼 있는 컴포넌트로 렌더.
+- 웹은 `NEXT_PUBLIC_API_URL`이 있으면 API를 읽고, 없으면(로컬) MDX 폴백.
 
 ---
 
 ## 5. 데이터 모델 (DynamoDB, 온디맨드)
 
-### 5.1 `nodi-subscribers`
+테이블 이름 prefix: `nodi-class-` (예: `nodi-class-subscribers`).
+
+### 5.1 `nodi-class-subscribers`
 | 속성 | 타입 | 설명 |
 |---|---|---|
 | `pk` | S | `EMAIL#<lowercased email>` |
@@ -262,7 +274,7 @@ GSI `gsi1` (`gsi1pk`, `gsi1sk`) — 발송 대상 조회용.
 `landing`(랜딩페이지) · `brand`(브랜드·로고) · `ppt`(PPT) · `app`(서비스·앱) · `none`(아직 없음)
 필드는 **이 하나만**. 이름·전화·업종은 받지 않는다.
 
-### 5.3 `nodi-inquiries`
+### 5.3 `nodi-class-inquiries`
 | 속성 | 타입 |
 |---|---|
 | `pk` | `INQ#<ulid>` |
@@ -270,10 +282,23 @@ GSI `gsi1` (`gsi1pk`, `gsi1sk`) — 발송 대상 조회용.
 | `name`, `email`, `resultUrl`, `blocked`(막힌 지점), `status`(`new`\|`replied`\|`closed`), `createdAt`, `ip`, `ua` | |
 | `gsi1pk` = `STATUS#new`, `gsi1sk` = `createdAt` | |
 
-### 5.4 `nodi-events` (경량 로그, TTL 90일)
+### 5.4 `nodi-class-events` (경량 로그, TTL 90일)
 `pk` = `EMAILHASH#<sha256>`, `sk` = `<ts>#<event>` — `subscribe.requested`, `subscribe.confirmed`, `gate.opened(slug)`, `mail.sent(template)`, `unsubscribe`. 대시보드 없음. 전환율은 이 테이블을 스크립트로 집계(§10).
 
-### 5.5 zod 스키마 (`packages/shared/src/schemas.ts`)
+### 5.5 `nodi-class-resources` (무료 자료)
+| 속성 | 타입 | 설명 |
+|---|---|---|
+| `pk` | S | `RESOURCE#<slug>` |
+| `sk` | S | `META` |
+| `slug`, `title`, `series`, `summary`, `youtube?`, `freeParts`, `publishedAt`, `body`, `downloads?` | | |
+| `status` | S | `published` \| `draft` |
+| `gsi1pk` | S | `STATUS#<status>` |
+| `gsi1sk` | S | `publishedAt` |
+| `createdAt`, `updatedAt` | S | |
+
+GSI `gsi1` — published 목록 조회.
+
+### 5.6 zod 스키마 (`packages/shared/src/schemas.ts`)
 ```ts
 export const SubscribeInput = z.object({
   email: z.string().email().max(254).transform(s => s.trim().toLowerCase()),
@@ -292,6 +317,18 @@ export const InquiryInput = z.object({
   consent: z.literal(true),
   website: z.string().max(0).optional(),
   turnstile: z.string().min(10),
+});
+export const ResourceUpsertInput = z.object({
+  slug: z.string().regex(/^[a-z0-9-]{3,64}$/),
+  title: z.string().min(1).max(200),
+  series: z.string().min(1).max(120),
+  summary: z.string().min(1).max(1000),
+  youtube: z.string().url().max(2048).optional(),
+  freeParts: z.number().int().min(0).max(50).default(1),
+  publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  body: z.string().max(200_000),
+  downloads: z.array(z.object({ label: z.string(), key: z.string() })).max(20).optional(),
+  status: z.enum(['published', 'draft']).default('published'),
 });
 ```
 
@@ -364,25 +401,25 @@ Base: `https://api.<NODI_DOMAIN>` (커스텀 도메인, ACM 인증서 us-east-1 
 
 ## 9. 인프라 (`infra/`, CDK v2)
 
-### 9.1 스택 구성 (환경 `dev` / `prod`, 컨텍스트 `-c env=prod`)
+### 9.1 단일 스택 (`stackName: nodi-class`)
 ```
-NodiDataStack        DynamoDB ×3 (PITR on prod), 삭제 보호 prod
-NodiMailStack        SES 도메인 identity(mail.<domain>), DKIM·SPF·DMARC Route53 레코드,
-                     configuration set, SNS 토픽(bounce/complaint)
-NodiApiStack         Lambda ×5 (NodejsFunction, Node22, arm64, 256MB, 10s),
-                     HTTP API + 라우트 + 스로틀, 커스텀 도메인 api.<domain>, ACM,
-                     IAM 최소 권한(테이블·SES SendEmail·SSM GetParameter만)
-NodiWebStack         (Step 1은 비어 있음 — 호스팅은 Amplify 콘솔로) TODO §11
+NodiClassStack (nodi-class)
+  DynamoDB ×4 (subscribers / inquiries / events / resources), PITR, RETAIN
+  SES mail.<domain> + DKIM·SPF·DMARC, configuration set, SNS bounce/complaint
+  Lambda ×8 (subscribe/confirm/inquiry/unsubscribe/ses-events/resources-list|get|put)
+  HTTP API + 스로틀, 선택적 커스텀 도메인 api.<domain>
 ```
-- Route53 호스티드 존은 **CDK 밖에서 이미 존재**한다고 가정하고 `fromLookup`.
-- 비밀: `/nodi/<env>/GATE_SECRET`, `/nodi/<env>/TURNSTILE_SECRET` — SSM SecureString, 콘솔에서 수동 생성. CDK는 참조만.
-- 출력: API URL, 테이블 이름 → `apps/web/.env.local`에 손으로 옮긴다 (자동화 TODO).
+- AWS 리소스 이름 prefix: `nodi-class-` (테이블·Lambda·API·SNS 등).
+- Route53 호스티드 존은 **CDK 밖에서 이미 존재**한다고 가정 (`fromLookup` 또는 `-c hostedZoneId=`).
+- 비밀: `/nodi-class/GATE_SECRET`, `/nodi-class/TURNSTILE_SECRET`, `/nodi-class/ADMIN_API_KEY` — SSM SecureString, 콘솔에서 수동 생성. CDK는 참조만.
+- 출력: `ApiUrl`, 테이블 이름 → Amplify / `.env.local`에 손으로 옮긴다.
+- 웹 호스팅은 Amplify(스택에 웹 리소스 없음).
 
 ### 9.2 호스팅 (Step 1)
 Amplify Hosting을 콘솔에서 GitHub 연결로 세팅한다 (모노레포 설정: appRoot `apps/web`, 빌드 `pnpm install --frozen-lockfile && pnpm --filter @nodi/web build`). 환경 변수는 §10. 커스텀 도메인 `<NODI_DOMAIN>` + `www` 리다이렉트. CDK로 옮기는 건 TODO.
 
 ### 9.3 비용 가드
-DynamoDB 온디맨드, Lambda arm64, CloudWatch 로그 보존 14일(dev) / 90일(prod). 예산 알람 월 $10.
+DynamoDB 온디맨드, Lambda arm64, CloudWatch 로그 보존 90일. 예산 알람 월 $10.
 
 ---
 
@@ -405,7 +442,6 @@ BIZ_EMAIL=contact@cascades.studio
 
 # infra (cdk.context 또는 -c)
 NODI_DOMAIN=
-NODI_ENV=dev
 NOTIFY_EMAIL=contact@cascades.studio
 ```
 사업자 정보는 **비어 있어도 빌드가 되어야** 하고, 비어 있으면 푸터에 `[ ]`가 아니라 해당 줄을 렌더하지 않는다.
@@ -420,7 +456,7 @@ NOTIFY_EMAIL=contact@cascades.studio
 - [ ] SES: `mail.<domain>` identity 생성 → **Production access 신청** (오늘)
 - [ ] Route53 호스티드 존 존재 확인
 - [ ] Cloudflare Turnstile 사이트 생성 → 키 2개
-- [ ] SSM에 `GATE_SECRET`(openssl rand -base64 48), `TURNSTILE_SECRET` 저장
+- [ ] SSM에 `/nodi-class/GATE_SECRET`(openssl rand -base64 48), `/nodi-class/TURNSTILE_SECRET`, `/nodi-class/ADMIN_API_KEY` 저장
 - [ ] Pretendard Regular/Bold woff2 확보
 - [ ] before/after 이미지, 프로필 이미지, 자료 썸네일 4장
 
@@ -448,13 +484,13 @@ NOTIFY_EMAIL=contact@cascades.studio
 - DoD: `pnpm build` 성공, Lighthouse 모바일 성능 90+, 카피가 §3과 글자 단위로 일치 — **Lighthouse는 배포 후 수동**
 
 ### S1-5 infra (data + mail)
-- [x] `NodiDataStack`, `NodiMailStack` 코드 — `cdk deploy -c env=dev`는 **사람/자격증명 필요**
+- [x] `NodiClassStack` (`nodi-class`) 코드 — `cdk deploy -c domain=…`는 **사람/자격증명 필요**
 - DoD: 테이블 3개 존재, SES identity Verified, DKIM 3레코드 Success — **배포 후 확인**
 
 ### S1-6 api
 - [x] 핸들러 5개 + `mail/` 템플릿 4종 + `db/` 리포지토리 + Turnstile 클라이언트
 - [x] 단위 테스트: subscribe(신규/기존active/허니팟/bot), confirm(정상/만료), inquiry, unsubscribe
-- [x] `NodiApiStack` 코드 — 배포·커스텀 도메인은 **사람/자격증명 필요**
+- [x] `NodiClassStack` API 라우트·Lambda — 배포·커스텀 도메인은 **사람/자격증명 필요**
 - DoD: `curl`로 4개 엔드포인트 시나리오 통과, 실메일 2통 — **배포 후 확인**
 
 ### S1-7 web 연결
