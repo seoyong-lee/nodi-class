@@ -15,7 +15,8 @@
     "./tokens/shape.css": "./src/tokens/shape.css",
     "./tokens/motion.css": "./src/tokens/motion.css",
     "./tokens/base.css": "./src/tokens/base.css",
-    "./tokens/styles.css": "./src/tokens/styles.css"
+    "./tokens/styles.css": "./src/tokens/styles.css",
+    "./mdx.css": "./src/mdx.css"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",

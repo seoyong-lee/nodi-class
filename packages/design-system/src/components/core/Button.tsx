@@ -10,6 +10,7 @@ export type ButtonProps = {
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
   disabled?: boolean;
   loading?: boolean;
+  onClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
   children?: ReactNode;
 };
 
@@ -21,6 +22,7 @@ export function Button({
   type = 'button',
   disabled = false,
   loading = false,
+  onClick,
   children,
 }: ButtonProps) {
   const isDisabled = disabled || loading;
@@ -56,6 +58,7 @@ export function Button({
       disabled={isDisabled}
       aria-disabled={isDisabled || undefined}
       aria-busy={loading || undefined}
+      onClick={onClick}
     >
       {content}
     </button>
