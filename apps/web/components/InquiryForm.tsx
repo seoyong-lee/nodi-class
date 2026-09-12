@@ -5,8 +5,9 @@ import { Button, Input } from '@nodi/design-system';
 import { postInquiry } from '../lib/api';
 import { CONSENT_LABEL, FORM_ERROR_LABEL, INQUIRY_DONE_LABEL } from '../lib/copy';
 import { getTurnstileToken } from '../lib/turnstile';
-import * as hp from './honeypot.css';
-import * as styles from './InquiryForm.css';
+
+const honeypotClass =
+  'absolute opacity-0 left-0 top-0 h-px w-px overflow-hidden pointer-events-none';
 
 export function InquiryForm() {
   const [submitted, setSubmitted] = useState(false);
@@ -54,13 +55,18 @@ export function InquiryForm() {
   }
 
   if (submitted) {
-    return <p className={styles.done}>{INQUIRY_DONE_LABEL}</p>;
+    return (
+      <p className="m-0 max-w-[720px] text-strong break-keep">{INQUIRY_DONE_LABEL}</p>
+    );
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form
+      className="max-w-[720px] bg-raised border-hairline rounded p-5 flex flex-col gap-3 break-keep relative"
+      onSubmit={handleSubmit}
+    >
       <input
-        className={hp.honeypot}
+        className={honeypotClass}
         type="text"
         name="website"
         autoComplete="off"
@@ -70,7 +76,7 @@ export function InquiryForm() {
         onChange={(e) => setWebsite(e.target.value)}
       />
       <div ref={turnstileRef} />
-      <div className={styles.row}>
+      <div className="grid grid-cols-2 gap-3 max-[720px]:grid-cols-1">
         <Input
           label="이름"
           name="name"
@@ -103,7 +109,7 @@ export function InquiryForm() {
         value={blocked}
         onChange={(e) => setBlocked(e.target.value)}
       />
-      <label className={styles.consent}>
+      <label className="flex items-center gap-[10px] text-label text-muted [&_input]:w-4 [&_input]:h-4 [&_input]:accent-accent">
         <input
           type="checkbox"
           checked={consent}
@@ -113,16 +119,16 @@ export function InquiryForm() {
         {CONSENT_LABEL}
       </label>
       {error ? (
-        <p className={styles.error} role="alert">
+        <p className="m-0 text-label text-strong break-keep" role="alert">
           {error}
         </p>
       ) : null}
-      <div className={styles.submit}>
+      <div className="self-start max-[720px]:self-stretch max-[720px]:[&_a]:w-full max-[720px]:[&_button]:w-full">
         <Button variant="primary" type="submit" disabled={submitting} loading={submitting}>
           프로젝트 검토 요청하기
         </Button>
       </div>
-      <p className={styles.note}>
+      <p className="m-0 text-label text-muted">
         계약과 세금계산서는 Cascades 명의로 진행합니다.
       </p>
     </form>

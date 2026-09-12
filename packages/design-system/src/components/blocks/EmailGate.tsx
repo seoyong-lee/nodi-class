@@ -3,7 +3,6 @@
 import { useId, useState, type FormEvent } from 'react';
 import { Button } from '../core/Button';
 import { Input } from '../core/Input';
-import * as styles from './EmailGate.css';
 
 export type EmailGateExtraField = {
   name: string;
@@ -46,16 +45,21 @@ export function EmailGate({
   }
 
   return (
-    <section className={styles.root}>
-      <div className={styles.header}>
-        <h3 className={styles.title}>{title}</h3>
-        {description ? <p className={styles.description}>{description}</p> : null}
+    <section className="bg-raised border-hairline rounded p-5 flex flex-col gap-block-tight min-w-0 box-border overflow-hidden">
+      <div className="flex flex-col gap-inline">
+        <h3 className="m-0 text-h3 font-bold text-strong break-keep">{title}</h3>
+        {description ? (
+          <p className="m-0 max-w-measure text-body-sm text-body break-keep">{description}</p>
+        ) : null}
       </div>
       {submitted ? (
-        <p className={styles.submitted}>{submittedLabel}</p>
+        <p className="m-0 text-body-sm text-accent">{submittedLabel}</p>
       ) : (
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <div className={styles.fieldGrow}>
+        <form
+          className="flex flex-wrap gap-inline items-end min-w-0 w-full"
+          onSubmit={handleSubmit}
+        >
+          <div className="flex-[1_1_240px] min-w-0 w-full max-[480px]:flex-[1_1_100%]">
             <Input
               label="이메일"
               type="email"
@@ -67,13 +71,13 @@ export function EmailGate({
             />
           </div>
           {extraField ? (
-            <div className={styles.extra}>
-              <label className={styles.extraLabel} htmlFor={selectId}>
+            <div className="flex flex-col gap-inline-tight flex-[1_1_100%] min-w-0 max-[480px]:w-full">
+              <label className="text-caption text-muted" htmlFor={selectId}>
                 {extraField.label}
               </label>
               <select
                 id={selectId}
-                className={styles.select}
+                className="w-full box-border py-[14px] pl-4 pr-10 bg-field text-strong border border-line rounded font-sans text-body-sm leading-[1.4] outline-none transition-ui focus:border-accent"
                 name={extraField.name}
                 value={extra}
                 onChange={(e) => setExtra(e.target.value)}
@@ -86,14 +90,14 @@ export function EmailGate({
               </select>
             </div>
           ) : null}
-          <div className={styles.submit}>
+          <div className="flex-none max-[480px]:flex-[1_1_100%] max-[480px]:w-full max-[480px]:[&_button]:w-full max-[480px]:[&_a]:w-full">
             <Button variant="primary" type="submit" disabled={submitting} loading={submitting}>
               {buttonLabel}
             </Button>
           </div>
         </form>
       )}
-      <p className={styles.consent}>{consent}</p>
+      <p className="m-0 text-label leading-[1.7] text-muted max-w-measure break-keep">{consent}</p>
     </section>
   );
 }

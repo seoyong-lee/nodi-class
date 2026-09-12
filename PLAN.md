@@ -63,7 +63,7 @@ nodi-class/
 - AWS CDK v2 최신, `aws-cdk-lib` + `constructs`, Lambda 런타임 Node 22, 번들은 `NodejsFunction`(esbuild)
 - AWS SDK v3 (`@aws-sdk/client-dynamodb`, `@aws-sdk/lib-dynamodb`, `@aws-sdk/client-sesv2`)
 - zod, vitest, eslint(flat config), prettier
-- **Tailwind 쓰지 않는다.** 디자인 시스템이 CSS 변수 기반이라 충돌한다. **vanilla-extract** + 토큰 CSS 변수만 쓴다 (`*.css.ts`). CSS Modules·인라인 hex는 쓰지 않는다.
+- **Tailwind** + 디자인 토큰 CSS 변수(`--surface-*`, `--accent` 등)를 쓴다. vanilla-extract·CSS Modules는 쓰지 않는다. 임의의 hex/`rgb(`/`box-shadow`는 컴포넌트에서 금지(토큰·theme만).
 
 ### 1.2 워크스페이스 이름
 - `@nodi/web`, `@nodi/design-system`, `@nodi/shared`, `@nodi/api`, `@nodi/infra`
@@ -485,7 +485,7 @@ NOTIFY_EMAIL=contact@cascades.studio
 ```
 - PLAN.md가 기준이다. 범위 밖 기능은 만들지 말고 PLAN.md §13 TODO에 한 줄 추가한다.
 - 카피는 PLAN.md §3의 문장을 글자 단위로 쓴다. 문구를 '개선'하지 않는다.
-- 색·그림자·폰트: 토큰 변수만. hex 리터럴·box-shadow·Tailwind 금지. 스타일은 vanilla-extract(`*.css.ts`).
+- 색·그림자·폰트: 토큰 CSS 변수 + Tailwind theme만. hex 리터럴·box-shadow 금지. vanilla-extract·CSS Modules 금지.
 - 이메일 원문을 로그·URL·쿠키에 넣지 않는다.
 - Next(apps/web)는 AWS SDK를 import하지 않는다. 데이터 접근은 전부 services/api.
 - 새 npm 의존성은 추가 전에 이유를 커밋 메시지에 쓴다.
@@ -493,10 +493,10 @@ NOTIFY_EMAIL=contact@cascades.studio
 ```
 
 `.cursor/rules/`:
-- `web.mdc` (glob `apps/web/**`): 서버 컴포넌트 기본, 클라이언트는 폼·Turnstile만. vanilla-extract. 이미지는 `next/image`. 한글 `word-break: keep-all`.
+- `web.mdc` (glob `apps/web/**`): 서버 컴포넌트 기본, 클라이언트는 폼·Turnstile만. Tailwind. 이미지는 `next/image`. 한글 `break-keep`.
 - `api.mdc` (glob `services/api/**`): 핸들러 = parse → service → response. 응답 스키마는 shared에서. 콘솔 로그 대신 구조화 로그(JSON). 테스트 필수.
 - `infra.mdc` (glob `infra/**`): 스택 4개 이름 고정. `RemovalPolicy.RETAIN`은 prod 테이블만. 시크릿은 코드에 절대 없음.
-- `design.mdc` (glob `packages/design-system/**`): props는 §2.2 표와 일치. 새 variant 추가 금지. vanilla-extract.
+- `design.mdc` (glob `packages/design-system/**`): props는 §2.2 표와 일치. 새 variant 추가 금지. Tailwind + 토큰.
 
 ---
 

@@ -1,7 +1,6 @@
 import { Badge } from '../core/Badge';
 import { Icon } from '../core/Icon';
 import { Thumb16x9 } from './Thumb16x9';
-import * as styles from './ResourceCard.css';
 
 export type ResourceCardProps = {
   title: string;
@@ -23,20 +22,23 @@ export function ResourceCard({
   const href = `/free/${slug}`;
 
   return (
-    <a className={styles.root} href={href}>
-      <div className={locked ? styles.lockedThumb : undefined}>
+    <a
+      className="flex flex-col gap-inline bg-card border border-line rounded px-3 pt-3 pb-5 transition-ui text-inherit no-underline hover:border-line-strong hover:bg-raised"
+      href={href}
+    >
+      <div className={locked ? 'opacity-[0.55]' : undefined}>
         <Thumb16x9 src={thumbnail} alt="" />
       </div>
-      <div className={styles.body}>
-        <h3 className={styles.title}>{title}</h3>
-        <div className={styles.meta}>
+      <div className="flex flex-col gap-inline px-1">
+        <h3 className="m-0 text-body font-bold text-strong break-keep">{title}</h3>
+        <div className="flex items-center gap-inline-tight flex-wrap">
           {fromVideo ? <Badge>영상에서 소개</Badge> : null}
           {locked ? (
-            <span className={styles.locked}>
+            <span className="inline-flex items-center gap-[6px] text-caption text-muted">
               <Icon name="lock" size={14} />
             </span>
           ) : (
-            <span className={styles.open}>
+            <span className="inline-flex items-center gap-[6px] text-caption font-bold text-link">
               {openLabel}
               <Icon name="arrow-right" size={14} />
             </span>

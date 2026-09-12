@@ -4,8 +4,8 @@ globs: apps/web/**
 ---
 
 - 서버 컴포넌트 기본. 클라이언트는 폼·Turnstile만.
-- vanilla-extract (`*.css.ts`). Tailwind·CSS Modules 금지. 색·폰트는 디자인 토큰 변수만.
+- Tailwind + 디자인 토큰 CSS 변수. vanilla-extract·CSS Modules 금지. hex/`box-shadow` 금지.
 - 이미지는 `next/image`.
-- 한글은 `word-break: keep-all`.
+- 한글은 `break-keep` (word-break: keep-all).
 - AWS SDK를 import하지 않는다. 데이터 접근은 `services/api`.
 - 카피는 PLAN.md §3 문장을 글자 단위로 쓴다.

@@ -1,19 +1,20 @@
-import * as styles from './LockedSkeleton.css';
-
 const WIDTHS = ['100%', '94%', '88%', '72%', '96%', '64%', '90%', '58%'] as const;
 
 export function LockedSkeleton({ partLabels }: { partLabels: string[] }) {
   return (
-    <div className={styles.wrap}>
-      <div className={styles.blur} aria-hidden="true">
+    <div className="relative max-w-[720px]">
+      <div
+        className="flex flex-col gap-5 blur-[6px] opacity-[0.45] pointer-events-none select-none"
+        aria-hidden="true"
+      >
         {partLabels.map((label, partIndex) => (
-          <div key={`${label}-${partIndex}`} className={styles.part}>
-            <span className={styles.label}>{label}</span>
-            <div className={styles.lines}>
+          <div key={`${label}-${partIndex}`} className="flex flex-col gap-2">
+            <span className="text-label tracking-label-en text-muted">{label}</span>
+            <div className="flex flex-col gap-inline">
               {WIDTHS.slice(0, 4 + (partIndex % 3)).map((width, i) => (
                 <div
                   key={i}
-                  className={styles.line}
+                  className="h-3 rounded-badge bg-raised"
                   style={{ width }}
                 />
               ))}
@@ -21,7 +22,7 @@ export function LockedSkeleton({ partLabels }: { partLabels: string[] }) {
           </div>
         ))}
       </div>
-      <div className={styles.overlay} />
+      <div className="absolute inset-0 bg-[color-mix(in_srgb,var(--surface-page)_20%,transparent)]" />
     </div>
   );
 }

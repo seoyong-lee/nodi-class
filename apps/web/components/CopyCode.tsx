@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
-import * as styles from './CopyCode.css';
 
 export function CopyCode({ children }: { children: ReactNode }) {
   const [copied, setCopied] = useState(false);
@@ -21,11 +20,15 @@ export function CopyCode({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className={styles.root}>
-      <button type="button" className={styles.button} onClick={handleCopy}>
+    <div className="relative my-3">
+      <button
+        type="button"
+        className="absolute top-2 right-2 z-[1] appearance-none border-hairline rounded-badge bg-card text-body font-sans text-label px-[10px] py-[6px] cursor-pointer hover:text-strong hover:border-hairline-strong"
+        onClick={handleCopy}
+      >
         {copied ? '복사됨' : '복사'}
       </button>
-      <pre className={styles.pre}>
+      <pre className="m-0 p-3 pt-5 overflow-x-auto bg-raised border-hairline rounded text-body text-body-sm break-keep whitespace-pre-wrap">
         <code>{children}</code>
       </pre>
     </div>

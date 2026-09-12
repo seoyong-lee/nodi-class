@@ -9,9 +9,9 @@ import '@nodi/design-system/tokens/shape.css';
 import '@nodi/design-system/tokens/motion.css';
 import '@nodi/design-system/tokens/base.css';
 import '@nodi/design-system/tokens/styles.css';
+import './globals.css';
 import { SiteHeader } from '../components/SiteHeader';
 import { getBusinessLines, getSocialLinks, getYoutubeUrl } from '../lib/business';
-import * as styles from '../styles/page.css';
 
 export const metadata: Metadata = {
   title: '노디 AI 클래스',
@@ -27,9 +27,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko">
       <body>
-        <div className={styles.shell}>
+        <div className="min-h-dvh flex flex-col">
           <SiteHeader youtubeUrl={youtubeUrl} />
-          <div className={styles.main}>{children}</div>
+          <div className="flex-1">{children}</div>
           <SiteFooter
             operator="Cascades"
             business={business}

@@ -8,11 +8,6 @@
       "types": "./src/index.ts",
       "default": "./src/index.ts"
     },
-    "./styles/vars": {
-      "types": "./src/styles/vars.ts",
-      "import": "./src/styles/vars.ts",
-      "default": "./src/styles/vars.ts"
-    },
     "./tokens/fonts.css": "./src/tokens/fonts.css",
     "./tokens/colors.css": "./src/tokens/colors.css",
     "./tokens/typography.css": "./src/tokens/typography.css",
@@ -33,8 +28,6 @@
     "react-dom": "^19.0.0"
   },
   "dependencies": {
-    "@vanilla-extract/css": "^1.21.2",
-    "@vanilla-extract/recipes": "^0.5.7",
     "lucide-react": "^0.475.0"
   },
   "devDependencies": {

@@ -1,29 +1,28 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import type { ReactNode } from 'react';
 import { CopyCode } from './CopyCode';
-import * as styles from './MdxContent.css';
 
 const components = {
   h2: (props: { children?: ReactNode; id?: string }) => (
-    <h2 className={styles.h2} {...props} />
+    <h2 className="mt-5 mb-3 text-h3 font-bold text-strong" {...props} />
   ),
   h3: (props: { children?: ReactNode }) => (
-    <h3 className={styles.h3} {...props} />
+    <h3 className="mt-3 mb-2 text-body font-bold text-strong" {...props} />
   ),
   p: (props: { children?: ReactNode }) => (
-    <p className={styles.p} {...props} />
+    <p className="m-0 mb-2 max-w-measure" {...props} />
   ),
   ul: (props: { children?: ReactNode }) => (
-    <ul className={styles.ul} {...props} />
+    <ul className="m-0 mb-2 pl-[1.25em] max-w-measure" {...props} />
   ),
   ol: (props: { children?: ReactNode }) => (
-    <ol className={styles.ol} {...props} />
+    <ol className="m-0 mb-2 pl-[1.25em] max-w-measure" {...props} />
   ),
   li: (props: { children?: ReactNode }) => (
-    <li className={styles.li} {...props} />
+    <li className="mb-inline-tight" {...props} />
   ),
   strong: (props: { children?: ReactNode }) => (
-    <strong className={styles.strong} {...props} />
+    <strong className="text-strong font-bold" {...props} />
   ),
   pre: (props: { children?: ReactNode }) => <>{props.children}</>,
   code: (props: { children?: ReactNode; className?: string }) => {
@@ -31,13 +30,17 @@ const components = {
     if (isBlock) {
       return <CopyCode>{props.children}</CopyCode>;
     }
-    return <code className={styles.inlineCode}>{props.children}</code>;
+    return (
+      <code className="font-mono text-[0.92em] bg-raised rounded-badge px-[0.35em] py-[0.1em]">
+        {props.children}
+      </code>
+    );
   },
 };
 
 export function MdxContent({ source }: { source: string }) {
   return (
-    <div className={styles.root}>
+    <div className="break-keep text-body text-body leading-[var(--leading-body)]">
       <MDXRemote source={source} components={components} />
     </div>
   );

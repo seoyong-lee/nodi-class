@@ -10,14 +10,15 @@ import {
   getResource,
   listResourceSlugs,
 } from '../../../lib/resources';
-import * as styles from './free.css';
-import * as pageStyles from '../../../styles/page.css';
 
 export const dynamic = 'force-dynamic';
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+const section = 'max-w-page mx-auto pt-section px-gutter break-keep';
+const sectionLast = `${section} pb-section`;
 
 export function generateStaticParams() {
   return listResourceSlugs().map((slug) => ({ slug }));
@@ -44,12 +45,14 @@ export default async function FreeResourcePage({ params }: Props) {
 
   return (
     <main>
-      <section className={pageStyles.section}>
-        <div className={styles.hero}>
-          <div className={styles.heroCopy}>
-            <span className={pageStyles.eyebrow}>{doc.frontmatter.series}</span>
-            <h1 className={pageStyles.heroTitle}>{doc.frontmatter.title}</h1>
-            <p className={pageStyles.lead}>{doc.frontmatter.summary}</p>
+      <section className={section}>
+        <div className="grid grid-cols-[1fr_minmax(240px,420px)] gap-8 items-start break-keep max-[960px]:grid-cols-1">
+          <div className="flex flex-col gap-3">
+            <span className="text-label text-muted">{doc.frontmatter.series}</span>
+            <h1 className="m-0 font-sans text-hero max-[720px]:text-hero-m font-bold text-strong">
+              {doc.frontmatter.title}
+            </h1>
+            <p className="m-0 max-w-measure text-body">{doc.frontmatter.summary}</p>
           </div>
           {doc.frontmatter.youtube ? (
             <VideoCard
@@ -62,27 +65,32 @@ export default async function FreeResourcePage({ params }: Props) {
       </section>
 
       {!isPlaceholder && doc.parts.length > 0 ? (
-        <section className={pageStyles.section}>
-          <span className={pageStyles.sectionLabel}>목차</span>
-          <ol className={styles.toc}>
+        <section className={section}>
+          <span className="text-label tracking-[var(--tracking-label)] text-muted">
+            목차
+          </span>
+          <ol className="list-none mt-block-tight mb-0 mx-0 p-0 max-w-[720px] border-t border-line">
             {doc.parts.map((part, index) => (
-              <li key={part.id} className={styles.tocItem}>
-                <span className={styles.tocNum}>
+              <li
+                key={part.id}
+                className="flex gap-2 py-3 border-b border-line"
+              >
+                <span className="flex-none w-6 text-caption text-muted">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <span className={styles.tocTitle}>{part.heading}</span>
+                <span className="text-body-sm text-body">{part.heading}</span>
               </li>
             ))}
           </ol>
         </section>
       ) : null}
 
-      <section className={pageStyles.section}>
+      <section className={section}>
         {isPlaceholder ? (
-          <p className={pageStyles.lead}>준비 중</p>
+          <p className="m-0 max-w-measure text-body">준비 중</p>
         ) : (
           openParts.map((part) => (
-            <article key={part.id} className={styles.part} id={part.id}>
+            <article key={part.id} className="max-w-[720px] mb-5" id={part.id}>
               <MdxContent source={`## ${part.heading}\n\n${part.body}`} />
             </article>
           ))
@@ -90,8 +98,8 @@ export default async function FreeResourcePage({ params }: Props) {
       </section>
 
       {!unlocked ? (
-        <section className={pageStyles.section}>
-          <div className={styles.gate}>
+        <section className={section}>
+          <div className="max-w-[640px] mb-5">
             <Suspense fallback={null}>
               <EmailGateForm
                 title="이메일을 남기면 지금 바로 열립니다"
@@ -102,7 +110,7 @@ export default async function FreeResourcePage({ params }: Props) {
             </Suspense>
           </div>
           {lockedParts.length > 0 ? (
-            <div className={styles.locked}>
+            <div className="mt-3">
               <LockedSkeleton
                 partLabels={lockedParts.map((p) => {
                   const m = /^Part\s+(\d+)/i.exec(p.heading);
@@ -113,13 +121,13 @@ export default async function FreeResourcePage({ params }: Props) {
           ) : null}
         </section>
       ) : (
-        <section className={pageStyles.section}>
-          <div className={styles.opened}>
+        <section className={section}>
+          <div className="inline-flex items-center gap-inline-tight text-strong break-keep">
             <Icon name="check" size={18} />
             <span>메일로도 보냈습니다</span>
           </div>
           {downloads && downloads.length > 0 ? (
-            <div className={styles.downloads}>
+            <div className="flex flex-wrap gap-inline my-4 mb-5">
               {downloads.map((d) => (
                 <Button key={d.key} variant="secondary" href="#">
                   {d.label}
@@ -129,7 +137,7 @@ export default async function FreeResourcePage({ params }: Props) {
           ) : null}
           {!isPlaceholder
             ? lockedParts.map((part) => (
-                <article key={part.id} className={styles.part} id={part.id}>
+                <article key={part.id} className="max-w-[720px] mb-5" id={part.id}>
                   <MdxContent source={`## ${part.heading}\n\n${part.body}`} />
                 </article>
               ))
@@ -138,9 +146,11 @@ export default async function FreeResourcePage({ params }: Props) {
       )}
 
       {others.length > 0 ? (
-        <section className={pageStyles.sectionLast}>
-          <span className={pageStyles.sectionLabel}>다른 자료</span>
-          <div className={styles.others}>
+        <section className={sectionLast}>
+          <span className="text-label tracking-[var(--tracking-label)] text-muted">
+            다른 자료
+          </span>
+          <div className="grid grid-cols-2 gap-3 mt-block-tight max-w-[720px] max-[720px]:grid-cols-1">
             {others.map((resource) => (
               <ResourceCard
                 key={resource.frontmatter.slug}

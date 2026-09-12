@@ -1,11 +1,15 @@
-import * as styles from '../../styles/page.css';
+const sectionLast =
+  'max-w-page mx-auto pt-section px-gutter pb-section break-keep';
+const legalTitle = 'm-0 mb-3 text-h2 font-bold text-strong';
+const legalBody =
+  'flex flex-col gap-3 max-w-measure [&_h2]:m-0 [&_h2]:text-h3 [&_h2]:text-strong [&_p]:m-0 [&_p]:text-body [&_li]:m-0 [&_li]:text-body [&_ul]:m-0 [&_ul]:pl-[1.25em]';
 
 export default function TermsPage() {
   return (
     <main>
-      <section className={styles.sectionLast}>
-        <h1 className={styles.legalTitle}>이용약관</h1>
-        <div className={styles.legalBody}>
+      <section className={sectionLast}>
+        <h1 className={legalTitle}>이용약관</h1>
+        <div className={legalBody}>
           <p>
             본 이용약관은 노디 AI 클래스에서 제공하는 무료 자료 열람·이메일 안내
             서비스에 적용됩니다. Step 1 범위의 무료 서비스에 한합니다.

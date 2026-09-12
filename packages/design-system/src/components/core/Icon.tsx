@@ -1,6 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
-import * as styles from './Icon.css';
 
 export type IconProps = {
   name: string;
@@ -23,7 +22,11 @@ export function Icon({ name, size = 16 }: IconProps) {
   }
 
   return (
-    <span className={styles.root} aria-hidden="true" style={{ width: size, height: size }}>
+    <span
+      className="inline-flex items-center justify-center flex-none text-current"
+      aria-hidden="true"
+      style={{ width: size, height: size }}
+    >
       <LucideGlyph size={size} color="currentColor" strokeWidth={2} />
     </span>
   );

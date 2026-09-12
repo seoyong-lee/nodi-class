@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import * as styles from './BeforeAfter.css';
 
 export type BeforeAfterProps = {
   beforeCaption: string;
@@ -10,9 +9,11 @@ export type BeforeAfterProps = {
 
 function Pane({ caption, children }: { caption: string; children: ReactNode }) {
   return (
-    <div className={styles.pane}>
-      <span className={styles.caption}>{caption}</span>
-      <div className={styles.frame}>{children}</div>
+    <div className="flex flex-col gap-inline min-w-0">
+      <span className="text-label tracking-label-en text-muted">{caption}</span>
+      <div className="bg-card border-hairline rounded p-card-pad min-h-[180px] text-body text-body-sm">
+        {children}
+      </div>
     </div>
   );
 }
@@ -24,7 +25,7 @@ export function BeforeAfter({
   after,
 }: BeforeAfterProps) {
   return (
-    <div className={styles.root}>
+    <div className="grid grid-cols-2 gap-block-tight max-[375px]:grid-cols-1">
       <Pane caption={beforeCaption}>{before}</Pane>
       <Pane caption={afterCaption}>{after}</Pane>
     </div>

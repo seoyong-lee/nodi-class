@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import * as styles from './Thumb16x9.css';
 
 export type Thumb16x9Props = {
   src?: string;
@@ -9,9 +8,11 @@ export type Thumb16x9Props = {
 
 export function Thumb16x9({ src, alt = '', children }: Thumb16x9Props) {
   return (
-    <div className={styles.root}>
-      {src ? <img className={styles.image} src={src} alt={alt} /> : (
-        <span className={styles.placeholder}>16:9</span>
+    <div className="relative aspect-video w-full overflow-hidden rounded-[calc(var(--radius)-3px)] bg-raised border-hairline flex items-center justify-center">
+      {src ? (
+        <img className="w-full h-full object-cover block" src={src} alt={alt} />
+      ) : (
+        <span className="text-label tracking-label-en text-disabled">16:9</span>
       )}
       {children}
     </div>

@@ -11,8 +11,6 @@ import {
   GATE_SUBMITTED_LABEL,
 } from '../lib/copy';
 import { getTurnstileToken } from '../lib/turnstile';
-import * as hp from './honeypot.css';
-import * as styles from './EmailGateForm.css';
 
 type Props = {
   title: string;
@@ -24,6 +22,9 @@ type Props = {
 };
 
 type GateOutcome = 'pending' | 'active';
+
+const honeypotClass =
+  'absolute opacity-0 left-0 top-0 h-px w-px overflow-hidden pointer-events-none';
 
 export function EmailGateForm({
   title,
@@ -87,9 +88,9 @@ export function EmailGateForm({
   }
 
   return (
-    <div className={styles.root}>
+    <div className="relative min-w-0">
       <input
-        className={hp.honeypot}
+        className={honeypotClass}
         type="text"
         name="website"
         autoComplete="off"
@@ -113,7 +114,7 @@ export function EmailGateForm({
         extraField={extraField}
       />
       {error && !submitted ? (
-        <p className={styles.error} role="alert">
+        <p className="mt-2 mb-0 text-label text-strong break-keep" role="alert">
           {error}
         </p>
       ) : null}

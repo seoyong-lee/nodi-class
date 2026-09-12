@@ -1,7 +1,4 @@
-import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin';
 import type { NextConfig } from 'next';
-
-const withVanillaExtract = createVanillaExtractPlugin();
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@nodi/design-system', '@nodi/shared'],
@@ -17,4 +14,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withVanillaExtract(nextConfig);
+export default nextConfig;

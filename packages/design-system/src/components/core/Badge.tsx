@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import * as styles from './Badge.css';
+import { cn } from '../../lib/cn';
 
 export type BadgeProps = {
   children?: ReactNode;
@@ -7,9 +7,16 @@ export type BadgeProps = {
 };
 
 export function Badge({ children, tone = 'default' }: BadgeProps) {
-  const className = [styles.root, tone === 'current' ? styles.current : '']
-    .filter(Boolean)
-    .join(' ');
-
-  return <span className={className}>{children}</span>;
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-[6px] px-[9px] py-1 border border-line rounded-badge text-label leading-[1.4] whitespace-nowrap',
+        tone === 'current'
+          ? 'bg-accent-quiet text-accent border-transparent'
+          : 'bg-raised text-muted',
+      )}
+    >
+      {children}
+    </span>
+  );
 }

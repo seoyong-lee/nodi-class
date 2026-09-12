@@ -1,4 +1,4 @@
-import * as styles from './SectionHeading.css';
+import { cn } from '../../lib/cn';
 
 const HANGUL = /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3]/;
 
@@ -16,19 +16,23 @@ export function SectionHeading({
   align = 'left',
 }: SectionHeadingProps) {
   const isKoreanLabel = HANGUL.test(label);
-  const rootClass = [styles.root, align === 'center' ? styles.center : '']
-    .filter(Boolean)
-    .join(' ');
-  const labelClass = [styles.label, isKoreanLabel ? '' : styles.labelEn]
-    .filter(Boolean)
-    .join(' ');
 
   return (
-    <header className={rootClass}>
-      <span className={labelClass}>
+    <header
+      className={cn(
+        'flex flex-col gap-inline items-start text-left',
+        align === 'center' && 'items-center text-center',
+      )}
+    >
+      <span
+        className={cn(
+          'text-label text-muted leading-[1.4] tracking-normal normal-case',
+          !isKoreanLabel && 'tracking-label-en',
+        )}
+      >
         {index} / {label}
       </span>
-      <h2 className={styles.title}>{title}</h2>
+      <h2 className="m-0 text-h2 font-bold text-strong break-keep">{title}</h2>
     </header>
   );
 }

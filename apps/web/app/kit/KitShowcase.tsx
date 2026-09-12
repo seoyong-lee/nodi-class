@@ -15,18 +15,17 @@ import {
   Thumb16x9,
   VideoCard,
 } from '@nodi/design-system';
-import * as styles from './kit.css';
 
 export function KitShowcase() {
   const [submitted, setSubmitted] = useState(false);
 
   return (
-    <main className={styles.page}>
-      <h1 className={styles.heading}>Design System Kit</h1>
+    <main className="max-w-page mx-auto pt-5 px-gutter pb-10 flex flex-col gap-section">
+      <h1 className="m-0 text-h2 font-bold text-strong">Design System Kit</h1>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Button</h2>
-        <div className={styles.row}>
+      <section className="flex flex-col gap-block-tight">
+        <h2 className="m-0 text-h3 font-bold text-strong">Button</h2>
+        <div className="flex flex-wrap gap-inline items-center">
           <Button variant="primary">Primary</Button>
           <Button variant="secondary">Secondary</Button>
           <Button variant="primary" size="sm" icon="arrow-right">
@@ -41,17 +40,17 @@ export function KitShowcase() {
         </div>
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Input</h2>
-        <div className={styles.stack}>
+      <section className="flex flex-col gap-block-tight">
+        <h2 className="m-0 text-h3 font-bold text-strong">Input</h2>
+        <div className="flex flex-col gap-block-tight max-w-[480px]">
           <Input label="이메일" name="email" type="email" placeholder="you@example.com" />
           <Input label="메모" name="memo" multiline placeholder="여러 줄" error="오류 예시" />
         </div>
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Badge · Icon</h2>
-        <div className={styles.row}>
+      <section className="flex flex-col gap-block-tight">
+        <h2 className="m-0 text-h3 font-bold text-strong">Badge · Icon</h2>
+        <div className="flex flex-wrap gap-inline items-center">
           <Badge>default</Badge>
           <Badge tone="current">current</Badge>
           <Icon name="lock" size={20} />
@@ -59,8 +58,8 @@ export function KitShowcase() {
         </div>
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>SectionHeading</h2>
+      <section className="flex flex-col gap-block-tight">
+        <h2 className="m-0 text-h3 font-bold text-strong">SectionHeading</h2>
         <SectionHeading index="01" label="무료 자료" title="영상에서 쓴 자료, 그대로 드립니다" />
         <SectionHeading
           index="02"
@@ -70,8 +69,8 @@ export function KitShowcase() {
         />
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>BeforeAfter</h2>
+      <section className="flex flex-col gap-block-tight">
+        <h2 className="m-0 text-h3 font-bold text-strong">BeforeAfter</h2>
         <BeforeAfter
           beforeCaption="만들기 전"
           afterCaption="기준을 준 뒤"
@@ -80,9 +79,9 @@ export function KitShowcase() {
         />
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>ProductCard</h2>
-        <div className={styles.grid3}>
+      <section className="flex flex-col gap-block-tight">
+        <h2 className="m-0 text-h3 font-bold text-strong">ProductCard</h2>
+        <div className="grid grid-cols-3 gap-block-tight max-[800px]:grid-cols-1">
           <ProductCard
             label="VOD · 준비 중"
             title="클로드 디자인 실전 가이드"
@@ -123,18 +122,18 @@ export function KitShowcase() {
         </div>
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>ResourceCard · Thumb16x9</h2>
-        <div className={styles.grid2}>
+      <section className="flex flex-col gap-block-tight">
+        <h2 className="m-0 text-h3 font-bold text-strong">ResourceCard · Thumb16x9</h2>
+        <div className="grid grid-cols-2 gap-block-tight max-[800px]:grid-cols-1">
           <ResourceCard title="클로드 디자인 가이드" slug="claude-design" locked />
           <ResourceCard title="프롬프트 체크리스트" slug="prompt-checklist" locked={false} />
           <Thumb16x9 />
         </div>
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>VideoCard</h2>
-        <div className={styles.grid2}>
+      <section className="flex flex-col gap-block-tight">
+        <h2 className="m-0 text-h3 font-bold text-strong">VideoCard</h2>
+        <div className="grid grid-cols-2 gap-block-tight max-[800px]:grid-cols-1">
           <VideoCard
             title="코딩 몰라도 AI로 만드는 법"
             note="클릭하면 영상이 로드됩니다"
@@ -143,8 +142,8 @@ export function KitShowcase() {
         </div>
       </section>
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>EmailGate</h2>
+      <section className="flex flex-col gap-block-tight">
+        <h2 className="m-0 text-h3 font-bold text-strong">EmailGate</h2>
         <EmailGate
           title="한 번 등록하면 모든 자료가 열립니다"
           description="영상에서 쓴 파일과 체크리스트를 한 번에 보내드립니다."

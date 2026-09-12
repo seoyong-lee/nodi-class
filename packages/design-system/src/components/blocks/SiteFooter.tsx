@@ -1,5 +1,4 @@
 import { Icon } from '../core/Icon';
-import * as styles from './SiteFooter.css';
 
 export type SiteFooterLink = {
   label: string;
@@ -28,33 +27,33 @@ export function SiteFooter({
   const year = new Date().getFullYear();
 
   return (
-    <footer className={styles.root}>
-      <div className={styles.inner}>
-        <div className={styles.businessBlock}>
-          <span className={styles.operator}>{operator}</span>
-          <ul className={styles.businessList}>
+    <footer className="border-t border-line pt-6 pb-8">
+      <div className="max-w-page mx-auto px-gutter flex flex-wrap gap-block justify-between">
+        <div className="flex flex-col gap-inline min-w-0">
+          <span className="text-body-sm font-bold text-strong">{operator}</span>
+          <ul className="list-none m-0 p-0 flex flex-col gap-1">
             {business.map((line) => (
-              <li key={line} className={styles.businessItem}>
+              <li key={line} className="text-label leading-[1.8] text-muted">
                 {line}
               </li>
             ))}
           </ul>
         </div>
-        <div className={styles.aside}>
-          <ul className={styles.links}>
+        <div className="flex flex-col gap-block-tight items-start">
+          <ul className="list-none m-0 p-0 flex gap-block-tight flex-wrap">
             {links.map((link) => (
               <li key={link.label}>
-                <a className={styles.link} href={link.href}>
+                <a className="text-caption text-body" href={link.href}>
                   {link.label}
                 </a>
               </li>
             ))}
           </ul>
-          <ul className={styles.social}>
+          <ul className="list-none m-0 p-0 flex gap-inline flex-wrap">
             {socialLinks.map((link) => (
               <li key={link.label}>
                 <a
-                  className={styles.socialLink}
+                  className="inline-flex items-center gap-[6px] text-caption text-body"
                   href={link.href}
                   target="_blank"
                   rel="noreferrer"
@@ -65,7 +64,7 @@ export function SiteFooter({
               </li>
             ))}
           </ul>
-          <span className={styles.copy}>
+          <span className="text-label text-disabled">
             © {year} {operator}
           </span>
         </div>

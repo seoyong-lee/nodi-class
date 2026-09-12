@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .break-keep {
+    word-break: keep-all;
+  }
+
+  .transition-ui {
+    transition: var(--transition-ui);
+  }
+
+  .border-hairline {
+    border: var(--border-hairline);
+  }
+
+  .border-hairline-strong {
+    border: var(--border-hairline-strong);
+  }
+
+  .tracking-label-en {
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+}

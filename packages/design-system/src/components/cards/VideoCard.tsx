@@ -3,7 +3,6 @@
 import { useMemo, useState } from 'react';
 import { Icon } from '../core/Icon';
 import { Thumb16x9 } from './Thumb16x9';
-import * as styles from './VideoCard.css';
 
 export type VideoCardProps = {
   title: string;
@@ -39,11 +38,11 @@ export function VideoCard({ title, note, href, thumbnail }: VideoCardProps) {
   const embed = useMemo(() => youtubeEmbedUrl(href), [href]);
 
   return (
-    <article className={styles.root}>
+    <article className="group flex flex-col gap-inline bg-card border border-line rounded px-3 pt-3 pb-5 text-inherit transition-ui hover:border-line-strong">
       {playing && embed ? (
         <Thumb16x9>
           <iframe
-            className={styles.iframe}
+            className="absolute inset-0 w-full h-full border-0"
             src={embed}
             title={title}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -53,7 +52,7 @@ export function VideoCard({ title, note, href, thumbnail }: VideoCardProps) {
       ) : (
         <button
           type="button"
-          className={styles.trigger}
+          className="contents cursor-pointer bg-transparent border-0 p-0 text-inherit font-inherit text-left"
           onClick={() => {
             if (embed) {
               setPlaying(true);
@@ -63,15 +62,20 @@ export function VideoCard({ title, note, href, thumbnail }: VideoCardProps) {
           }}
         >
           <Thumb16x9 src={thumbnail} alt="">
-            <span className={styles.play} aria-hidden="true">
+            <span
+              className="absolute left-3 bottom-3 inline-flex items-center justify-center w-8 h-8 border-0 rounded-badge bg-[color-mix(in_srgb,var(--text-on-accent)_72%,transparent)] text-strong cursor-pointer p-0"
+              aria-hidden="true"
+            >
               <Icon name="play" size={14} />
             </span>
           </Thumb16x9>
         </button>
       )}
-      <div className={styles.body}>
-        <h3 className={styles.title}>{title}</h3>
-        {note ? <span className={styles.note}>{note}</span> : null}
+      <div className="flex flex-col gap-[6px] px-1">
+        <h3 className="m-0 text-body font-bold text-strong break-keep transition-ui group-hover:text-link">
+          {title}
+        </h3>
+        {note ? <span className="text-caption text-muted">{note}</span> : null}
       </div>
     </article>
   );
