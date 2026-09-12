@@ -89,7 +89,8 @@ export const extraLabel = style({
 export const select = style({
   width: '100%',
   boxSizing: 'border-box',
-  padding: '14px 16px',
+  // Extra right padding so the native chevron is not flush with the edge.
+  padding: '14px 40px 14px 16px',
   background: vars.surface.field,
   color: vars.text.strong,
   border: `1px solid ${vars.border.subtle}`,
