@@ -12,12 +12,12 @@ Step 1 code is ready. The items below need a human (AWS / Amplify / YouTube).
 ## CDK (single stack `nodi-class`)
 ```bash
 pnpm infra:deploy -- -c domain=<NODI_DOMAIN>
-# or skip Route53 lookup:
-pnpm --filter @nodi/infra exec cdk deploy \
-  -c domain=<NODI_DOMAIN> -c hostedZoneId=<ZONE_ID>
+# equivalent:
+NODI_DOMAIN=<NODI_DOMAIN> pnpm infra:deploy
+# skip Route53 lookup:
+pnpm infra:deploy -- -c domain=<NODI_DOMAIN> -c hostedZoneId=<ZONE_ID>
 # custom API domain api.<domain>:
-pnpm --filter @nodi/infra exec cdk deploy \
-  -c domain=<NODI_DOMAIN> -c hostedZoneId=<ZONE_ID> -c enableCustomDomain=true
+pnpm infra:deploy -- -c domain=<NODI_DOMAIN> -c hostedZoneId=<ZONE_ID> -c enableCustomDomain=true
 ```
 
 Copy stack outputs into Amplify / `.env.local`:

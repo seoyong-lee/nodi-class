@@ -1,10 +1,10 @@
 # claude-ppt-guidebook — content notes
 
-## 1. Missing image files (human must download)
+## 1. Image files
 
-Place into `apps/web/public/img/resources/claude-ppt-guidebook/`:
+Checked into `apps/web/public/img/resources/claude-ppt-guidebook/` (from Notion):
 
-- `cover.png`
+- `cover-book1.png` (Notion cover; site card uses `/img/book-ppt.png`)
 - `part03-first.png`
 - `part03-fixed.png`
 - `part03-applied.png`
@@ -13,7 +13,7 @@ Place into `apps/web/public/img/resources/claude-ppt-guidebook/`:
 - `part07-chart.png`
 - `part08-compare.png`
 
-Source Notion page images (8 attachments including cover) live on:
+Source:
 
 https://cascades-studio.notion.site/PPT-3d540dc0dcc08009bc18cce26662df57
 
@@ -25,7 +25,7 @@ https://cascades-studio.notion.site/PPT-3d540dc0dcc08009bc18cce26662df57
 
 ```
 클로드 PPT 실전 가이드북 (프롬프트 7종 포함) — 강의 출시 전까지 무료, 지금 받아두면 그 뒤에도 계속 열립니다
-https://<site>/free/claude-ppt-guidebook?src=yt-ppt
+https://<site>/free/claude-ppt-guidebook?utm_source=youtube&utm_medium=pinned_comment&utm_campaign=claude-ppt-guidebook&utm_content=<video-id>
 ```
 
 ## 4. Source quirks preserved (not fixed)

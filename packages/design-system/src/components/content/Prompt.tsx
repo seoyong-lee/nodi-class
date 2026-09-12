@@ -106,7 +106,7 @@ export function Prompt({
       <pre
         ref={preRef}
         className={cn(
-          'm-0 p-4 bg-field font-sans text-[14px] leading-[1.6] text-body whitespace-pre-wrap overflow-y-auto rounded',
+          'nodi-prompt-scroll m-0 p-4 bg-field font-sans text-[14px] leading-[1.6] text-body whitespace-pre-wrap overflow-y-auto rounded',
           expanded ? 'max-h-none' : 'max-h-[480px] max-[720px]:max-h-[360px]',
         )}
       >

@@ -87,3 +87,26 @@
     transition: none;
   }
 }
+
+/* Prompt body scrollbar — match dark field surface (no system chrome). */
+.nodi-prompt-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--nd-600) transparent;
+}
+
+.nodi-prompt-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.nodi-prompt-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nodi-prompt-scroll::-webkit-scrollbar-thumb {
+  background: var(--nd-600);
+  border-radius: var(--radius-badge);
+}
+
+.nodi-prompt-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--nd-300);
+}

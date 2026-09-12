@@ -85,7 +85,7 @@ nodi-class/
   "test": "pnpm -r test",
   "typecheck": "pnpm -r typecheck",
   "infra:diff": "pnpm --filter @nodi/infra cdk diff",
-  "infra:deploy": "pnpm --filter @nodi/infra cdk deploy --all",
+  "infra:deploy": "bash scripts/cdk.sh deploy --all",
   "infra:destroy": "pnpm --filter @nodi/infra cdk destroy --all"
 }
 ```

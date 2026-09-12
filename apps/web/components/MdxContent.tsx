@@ -10,17 +10,10 @@ import { ResourceMdxImage } from './ResourceMdxImage';
 function baseComponents(resourceSlug?: string) {
   return {
     h2: (props: { children?: ReactNode; id?: string }) => (
-      <h2
-        className="mt-5 mb-3 scroll-mt-24 text-h3 font-bold text-strong"
-        {...props}
-      />
+      <h2 className="mt-5 mb-3 scroll-mt-24 text-h3 font-bold text-strong" {...props} />
     ),
-    ul: (props: { children?: ReactNode }) => (
-      <ul className="list-disc" {...props} />
-    ),
-    ol: (props: { children?: ReactNode }) => (
-      <ol className="list-decimal" {...props} />
-    ),
+    ul: (props: { children?: ReactNode }) => <ul className="list-disc" {...props} />,
+    ol: (props: { children?: ReactNode }) => <ol className="list-decimal" {...props} />,
     Callout,
     Prompt: (props: ComponentProps<typeof Prompt>) =>
       resourceSlug ? (
@@ -31,8 +24,7 @@ function baseComponents(resourceSlug?: string) {
     img: ResourceMdxImage,
     pre: (props: { children?: ReactNode }) => <>{props.children}</>,
     code: (props: { children?: ReactNode; className?: string }) => {
-      const isBlock =
-        Boolean(props.className) || String(props.children).includes('\n');
+      const isBlock = Boolean(props.className) || String(props.children).includes('\n');
       if (isBlock) {
         return <CopyCode>{props.children}</CopyCode>;
       }
@@ -46,15 +38,9 @@ function baseComponents(resourceSlug?: string) {
   };
 }
 
-export function MdxContent({
-  source,
-  resourceSlug,
-}: {
-  source: string;
-  resourceSlug?: string;
-}) {
+export function MdxContent({ source, resourceSlug }: { source: string; resourceSlug?: string }) {
   return (
-    <div className="nodi-mdx break-keep text-body leading-[var(--leading-body)]">
+    <div className="nodi-mdx break-keep text-body leading-[var(--leading-body)] ">
       <MDXRemote
         source={source}
         components={baseComponents(resourceSlug)}

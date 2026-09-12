@@ -14,13 +14,12 @@
   margin-top: 40px;
   margin-bottom: 12px;
   color: var(--text-strong);
-  line-height: var(--leading-heading);
+  line-height: var(--leading-tight, 1.35);
 }
 
 .nodi-mdx p {
   font-size: 16px;
   line-height: 1.7;
-  max-width: var(--measure);
   color: var(--text-body);
   margin: 0 0 16px;
 }
@@ -29,7 +28,6 @@
 .nodi-mdx ol {
   margin: 0 0 16px;
   padding-left: 1.5em;
-  max-width: var(--measure);
   color: var(--text-body);
   font-size: 16px;
   line-height: 1.7;
