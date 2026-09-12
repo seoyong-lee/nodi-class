@@ -124,7 +124,7 @@ export default function HomePage() {
         <span className="text-label tracking-[var(--tracking-label)] text-muted">04 / 노디</span>
         <div className="h-block-tight" />
         <div className="flex gap-10 items-start max-[960px]:flex-col max-[960px]:gap-6">
-          <div className="flex-none w-[240px] aspect-[1/1] rounded-full overflow-hidden bg-raised border-hairline relative isolate max-[960px]:w-full max-[960px]:max-w-[240px]">
+          <div className="flex-none w-[240px] aspect-[1/1] rounded-full overflow-hidden bg-raised border-hairline relative isolate max-[960px]:w-full max-[960px]:max-w-[240px] max-[960px]:mx-auto">
             <Image
               className="object-cover object-center rounded"
               src="/img/profile.png"
