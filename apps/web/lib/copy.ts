@@ -17,6 +17,11 @@ export const GATE_SUBMITTED_LABEL = '열렸습니다. 메일로도 보냈습니�
 /** Unlocked cookie state under the gate slot. */
 export const GATE_ACTIVE_LABEL = '메일로도 보냈습니다';
 
+export const GATE_ACTIVE_RESUBSCRIBE_LABEL =
+  '이미 등록된 주소입니다. 메일로 링크를 다시 보냈습니다.';
+
+export const GATE_NOT_REGISTERED_LABEL = '등록된 주소가 아닙니다';
+
 export const FORM_ERROR_LABEL = '잠시 후 다시 시도해 주세요.';
 
 export const INQUIRY_DONE_LABEL =

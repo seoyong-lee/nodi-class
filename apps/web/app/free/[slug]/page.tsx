@@ -16,7 +16,6 @@ import Image from 'next/image';
 import { EmailGateForm } from '../../../components/EmailGateForm';
 import { LockedParts } from '../../../components/LockedParts';
 import { MdxContent } from '../../../components/MdxContent';
-import { PaidGateStub } from '../../../components/PaidGateStub';
 import { hasValidAccessCookie } from '../../../lib/access';
 import { BUILDING_EXTRA_FIELD } from '../../../lib/building';
 import { GATE_ACTIVE_LABEL } from '../../../lib/copy';
@@ -242,7 +241,24 @@ export default async function FreeResourcePage({ params }: Props) {
         <section className={section}>
           <div className={`${bodyCol} flex flex-col gap-block`}>
             {access === 'paid' ? (
-              <PaidGateStub />
+              <div id="gate" className="scroll-mt-24">
+                <Suspense fallback={null}>
+                  <EmailGateForm
+                    title="이 자료는 「클로드 디자인 실전」 교재가 되었습니다"
+                    description="이전에 등록한 이메일이면 그대로 열립니다. 새로 보시려면 강의에서 볼 수 있습니다."
+                    buttonLabel="등록한 이메일로 열기"
+                    buttonVariant="secondary"
+                    intent="reopen"
+                    slug={slug}
+                    layout="stack"
+                    footer={
+                      <Button variant="primary" href="/course">
+                        강의 보기
+                      </Button>
+                    }
+                  />
+                </Suspense>
+              </div>
             ) : (
               <>
                 <div id="gate" className="scroll-mt-24">

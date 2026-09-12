@@ -1,14 +1,26 @@
 import { z } from 'zod';
 
-export const SubscribeInput = z.object({
-  email: z.string().email().max(254).transform((s) => s.trim().toLowerCase()),
-  slug: z.string().regex(/^[a-z0-9-]{3,64}$/),
-  source: z.string().regex(/^[a-z0-9-]{0,64}$/).optional(),
-  building: z.enum(['landing', 'brand', 'ppt', 'app', 'none']).optional(),
-  consent: z.literal(true),
-  website: z.string().max(0).optional(),
-  turnstile: z.string().min(10),
-});
+export const SubscribeInput = z
+  .object({
+    email: z.string().email().max(254).transform((s) => s.trim().toLowerCase()),
+    slug: z.string().regex(/^[a-z0-9-]{3,64}$/),
+    source: z.string().regex(/^[a-z0-9-]{0,64}$/).optional(),
+    building: z.enum(['landing', 'brand', 'ppt', 'app', 'none']).optional(),
+    consent: z.literal(true).optional(),
+    /** `reopen` = existing subscriber only (paid textbook gate). */
+    intent: z.enum(['subscribe', 'reopen']).default('subscribe'),
+    website: z.string().max(0).optional(),
+    turnstile: z.string().min(10),
+  })
+  .superRefine((data, ctx) => {
+    if (data.intent !== 'reopen' && data.consent !== true) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['consent'],
+        message: 'required',
+      });
+    }
+  });
 
 export const InquiryInput = z.object({
   name: z.string().min(1).max(40),

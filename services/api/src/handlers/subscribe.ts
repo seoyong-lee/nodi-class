@@ -5,7 +5,10 @@ import {
   createGateToken,
   COURSE_WAITLIST_SLUG,
 } from '@nodi/shared';
-import { upsertSubscriber } from '../db/subscribers.js';
+import {
+  getSubscriber,
+  upsertSubscriber,
+} from '../db/subscribers.js';
 import { putEvent } from '../db/events.js';
 import { getEnv } from '../lib/env.js';
 import { emailHashField, log } from '../lib/log.js';
@@ -75,7 +78,44 @@ export async function handler(
       return forbidden({ error: 'bot' });
     }
 
-    const { email, slug, source, building } = parsed.data;
+    const { email, slug, source, building, intent } = parsed.data;
+
+    if (intent === 'reopen') {
+      const existing = await getSubscriber(email);
+      if (
+        !existing ||
+        existing.status === 'unsubscribed' ||
+        (existing.status !== 'active' && existing.status !== 'pending')
+      ) {
+        log('info', 'subscribe.reopen_miss', { ...emailHashField(email), slug });
+        return badRequest({ error: 'not_registered' });
+      }
+
+      const gateToken = createGateToken(email, env.gateSecret);
+      const confirmToken = createConfirmToken(email, slug, env.gateSecret);
+      const confirmUrl = `${confirmApiBase(env.siteUrl)}/confirm?t=${encodeURIComponent(confirmToken)}`;
+      const footer = footerFrom(env, existing.unsubToken);
+
+      await sendMail({
+        to: email,
+        content: resourceMail({ slug, confirmUrl, footer }),
+        unsubToken: existing.unsubToken,
+        template: 'resource',
+      });
+
+      await putEvent({
+        email,
+        event: 'gate.opened',
+        meta: { slug, intent: 'reopen' },
+      });
+
+      return accepted({
+        ok: true,
+        state: existing.status === 'active' ? 'active' : 'pending',
+        gateToken,
+      });
+    }
+
     const result = await upsertSubscriber({
       email,
       slug,

@@ -16,10 +16,12 @@ export type EmailGateProps = {
   title: string;
   description?: string;
   buttonLabel: string;
-  /** Checkbox label (required, default unchecked). */
-  consent: string;
+  buttonVariant?: 'primary' | 'secondary';
+  /** Checkbox label. Omit when requireConsent is false. */
+  consent?: string;
   /** Detail under the checkbox; may include a privacy link node. */
   consentDetail?: ReactNode;
+  requireConsent?: boolean;
   submittedLabel: string;
   submitted: boolean;
   onSubmit: (email: string, extra?: string) => void | Promise<void>;
@@ -34,8 +36,10 @@ export function EmailGate({
   title,
   description,
   buttonLabel,
+  buttonVariant = 'primary',
   consent,
   consentDetail,
+  requireConsent = true,
   submittedLabel,
   submitted,
   onSubmit,
@@ -52,7 +56,8 @@ export function EmailGate({
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (submitting || !agreed) return;
+    if (submitting) return;
+    if (requireConsent && !agreed) return;
     await onSubmit(email, extraField ? extra : undefined);
   }
 
@@ -128,32 +133,34 @@ export function EmailGate({
               </select>
             </div>
           ) : null}
-          <div
-            className={cn(
-              'flex flex-col gap-2 break-keep',
-              stacked ? 'w-full' : 'flex-[1_1_100%] w-full',
-            )}
-          >
-            <label
-              className="flex items-start gap-[10px] text-label text-muted leading-[1.7] [color-scheme:dark] [&_input]:mt-[2px] [&_input]:w-4 [&_input]:h-4 [&_input]:accent-accent [&_input]:shrink-0"
-              htmlFor={consentId}
+          {requireConsent && consent ? (
+            <div
+              className={cn(
+                'flex flex-col gap-2 break-keep',
+                stacked ? 'w-full' : 'flex-[1_1_100%] w-full',
+              )}
             >
-              <input
-                id={consentId}
-                type="checkbox"
-                name="consent"
-                checked={agreed}
-                onChange={(e) => setAgreed(e.target.checked)}
-                required
-              />
-              <span>{consent}</span>
-            </label>
-            {consentDetail ? (
-              <p className="m-0 pl-[26px] text-label text-muted leading-[1.7]">
-                {consentDetail}
-              </p>
-            ) : null}
-          </div>
+              <label
+                className="flex items-start gap-[10px] text-label text-muted leading-[1.7] [color-scheme:dark] [&_input]:mt-[2px] [&_input]:w-4 [&_input]:h-4 [&_input]:accent-accent [&_input]:shrink-0"
+                htmlFor={consentId}
+              >
+                <input
+                  id={consentId}
+                  type="checkbox"
+                  name="consent"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  required
+                />
+                <span>{consent}</span>
+              </label>
+              {consentDetail ? (
+                <p className="m-0 pl-[26px] text-label text-muted leading-[1.7]">
+                  {consentDetail}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
           <div
             className={
               stacked
@@ -162,7 +169,7 @@ export function EmailGate({
             }
           >
             <Button
-              variant="primary"
+              variant={buttonVariant}
               type="submit"
               disabled={submitting}
               loading={submitting}
