@@ -20,5 +20,25 @@ export const InquiryInput = z.object({
   turnstile: z.string().min(10),
 });
 
+export const ResourceDownload = z.object({
+  label: z.string().min(1).max(120),
+  key: z.string().min(1).max(512),
+});
+
+export const ResourceUpsertInput = z.object({
+  slug: z.string().regex(/^[a-z0-9-]{3,64}$/),
+  title: z.string().min(1).max(200),
+  series: z.string().min(1).max(120),
+  summary: z.string().min(1).max(1000),
+  youtube: z.string().url().max(2048).optional(),
+  freeParts: z.number().int().min(0).max(50).default(1),
+  publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  body: z.string().max(200_000),
+  downloads: z.array(ResourceDownload).max(20).optional(),
+  status: z.enum(['published', 'draft']).default('published'),
+});
+
 export type SubscribeInput = z.infer<typeof SubscribeInput>;
 export type InquiryInput = z.infer<typeof InquiryInput>;
+export type ResourceUpsertInput = z.infer<typeof ResourceUpsertInput>;
+export type ResourceDownload = z.infer<typeof ResourceDownload>;

@@ -46,11 +46,13 @@ const SECRET = 'test-gate-secret-at-least-32-chars-long!!';
 const SITE = 'https://nodi.example';
 
 function setTestEnv(): void {
-  process.env.SUBSCRIBERS_TABLE = 'nodi-subscribers';
-  process.env.INQUIRIES_TABLE = 'nodi-inquiries';
-  process.env.EVENTS_TABLE = 'nodi-events';
+  process.env.SUBSCRIBERS_TABLE = 'nodi-class-subscribers';
+  process.env.INQUIRIES_TABLE = 'nodi-class-inquiries';
+  process.env.EVENTS_TABLE = 'nodi-class-events';
+  process.env.RESOURCES_TABLE = 'nodi-class-resources';
   process.env.GATE_SECRET = SECRET;
   process.env.TURNSTILE_SECRET = 'ts-secret';
+  process.env.ADMIN_API_KEY = 'test-admin-key';
   process.env.SITE_URL = SITE;
   process.env.API_URL = 'https://api.nodi.example';
   process.env.MAIL_FROM = '노디 AI 클래스 <hello@mail.nodi.example>';

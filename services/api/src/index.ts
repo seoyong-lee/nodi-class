@@ -3,3 +3,6 @@ export { handler as confirm } from './handlers/confirm.js';
 export { handler as inquiry } from './handlers/inquiry.js';
 export { handler as unsubscribe } from './handlers/unsubscribe.js';
 export { handler as sesEvents } from './handlers/ses-events.js';
+export { handler as resourcesList } from './handlers/resources-list.js';
+export { handler as resourcesGet } from './handlers/resources-get.js';
+export { handler as resourcesPut } from './handlers/resources-put.js';

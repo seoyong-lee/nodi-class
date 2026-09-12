@@ -15,15 +15,18 @@
     "infra:diff": "pnpm --filter @nodi/infra cdk diff",
     "infra:deploy": "pnpm --filter @nodi/infra cdk deploy --all",
     "infra:destroy": "pnpm --filter @nodi/infra cdk destroy --all",
-    "report": "tsx scripts/report.ts"
+    "report": "tsx scripts/report.ts",
+    "seed:resources": "tsx scripts/seed-resources.ts"
   },
   "devDependencies": {
     "@aws-sdk/client-dynamodb": "^3.1131.0",
     "@eslint/js": "^9.21.0",
+    "@nodi/shared": "workspace:*",
     "@types/node": "^22.13.10",
     "eslint": "^9.21.0",
     "eslint-plugin-nodi": "workspace:*",
     "globals": "^16.0.0",
+    "gray-matter": "^4.0.3",
     "prettier": "^3.5.3",
     "tsx": "^4.23.13",
     "typescript": "^5.8.2",
