@@ -103,9 +103,9 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 | Badge | core | `children`, `tone?: 'default'\|'current'` | 현재 상태만 `--accent-quiet` 배경 |
 | Icon | core | `name` (lucide 이름), `size?` | lucide-react 사용, 색은 `currentColor` |
 | SectionHeading | content | `index: '01'`, `label`, `title`, `align?: 'left'\|'center'` | 라벨 12px 0.08em은 영문에만. 한글 라벨은 자간 0 |
-| BeforeAfter | content | `beforeCaption`, `afterCaption`, `before: ReactNode`, `after: ReactNode` | 375에서 1열 |
+| BeforeAfter | content | `beforeCaption`, `afterCaption`, `before: ReactNode`, `after: ReactNode` | 375에서 1열. hover(leave 시 복귀)·터치 탭 토글만. 뷰포트 벗어나면 off. 스크롤 진입 리빌 없음. `--dur-reveal`. 그림자·파티클 없음 |
 | ProductCard | cards | `label`, `title`, `summary`, `rows: {label,value}[3]`, `ctaLabel`, `ctaHref?`, `ctaVariant?: 'primary'\|'secondary'` | rows는 정확히 3개. VOD CTA=primary, 워크숍·서비스 CTA=secondary |
-| ResourceCard | cards | `title`, `slug`, `locked: boolean`, `thumbnail?`, `openLabel?`, `badge?` | badge=유형 칩(`가이드북`/`프롬프트`/`체크리스트`/`요약본`). 잠금 시 자물쇠, 열림 시 openLabel. 썸네일은 ThumbBook(4:5). 그리드 3열 |
+| ResourceCard | cards | `title`, `slug`, `thumbnail?` | 타이틀만(유형 Badge·자물쇠 없음). 썸네일은 ThumbBook(4:5). 그리드 3열 |
 | ThumbBook | cards | `src?`, `alt?` | 책 커버 4:5. mockup 여백은 scale로 크롭 |
 | Thumb16x9 | cards | `src?`, `alt?` | 이미지 없으면 `--surface-raised` 플레이스홀더 |
 | VideoCard | cards | `title`, `note`, `href`, `thumbnail?` | 조회수 표시 없음. 유튜브 임베드는 클릭 후 로드(iframe 지연) |
@@ -140,14 +140,14 @@ CI 없이 `pnpm lint`에서 걸리게만 한다.
 | 블록 | 내용 |
 |---|---|
 | 히어로(중앙) | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` / `이제 AI로 직접 만들 수 있습니다` (2줄, `<br>`, keep-all, 마침표 없음) / 서브 `노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.` + `내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.` / Primary `무료 자료 받기`(→ `/free`) · Secondary `유튜브에서 보기` |
-| 01 / 무료 자료 (`id="free"`) | 제목 `바로 써볼 수 있는 자료, 부담 없이 무료로 가져가세요` / ResourceCard 4개 (§4 슬러그 순, Badge=유형 칩 + 잠금 아이콘). **이 섹션에 EmailGate 없음** |
+| 01 / 무료 자료 (`id="free"`) | 제목 `바로 써볼 수 있는 자료, 부담 없이 무료로 가져가세요` / ResourceCard 4개 (§4 슬러그 순). **이 섹션에 EmailGate 없음** |
 | 02 / 이렇게 달라집니다 | BeforeAfter(캡션 `만들기 전` / `기준을 준 뒤`) / 캡션 `같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.` / 이미지는 `public/img/before.png`, `after.png` |
 | 03 / 클래스 | 제목 `직접 만들어봤다면, 이제 기준을 배워보세요` / ProductCard ×3 (§3.5, VOD primary · 워크숍·서비스 secondary) |
 | 04 / 만든 사람 | 프로필(4:5, `--surface-raised`) + `직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어`(Bold 20px) / `컴퓨터소프트웨어공학 석사` / `비전공자 대상 풀스택 개발 부트캠프 강사` / 소형 `유튜브 노디 AI 운영` |
 | 최종 CTA(2열) | eyebrow `무료 자료` / 제목 `내 사업에 바로 써볼 무료 자료부터 시작해보세요.` / 설명 `노디 AI에서 소개한 프롬프트·가이드·체크리스트를 한곳에 정리했습니다.` + EmailGate(제목 `무료 자료 받아보기`, 서브 `이메일을 한 번 등록하면 모든 무료 자료를 확인할 수 있습니다.`, 버튼 `무료 자료 받기`, select 라벨 `지금 만들고 있는 것은 무엇인가요?`, extraField=§5.2, **동의=§3.7**). 데스크톱 좌 카피·우 폼 카드(~520px), ≤768px 1열 |
 
 ### 3.2 `/free` 목록 · `/free/[slug]` 자료 상세
-- `/free`: 라벨 `무료 자료` / h1 `바로 써볼 수 있는 자료,` `부담 없이 무료로 가져가세요` / 서브 `AI 활용에 도움이 되는 프롬프트·가이드·체크리스트를 모았습니다.` + `필요한 자료를 골라 무료로 받아보세요.` / ResourceCard 그리드(유형 Badge + 잠금 상태는 쿠키).
+- `/free`: 라벨 `무료 자료` / h1 `바로 써볼 수 있는 자료,` `부담 없이 무료로 가져가세요` / 서브 `AI 활용에 도움이 되는 프롬프트·가이드·체크리스트를 모았습니다.` + `필요한 자료를 골라 무료로 받아보세요.` / ResourceCard 그리드.
 - `/free/[slug]` 정적 경로: `generateStaticParams`로 API(또는 로컬 MDX) 슬러그 전부.
 - 상단: 라벨(frontmatter `series`), h1(frontmatter `title`), 서브(frontmatter `summary`), 우측 책 커버 이미지(`resourceThumbnail`) + 유형 Badge 안내 문구. (Step 1에서 VideoCard 비활성)
 - 목차: 본문 `##` 헤딩을 파싱해 번호 리스트로 자동 생성.
@@ -196,8 +196,8 @@ export const products = {
 |---|---|
 | `/unlock` | 쿼리 `t=`(§6.2 토큰) 검증 → 쿠키 발급 → `next` 슬러그로 리다이렉트. 실패 시 `/free/[slug]?expired=1` |
 | `/unsubscribe` | 쿼리 `t=` → API `POST /unsubscribe` + 접근 쿠키 삭제 → `수신을 해지했습니다.` 한 줄. **해지하면 자료 페이지도 닫힘**(§3.7) |
-| `/privacy` | 개인정보처리방침 — 수집(이메일·선택정보·source·동의기록) / 목적(자료 전달·새 자료·강의·서비스 소식·구독 열람) / 보관(해지 시까지, IP·UA 90일) / 위탁(AWS 서울·Turnstile 미국 국외 고지) / 권리·14세 미만·안전조치·변경 고지. 문서 버전=`CONSENT_VERSION`. 국외 이전 **동의 박스 없음**(SES 서울). GA4 없음 |
-| `/terms` | 이용약관(짧게): 무료 구독 범위, 저작권(재배포·판매 금지 / 본인 사업 사용 자유), 면책, 준거법. 계정·탈퇴·유료 조항 없음(Step 2) |
+| `/privacy` | 개인정보처리방침 — `content/legal/privacy.md` 렌더(표·목록). 문서 버전=`CONSENT_VERSION` |
+| `/terms` | 이용약관 — `content/legal/terms.md` 렌더. 유료 조항은 Step 2 |
 | `/refund` | 환불 정책 — Step 1은 "현재 유료 상품이 없습니다" 한 줄. Step 2에서 채움 |
 | `/not-found` | 시스템 톤으로 한 줄 |
 
@@ -442,26 +442,14 @@ DynamoDB 온디맨드, Lambda arm64, CloudWatch 로그 보존 90일. 예산 알�
 
 ## 10. 환경 변수
 
-`.env.example`:
+`.env.example` (웹 필수만):
 ```
-# apps/web
-NEXT_PUBLIC_SITE_URL=https://nodiworks.example
-NEXT_PUBLIC_API_URL=https://api.nodiworks.example
+NEXT_PUBLIC_API_URL=
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=
-NEXT_PUBLIC_YOUTUBE_URL=https://www.youtube.com/@nodiworks
-NEXT_PUBLIC_THREADS_URL=https://www.threads.net/@nodiworks
-GATE_SECRET=                      # SSM과 동일 값. Amplify 환경변수로 주입
-BIZ_NAME=                          # 상호
-BIZ_OWNER=                         # 대표
-BIZ_REG_NO=                        # 사업자등록번호
-BIZ_ADDRESS=
-BIZ_EMAIL=contact@cascades.studio
-
-# infra (cdk.context 또는 -c)
-NODI_DOMAIN=
-NOTIFY_EMAIL=contact@cascades.studio
+GATE_SECRET=
 ```
-사업자 정보는 **비어 있어도 빌드가 되어야** 하고, 비어 있으면 푸터에 `[ ]`가 아니라 해당 줄을 렌더하지 않는다.
+사이트 URL·유튜브·Threads·푸터(상호 Cascades·문의 contact@cascades.studio)는 코드에 하드코딩.
+인프라 도메인·NOTIFY_EMAIL은 CDK `-c domain=` / `-c notifyEmail=` (기본 contact@cascades.studio).
 
 ---
 
@@ -567,6 +555,7 @@ NOTIFY_EMAIL=contact@cascades.studio
 - [ ] **캠페인 발송**: `scripts/send.ts` — `active` 대상 SES v2 일괄 발송, 템플릿은 MDX, 발송 로그 `nodi-events`. UI 없음. **영리 광고 메일은 제목 `(광고)` 필수**.
 - [ ] **2년 재동의 확인 배치**: 동의 후 2년 경과 구독자에게 "계속 받으시겠습니까" 1통 자동 발송(정보통신망법 50조).
 - [ ] **GA4 도입 여부**: Step 1은 `nodi-events`+`source`로 전환율 집계. GA4는 Google 국외 처리 고지가 늘므로 필요해질 때만.
+- [ ] **홈 Before 호버 burn**: 폐기. BeforeAfter는 filter/border 차이 리빌로 구현됨.
 - [ ] **운영**: 메일 발송 실패 재시도(SQS DLQ), `ip/ua` 90일 후 삭제 배치, Amplify 호스팅 CDK 이관, CDK 출력 → web env 자동화.
 - [ ] **환불 정책·이용약관** 유료 조항 채우기.
 

@@ -260,11 +260,6 @@ export class NodiClassStack extends Stack {
       NOTIFY_EMAIL: notifyEmail,
       SES_CONFIGURATION_SET: configurationSet.configurationSetName,
       MAIL_REPLY_TO: 'contact@cascades.studio',
-      BIZ_NAME: process.env.BIZ_NAME ?? '',
-      BIZ_OWNER: process.env.BIZ_OWNER ?? '',
-      BIZ_REG_NO: process.env.BIZ_REG_NO ?? '',
-      BIZ_ADDRESS: process.env.BIZ_ADDRESS ?? '',
-      BIZ_EMAIL: process.env.BIZ_EMAIL ?? 'contact@cascades.studio',
     };
 
     const makeFn = (name: string, file: string): NodejsFunction => {

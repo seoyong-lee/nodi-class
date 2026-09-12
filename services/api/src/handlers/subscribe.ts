@@ -35,11 +35,6 @@ function footerFrom(
   return {
     siteUrl: env.siteUrl,
     unsubToken,
-    bizName: env.bizName,
-    bizOwner: env.bizOwner,
-    bizRegNo: env.bizRegNo,
-    bizAddress: env.bizAddress,
-    bizEmail: env.bizEmail,
   };
 }
 

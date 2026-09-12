@@ -1,1 +1,89 @@
 /* Global non-token styles (token files are imported by apps/web layout). */
+
+/* BeforeAfter — difference reveal (filter / border / opacity only; no shadow). */
+.nodi-ba {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: var(--gap-block-tight);
+}
+
+@media (max-width: 720px) {
+  .nodi-ba {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nodi-ba-pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-inline);
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+}
+
+.nodi-ba-caption {
+  margin: 0;
+  font-size: var(--size-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color var(--dur-reveal) var(--ease);
+}
+
+.nodi-ba-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  min-height: 180px;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: var(--border-hairline);
+  background: var(--surface-card);
+  transition:
+    filter var(--dur-reveal) var(--ease),
+    opacity var(--dur-reveal) var(--ease),
+    transform var(--dur-reveal) var(--ease),
+    border-color var(--dur-reveal) var(--ease);
+}
+
+.nodi-ba-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* Default: after slightly dimmed so it can “turn on”. */
+.nodi-ba-after .nodi-ba-frame {
+  filter: brightness(0.88);
+}
+
+/* On: before dims out; after brightens + mint border. */
+.nodi-ba[data-on='true'] .nodi-ba-before .nodi-ba-frame {
+  filter: grayscale(1) brightness(0.35) blur(1px);
+  opacity: 0.6;
+  transform: scale(0.98);
+}
+
+.nodi-ba[data-on='true'] .nodi-ba-after .nodi-ba-frame {
+  filter: brightness(1);
+  border-color: var(--accent);
+  transition-duration: 450ms;
+  transition-delay: 150ms;
+}
+
+.nodi-ba[data-on='true'] .nodi-ba-after .nodi-ba-caption {
+  color: var(--text-strong);
+  transition-delay: 150ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nodi-ba-frame,
+  .nodi-ba-caption {
+    transition: none;
+  }
+}

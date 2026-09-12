@@ -1,4 +1,6 @@
-import type { ReactNode } from 'react';
+'use client';
+
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 export type BeforeAfterProps = {
   beforeCaption: string;
@@ -7,24 +9,55 @@ export type BeforeAfterProps = {
   after: ReactNode;
 };
 
-function Pane({ caption, children }: { caption: string; children: ReactNode }) {
-  return (
-    <div className="flex h-full min-w-0 flex-col gap-inline">
-      <span className="text-label tracking-label-en text-muted">{caption}</span>
-      <div className="flex h-full min-h-[180px] flex-col rounded border-hairline bg-card p-card-pad text-body text-body-sm">
-        <div className="relative aspect-video w-full overflow-hidden rounded [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-top">
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-}
+/**
+ * Difference reveal: before dims out, after lights up (filter / border / opacity).
+ * Hover (mouse): enter on, leave off. Touch: tap toggles.
+ * Leaving the viewport always resets to off (no scroll-to-reveal).
+ */
+export function BeforeAfter({
+  beforeCaption,
+  afterCaption,
+  before,
+  after,
+}: BeforeAfterProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [on, setOn] = useState(false);
 
-export function BeforeAfter({ beforeCaption, afterCaption, before, after }: BeforeAfterProps) {
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) setOn(false);
+      },
+      { threshold: 0 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <div className="grid grid-cols-2 items-stretch gap-block-tight max-[720px]:grid-cols-1">
-      <Pane caption={beforeCaption}>{before}</Pane>
-      <Pane caption={afterCaption}>{after}</Pane>
+    <div
+      ref={rootRef}
+      className="nodi-ba"
+      data-on={on ? 'true' : 'false'}
+      onMouseEnter={() => setOn(true)}
+      onMouseLeave={() => setOn(false)}
+      onClick={() => {
+        if (window.matchMedia('(hover: none)').matches) {
+          setOn((v) => !v);
+        }
+      }}
+    >
+      <figure className="nodi-ba-pane nodi-ba-before">
+        <figcaption className="nodi-ba-caption">{beforeCaption}</figcaption>
+        <div className="nodi-ba-frame">{before}</div>
+      </figure>
+      <figure className="nodi-ba-pane nodi-ba-after">
+        <figcaption className="nodi-ba-caption">{afterCaption}</figcaption>
+        <div className="nodi-ba-frame">{after}</div>
+      </figure>
     </div>
   );
 }

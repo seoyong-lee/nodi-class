@@ -22,10 +22,8 @@ pnpm --filter @nodi/infra exec cdk deploy \
 
 Copy stack outputs into Amplify / `.env.local`:
 - `ApiUrl` → `NEXT_PUBLIC_API_URL`
-- `NEXT_PUBLIC_SITE_URL=https://<NODI_DOMAIN>`
 - `GATE_SECRET` (same as SSM)
 - `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
-- `BIZ_*` as available
 
 ## Seed free resources (MDX → DynamoDB)
 ```bash

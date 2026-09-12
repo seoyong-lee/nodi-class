@@ -140,14 +140,10 @@ export function KitShowcase() {
           <ResourceCard
             title="클로드 PPT 실전 가이드북"
             slug="claude-ppt-guidebook"
-            locked
-            badge="가이드북"
           />
           <ResourceCard
             title="클로드 랜딩페이지 디자인 체크리스트"
             slug="claude-design-landing-checklist"
-            locked={false}
-            badge="체크리스트"
           />
           <Thumb16x9 />
         </div>

@@ -11,12 +11,16 @@ import '@nodi/design-system/tokens/base.css';
 import '@nodi/design-system/tokens/styles.css';
 import './globals.css';
 import { SiteHeader } from '../components/SiteHeader';
-import { getBusinessLines, getSocialLinks, getYoutubeUrl } from '../lib/business';
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '');
+import {
+  OPERATOR,
+  SITE_URL,
+  getBusinessLines,
+  getSocialLinks,
+  getYoutubeUrl,
+} from '../lib/business';
 
 export const metadata: Metadata = {
-  metadataBase: siteUrl ? new URL(siteUrl) : undefined,
+  metadataBase: new URL(SITE_URL),
   title: '노디 AI 클래스',
   description:
     '랜딩페이지·브랜드·PPT. 유튜브 노디 AI에서 쓴 프롬프트와 가이드를 그대로 드립니다.',
@@ -66,7 +70,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <SiteHeader youtubeUrl={youtubeUrl} />
           <div className="flex-1">{children}</div>
           <SiteFooter
-            operator="Cascades"
+            operator={OPERATOR}
             business={business}
             links={[
               { label: '이용약관', href: '/terms' },

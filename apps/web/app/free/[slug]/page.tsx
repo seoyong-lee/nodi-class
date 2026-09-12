@@ -7,11 +7,7 @@ import { EmailGateForm } from '../../../components/EmailGateForm';
 import { LockedSkeleton } from '../../../components/LockedSkeleton';
 import { MdxContent } from '../../../components/MdxContent';
 import { hasValidAccessCookie } from '../../../lib/access';
-import {
-  getOtherResources,
-  getResource,
-  listResourceSlugs,
-} from '../../../lib/resources';
+import { getOtherResources, getResource, listResourceSlugs } from '../../../lib/resources';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,7 +47,7 @@ export default async function FreeResourcePage({ params }: Props) {
   return (
     <main>
       <section className={hero}>
-        <div className="grid grid-cols-[1fr_280px] gap-16 items-start break-keep max-[960px]:grid-cols-1 max-[960px]:gap-6">
+        <div className="grid grid-cols-[1fr_380px] gap-16 items-start break-keep max-[960px]:grid-cols-1 max-[960px]:gap-6">
           <div className="flex flex-col gap-6">
             <span className="text-label text-muted">{doc.frontmatter.series}</span>
             <h1 className="m-0 font-hero text-hero font-bold text-strong max-[720px]:text-hero-m">
@@ -59,14 +55,14 @@ export default async function FreeResourcePage({ params }: Props) {
             </h1>
             <p className="m-0 max-w-[30em] text-body">{doc.frontmatter.summary}</p>
           </div>
-          <aside className="flex flex-col gap-inline bg-card border border-line rounded overflow-hidden pb-5 min-w-0 max-[960px]:max-w-[240px]">
-            <div className="relative aspect-[4/5] w-full overflow-hidden bg-raised">
+          <aside className="flex flex-col gap-inline bg-card border border-line rounded overflow-hidden pb-5 min-w-0 max-[960px]:max-w-[320px]">
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-raised">
               <Image
-                className="object-cover object-center scale-125"
+                className="object-cover object-center"
                 src={cover}
                 alt=""
                 fill
-                sizes="280px"
+                sizes="(max-width: 960px) 320px, 380px"
                 priority
               />
             </div>
@@ -84,9 +80,7 @@ export default async function FreeResourcePage({ params }: Props) {
 
       {doc.parts.length > 0 ? (
         <section className={section}>
-          <span className="text-label tracking-[var(--tracking-label)] text-muted">
-            목차
-          </span>
+          <span className="text-label tracking-[var(--tracking-label)] text-muted">목차</span>
           <ol className="list-none m-0 mt-block-tight p-0 max-w-[720px] border-t border-line">
             {doc.parts.map((part, index) => (
               <li
@@ -168,17 +162,13 @@ export default async function FreeResourcePage({ params }: Props) {
 
       {others.length > 0 ? (
         <section className={sectionLast}>
-          <span className="text-label tracking-[var(--tracking-label)] text-muted">
-            다른 자료
-          </span>
+          <span className="text-label tracking-[var(--tracking-label)] text-muted">다른 자료</span>
           <div className="grid grid-cols-2 gap-6 mt-block-tight max-w-[720px] max-[720px]:grid-cols-1">
             {others.map((resource) => (
               <ResourceCard
                 key={resource.frontmatter.slug}
                 title={resource.frontmatter.title}
                 slug={resource.frontmatter.slug}
-                locked={!unlocked}
-                badge={resourceBadge(resource.frontmatter.slug)}
                 thumbnail={resourceThumbnail(resource.frontmatter.slug)}
               />
             ))}

@@ -1,37 +1,22 @@
-export function getBusinessLines(): string[] {
-  const entries: { env: string | undefined; prefix: string }[] = [
-    { env: process.env.BIZ_NAME, prefix: '상호' },
-    { env: process.env.BIZ_OWNER, prefix: '대표' },
-    { env: process.env.BIZ_REG_NO, prefix: '사업자등록번호' },
-    { env: process.env.BIZ_ADDRESS, prefix: '주소' },
-    { env: process.env.BIZ_EMAIL, prefix: '문의' },
-  ];
+/** Public site constants — not env-driven. */
 
-  return entries
-    .map(({ env, prefix }) => {
-      const value = env?.trim();
-      if (!value || value.includes('[ ]')) return null;
-      return `${prefix} ${value}`;
-    })
-    .filter((line): line is string => Boolean(line));
+export const SITE_URL = 'https://nodiworks.com';
+export const YOUTUBE_URL = 'https://www.youtube.com/@nodiworks';
+export const THREADS_URL = 'https://www.threads.net/@nodiworks';
+export const CONTACT_EMAIL = 'contact@cascades.studio';
+export const OPERATOR = 'Cascades';
+
+export function getBusinessLines(): string[] {
+  return [`상호 ${OPERATOR}`, `문의 ${CONTACT_EMAIL}`];
 }
 
 export function getSocialLinks(): { label: string; href: string; icon: string }[] {
-  const links: { label: string; href: string; icon: string }[] = [];
-  const youtube = process.env.NEXT_PUBLIC_YOUTUBE_URL?.trim();
-  const threads = process.env.NEXT_PUBLIC_THREADS_URL?.trim();
-  if (youtube) {
-    links.push({ label: 'YouTube', href: youtube, icon: 'youtube' });
-  }
-  if (threads) {
-    links.push({ label: 'Threads', href: threads, icon: 'at-sign' });
-  }
-  return links;
+  return [
+    { label: 'YouTube', href: YOUTUBE_URL, icon: 'youtube' },
+    { label: 'Threads', href: THREADS_URL, icon: 'at-sign' },
+  ];
 }
 
 export function getYoutubeUrl(): string {
-  return (
-    process.env.NEXT_PUBLIC_YOUTUBE_URL?.trim() ||
-    'https://www.youtube.com/@nodiworks'
-  );
+  return YOUTUBE_URL;
 }

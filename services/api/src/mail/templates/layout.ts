@@ -29,12 +29,10 @@ export type MailContent = {
 export type FooterContext = {
   siteUrl: string;
   unsubToken: string;
-  bizName: string;
-  bizOwner: string;
-  bizRegNo: string;
-  bizAddress: string;
-  bizEmail: string;
 };
+
+const OPERATOR = 'Cascades';
+const CONTACT_EMAIL = 'contact@cascades.studio';
 
 export function unsubUrl(siteUrl: string, unsubToken: string): string {
   return `${siteUrl}/unsubscribe?t=${encodeURIComponent(unsubToken)}`;
@@ -52,27 +50,20 @@ export function listUnsubHeaders(
 }
 
 export function footerText(ctx: FooterContext): string {
-  const lines = [
-    '노디 AI 클래스 · 운영 Cascades',
-    ctx.bizName ? `상호 ${ctx.bizName}` : '',
-    ctx.bizOwner ? `대표 ${ctx.bizOwner}` : '',
-    ctx.bizRegNo ? `사업자등록번호 ${ctx.bizRegNo}` : '',
-    ctx.bizAddress ? ctx.bizAddress : '',
-    ctx.bizEmail ? `문의 ${ctx.bizEmail}` : '',
+  return [
+    `노디 AI 클래스 · 운영 ${OPERATOR}`,
+    `상호 ${OPERATOR}`,
+    `문의 ${CONTACT_EMAIL}`,
     `수신거부: ${unsubUrl(ctx.siteUrl, ctx.unsubToken)}`,
-  ].filter(Boolean);
-  return lines.join('\n');
+  ].join('\n');
 }
 
 export function footerHtml(ctx: FooterContext): string {
   const rows = [
-    '노디 AI 클래스 · 운영 Cascades',
-    ctx.bizName ? `상호 ${ctx.bizName}` : '',
-    ctx.bizOwner ? `대표 ${ctx.bizOwner}` : '',
-    ctx.bizRegNo ? `사업자등록번호 ${ctx.bizRegNo}` : '',
-    ctx.bizAddress ? ctx.bizAddress : '',
-    ctx.bizEmail ? `문의 ${ctx.bizEmail}` : '',
-  ].filter(Boolean);
+    `노디 AI 클래스 · 운영 ${OPERATOR}`,
+    `상호 ${OPERATOR}`,
+    `문의 ${CONTACT_EMAIL}`,
+  ];
   const url = unsubUrl(ctx.siteUrl, ctx.unsubToken);
   return `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;border-top:1px solid #e5e5e5;">
