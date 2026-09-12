@@ -85,36 +85,48 @@ export function KitShowcase() {
           <ProductCard
             label="VOD · 준비 중"
             title="클로드 디자인 실전 가이드"
-            summary="디자이너 없이 내 사업용 페이지를 반복해서 만드는 과정"
+            summary="내 사업에 필요한 디자인을 직접 만들고 개선하는 실전 과정"
             rows={[
-              { label: '누구에게', value: '내 사업 페이지를 직접 만들어야 하는 분' },
-              { label: '남는 것', value: '매주 파일 하나' },
+              { label: '추천 대상', value: '내 사업 페이지를 직접 만들어야 하는 분' },
+              { label: '완성 결과', value: '재사용할 수 있는 디자인 기준과 랜딩페이지' },
               { label: '가격', value: '얼리버드 가격 예정' },
             ]}
-            ctaLabel="출시 알림 받기"
+            ctaLabel="출시 알림 신청하기"
             ctaHref="/course"
             ctaVariant="primary"
           />
           <ProductCard
             label="워크숍 · 준비 중"
             title="라이브 첨삭"
-            summary="직접 만든 결과물을 가져오면 화면을 보며 함께 고칩니다"
+            summary="직접 만든 결과물을 가져와 함께 보며 개선합니다"
             rows={[
-              { label: '누구에게', value: 'VOD 수료 후 실제 프로젝트가 있는 분' },
-              { label: '남는 것', value: '고친 결과물 + 기준표' },
+              {
+                label: '추천 대상',
+                value: 'VOD 수강 후 실제 프로젝트에 적용해보고 있는 분',
+              },
+              {
+                label: '완성 결과',
+                value: '개선된 결과물 + 이후에도 활용할 수 있는 점검 기준',
+              },
               { label: '가격', value: '추후 안내' },
             ]}
-            ctaLabel="알림 받기"
+            ctaLabel="출시 알림 신청하기"
             ctaHref="/course"
           />
           <ProductCard
             label="서비스"
             title="AI 결과물 마무리"
-            summary="AI로 만든 초안을, 내놓을 수 있는 결과물로 마무리합니다"
+            summary="AI로 만든 초안을, 고객이 선택하는 결과물로 완성합니다"
             rows={[
-              { label: '누구에게', value: '직접 해보다 한계를 느낀 분' },
-              { label: '남는 것', value: '내놓을 수 있는 완성본' },
-              { label: '가격', value: '300만원부터' },
+              {
+                label: '추천 대상',
+                value: '직접 만들어봤지만 완성도를 높이는 데 어려움을 겪고 있는 분',
+              },
+              {
+                label: '완성 결과',
+                value: '고객에게 보여줄 수 있는 수준의 최종 결과물',
+              },
+              { label: '가격', value: '300만 원부터' },
             ]}
             ctaLabel="프로젝트 검토 요청하기"
             ctaHref="/service"

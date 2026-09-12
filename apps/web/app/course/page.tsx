@@ -7,27 +7,27 @@ import { productCardProps } from '../../lib/products';
 const CURRICULUM = [
   {
     title: '보는 기준',
-    body: '좋은 레퍼런스를 고르고 뜯어 쓰는 법',
+    body: '좋은 디자인을 찾고 분석하는 법',
   },
   {
     title: '만드는 기준',
-    body: '디자인 시스템을 먼저 세팅하고 그 위에서 만드는 법',
+    body: '내 브랜드의 디자인 기준을 만들고 적용하는 법',
   },
   {
     title: '고치는 기준',
-    body: 'AI가 뽑은 5개 중 뭐가 나은지 판단하고 첨삭하는 법',
+    body: 'AI가 만든 결과물을 비교하고 개선하는 법',
   },
   {
-    title: '반복하는 시스템',
-    body: '한 번 만든 기준으로 상세·PPT·SNS까지 뽑는 법',
+    title: '확장하는 방법',
+    body: '한 번 만든 기준을 랜딩페이지·PPT·SNS까지 확장하는 법',
   },
 ] as const;
 
-const LEFTOVERS = [
-  '내 브랜드 레퍼런스 보드 1개',
-  '클로드 디자인에 저장된 디자인 시스템 1개',
-  '랜딩페이지 완성본 1개',
-  '다음 페이지에 바로 쓰는 프롬프트 템플릿',
+const OUTCOMES = [
+  '내 브랜드 레퍼런스 보드',
+  '계속 재사용할 수 있는 디자인 시스템',
+  '내 사업에 활용할 랜딩페이지 완성본',
+  '다음 작업에도 활용할 수 있는 프롬프트 템플릿',
 ] as const;
 
 const section = 'max-w-page mx-auto pt-section px-gutter break-keep';
@@ -47,17 +47,22 @@ export default function CoursePage() {
             <h1 className="m-0 font-hero text-hero max-[720px]:text-hero-m font-bold text-strong">
               클로드 디자인 실전
             </h1>
-            <p className="m-0 max-w-measure text-body">
-              디자이너 없이 돈 버는 페이지를 반복해서 만들어야 하는 분을 위한
-              과정입니다. 프롬프트가 아니라 고르는 기준을 배웁니다.
-            </p>
+            <div className="flex flex-col gap-inline max-w-measure">
+              <p className="m-0 text-body text-strong">
+                내 사업에 필요한 디자인, 이제 직접 만들 수 있습니다.
+              </p>
+              <p className="m-0 text-body">
+                클로드로 결과물을 만드는 방법부터 좋은 디자인을 고르고, 고치고,
+                반복해서 활용하는 기준까지 배웁니다.
+              </p>
+            </div>
           </div>
           <div className="max-w-[640px] w-full">
             <Suspense fallback={null}>
               <EmailGateForm
                 title="출시 알림 받기"
-                description="알림 신청자에게만 얼리버드 가격을 먼저 안내합니다"
-                buttonLabel="알림 받기"
+                description="클래스가 오픈되면 이메일로 가장 먼저 안내드립니다."
+                buttonLabel="출시 알림 신청하기"
                 slug={COURSE_WAITLIST_SLUG}
               />
             </Suspense>
@@ -84,10 +89,10 @@ export default function CoursePage() {
 
       <section className={section}>
         <span className="text-label tracking-[var(--tracking-label)] text-muted">
-          02 / 매주 남는 것
+          02 / 수강 후 완성하는 것
         </span>
         <ul className="list-none mt-block-tight mb-0 mx-0 p-0 max-w-[720px] border-t border-line">
-          {LEFTOVERS.map((item) => (
+          {OUTCOMES.map((item) => (
             <li
               key={item}
               className="py-4 border-b border-line text-strong max-[720px]:text-body-sm"
@@ -100,11 +105,16 @@ export default function CoursePage() {
 
       <section className={section}>
         <span className="text-label tracking-[var(--tracking-label)] text-muted">
-          03 / 가격
+          03 / 수강 안내
         </span>
-        <p className="mt-block-tight mb-0 max-w-measure text-h3 text-strong max-[720px]:text-[18px]">
-          출시 시 얼리버드 가격을 알림 신청자에게 먼저 안내합니다
-        </p>
+        <div className="mt-block-tight flex flex-col gap-inline max-w-measure">
+          <p className="m-0 text-h3 text-strong max-[720px]:text-[18px]">
+            현재 클래스를 준비하고 있습니다.
+          </p>
+          <p className="m-0 text-body">
+            출시 일정과 얼리버드 수강료는 알림 신청자에게 가장 먼저 안내드립니다.
+          </p>
+        </div>
       </section>
 
       <section className={sectionLast}>
