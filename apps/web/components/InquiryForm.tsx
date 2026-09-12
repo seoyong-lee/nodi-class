@@ -55,9 +55,7 @@ export function InquiryForm() {
   }
 
   if (submitted) {
-    return (
-      <p className="m-0 max-w-[720px] text-strong break-keep">{INQUIRY_DONE_LABEL}</p>
-    );
+    return <p className="m-0 max-w-[720px] text-strong break-keep">{INQUIRY_DONE_LABEL}</p>;
   }
 
   return (
@@ -102,7 +100,8 @@ export function InquiryForm() {
         onChange={(e) => setResultUrl(e.target.value)}
       />
       <Input
-        label="어디에서 막혔나요?"
+        label="어떤 부분에서 어려움을 겪고 계신가요?"
+        description="현재 문제 상황과 원하는 결과를 알려주세요."
         name="blocked"
         multiline
         rows={5}
@@ -125,18 +124,11 @@ export function InquiryForm() {
         </p>
       ) : null}
       <div className="self-start max-[720px]:self-stretch max-[720px]:[&_button]:w-full">
-        <Button
-          variant="primary"
-          type="submit"
-          disabled={submitting}
-          loading={submitting}
-        >
+        <Button variant="primary" type="submit" disabled={submitting} loading={submitting}>
           프로젝트 검토 요청하기
         </Button>
       </div>
-      <p className="m-0 text-label text-muted">
-        계약과 세금계산서는 Cascades 명의로 진행합니다.
-      </p>
+      <p className="m-0 text-label text-muted">계약과 세금계산서는 Cascades 명의로 진행합니다.</p>
     </form>
   );
 }

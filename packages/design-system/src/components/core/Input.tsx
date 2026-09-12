@@ -4,6 +4,7 @@ import { cn } from '../../lib/cn';
 
 export type InputProps = {
   label: string;
+  description?: string;
   type?: InputHTMLAttributes<HTMLInputElement>['type'];
   name: string;
   placeholder?: string;
@@ -17,6 +18,7 @@ export type InputProps = {
 
 export function Input({
   label,
+  description,
   type = 'text',
   name,
   placeholder,
@@ -28,23 +30,29 @@ export function Input({
   onChange,
 }: InputProps) {
   const id = useId();
+  const descriptionId = description ? `${id}-desc` : undefined;
 
   const fieldClass = cn(
     'w-full box-border px-4 py-[14px] bg-field text-strong rounded font-sans text-body-sm tracking-[var(--tracking-body)] outline-none transition-ui [color-scheme:dark] placeholder:text-disabled border focus:border-accent',
-    multiline
-      ? 'leading-[var(--leading-body)] resize-y py-[13px]'
-      : 'leading-[1.4]',
+    multiline ? 'leading-[var(--leading-body)] resize-y py-[13px]' : 'leading-[1.4]',
     error ? 'border-line-strong' : 'border-line',
   );
 
   return (
     <div className="flex flex-col gap-inline-tight w-full min-w-0 box-border">
-      <label
-        className="text-caption text-muted tracking-[var(--tracking-body)]"
-        htmlFor={id}
-      >
-        {label}
-      </label>
+      <div className="flex flex-col gap-1">
+        <label className="text-caption text-muted tracking-[var(--tracking-body)]" htmlFor={id}>
+          {label}
+        </label>
+        {description ? (
+          <span
+            id={descriptionId}
+            className="text-label leading-[1.6] text-[11px] break-keep text-[color-mix(in_srgb,var(--text-muted)_65%,var(--text-disabled))]"
+          >
+            {description}
+          </span>
+        ) : null}
+      </div>
       {multiline ? (
         <textarea
           id={id}
@@ -55,6 +63,7 @@ export function Input({
           value={value}
           onChange={onChange}
           rows={rows}
+          aria-describedby={descriptionId}
           aria-invalid={error ? true : undefined}
         />
       ) : (
@@ -67,12 +76,11 @@ export function Input({
           required={required}
           value={value}
           onChange={onChange}
+          aria-describedby={descriptionId}
           aria-invalid={error ? true : undefined}
         />
       )}
-      {error ? (
-        <span className="text-label text-muted leading-[1.6]">{error}</span>
-      ) : null}
+      {error ? <span className="text-label text-muted leading-[1.6]">{error}</span> : null}
     </div>
   );
 }
