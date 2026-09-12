@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import styles from './Thumb16x9.module.css';
+import * as styles from './Thumb16x9.css';
 
 export type Thumb16x9Props = {
   src?: string;

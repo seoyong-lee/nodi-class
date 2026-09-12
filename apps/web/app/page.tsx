@@ -14,7 +14,7 @@ import { getYoutubeUrl } from '../lib/business';
 import { productCardProps } from '../lib/products';
 import { listResources } from '../lib/resources';
 import { hasValidAccessCookie } from '../lib/access';
-import styles from '../styles/page.module.css';
+import * as styles from '../styles/page.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,13 +36,12 @@ export default async function HomePage() {
           <h1 className={styles.heroTitle}>
             코딩 몰라도,
             <br />
-            이제 AI로 직접
-            <br />
-            만들 수 있습니다.
+            이제 AI로 직접 만들 수 있습니다
           </h1>
           <p className={styles.lead}>
-            랜딩페이지·브랜드·PPT. 유튜브 노디 AI에서 쓴 프롬프트와 가이드를 그대로
-            드립니다. 이메일 한 번이면 전부 열립니다.
+            노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.
+            <br />
+            내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.
           </p>
           <div className={styles.ctaRow}>
             <Button variant="primary" href="#free">
@@ -59,18 +58,8 @@ export default async function HomePage() {
         <SectionHeading
           index="01"
           label="무료 자료"
-          title="영상에서 쓴 자료, 그대로 드립니다"
+          title="영상에서 쓴 자료, 내 사업에 바로 써보세요"
         />
-        <div className={styles.gateBlock}>
-          <Suspense fallback={null}>
-            <EmailGateForm
-              title="한 번 등록하면 모든 자료가 열립니다"
-              buttonLabel="받기"
-              slug={HOME_GATE_SLUG}
-              extraField={BUILDING_EXTRA_FIELD}
-            />
-          </Suspense>
-        </div>
         <div className={styles.grid4}>
           {resources.map((resource) => (
             <ResourceCard
@@ -109,7 +98,7 @@ export default async function HomePage() {
           }
         />
         <p className={styles.sectionNote}>
-          레퍼런스와 기준을 먼저 주면 같은 클로드에서 이 차이가 납니다.
+          같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.
         </p>
       </section>
 
@@ -117,7 +106,7 @@ export default async function HomePage() {
         <SectionHeading
           index="03"
           label="클래스"
-          title="무료 자료 다음은 클래스입니다"
+          title="직접 만들어봤다면, 이제 기준을 배워보세요"
         />
         <div className={styles.grid3}>
           <ProductCard {...vod} />
@@ -127,7 +116,7 @@ export default async function HomePage() {
       </section>
 
       <section className={styles.section}>
-        <span className={styles.sectionLabel}>04 / 운영하는 사람</span>
+        <span className={styles.sectionLabel}>04 / 만든 사람</span>
         <div className={styles.operator}>
           <div className={styles.profileFrame}>
             <Image
@@ -141,7 +130,7 @@ export default async function HomePage() {
           <div className={styles.operatorCopy}>
             <ul className={styles.operatorList}>
               <li className={styles.operatorLead}>
-                직접 서비스를 만드는 5년차 개발자
+                직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어
               </li>
               <li className={styles.operatorItem}>컴퓨터소프트웨어공학 석사</li>
               <li className={styles.operatorItem}>
@@ -155,7 +144,7 @@ export default async function HomePage() {
 
       <section className={styles.sectionLast}>
         <div className={styles.finalCta}>
-          <h2 className={styles.finalTitle}>무료 자료부터 받아보세요</h2>
+          <h2 className={styles.finalTitle}>무료 자료로 먼저 직접 만들어보세요</h2>
           <div className={styles.gateCenter}>
             <Suspense fallback={null}>
               <EmailGateForm

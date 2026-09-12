@@ -1,6 +1,6 @@
 import { UNSUBSCRIBE_DONE_LABEL } from '../../lib/copy';
 import { UnsubscribeClient } from './UnsubscribeClient';
-import styles from '../../styles/page.module.css';
+import * as styles from '../../styles/page.css';
 
 type Props = {
   searchParams: Promise<{ t?: string }>;

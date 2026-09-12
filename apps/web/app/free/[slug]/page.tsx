@@ -10,8 +10,8 @@ import {
   getResource,
   listResourceSlugs,
 } from '../../../lib/resources';
-import styles from './free.module.css';
-import pageStyles from '../../../styles/page.module.css';
+import * as styles from './free.css';
+import * as pageStyles from '../../../styles/page.css';
 
 export const dynamic = 'force-dynamic';
 

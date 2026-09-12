@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { Icon } from '../core/Icon';
 import { Thumb16x9 } from './Thumb16x9';
-import styles from './VideoCard.module.css';
+import * as styles from './VideoCard.css';
 
 export type VideoCardProps = {
   title: string;

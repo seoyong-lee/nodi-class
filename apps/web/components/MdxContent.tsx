@@ -1,7 +1,7 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import type { ReactNode } from 'react';
 import { CopyCode } from './CopyCode';
-import styles from './MdxContent.module.css';
+import * as styles from './MdxContent.css';
 
 const components = {
   h2: (props: { children?: ReactNode; id?: string }) => (

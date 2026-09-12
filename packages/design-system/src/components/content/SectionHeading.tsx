@@ -1,4 +1,4 @@
-import styles from './SectionHeading.module.css';
+import * as styles from './SectionHeading.css';
 
 const HANGUL = /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3]/;
 

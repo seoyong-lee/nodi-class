@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { Icon } from './Icon';
-import styles from './Button.module.css';
+import * as styles from './Button.css';
 
 export type ButtonProps = {
   variant: 'primary' | 'secondary';

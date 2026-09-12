@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
-import styles from './Icon.module.css';
+import * as styles from './Icon.css';
 
 export type IconProps = {
   name: string;

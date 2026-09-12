@@ -1,5 +1,5 @@
 import { Button } from '../core/Button';
-import styles from './ProductCard.module.css';
+import * as styles from './ProductCard.css';
 
 export type ProductCardRow = {
   label: string;

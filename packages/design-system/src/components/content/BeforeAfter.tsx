@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import styles from './BeforeAfter.module.css';
+import * as styles from './BeforeAfter.css';
 
 export type BeforeAfterProps = {
   beforeCaption: string;

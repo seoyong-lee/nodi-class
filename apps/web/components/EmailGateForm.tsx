@@ -11,8 +11,8 @@ import {
   GATE_SUBMITTED_LABEL,
 } from '../lib/copy';
 import { getTurnstileToken } from '../lib/turnstile';
-import hp from './honeypot.module.css';
-import styles from './EmailGateForm.module.css';
+import * as hp from './honeypot.css';
+import * as styles from './EmailGateForm.css';
 
 type Props = {
   title: string;

@@ -1,4 +1,4 @@
-import styles from './LockedSkeleton.module.css';
+import * as styles from './LockedSkeleton.css';
 
 const WIDTHS = ['100%', '94%', '88%', '72%', '96%', '64%', '90%', '58%'] as const;
 

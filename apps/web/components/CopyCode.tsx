@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
-import styles from './CopyCode.module.css';
+import * as styles from './CopyCode.css';
 
 export function CopyCode({ children }: { children: ReactNode }) {
   const [copied, setCopied] = useState(false);

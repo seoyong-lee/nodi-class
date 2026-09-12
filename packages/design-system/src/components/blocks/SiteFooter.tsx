@@ -1,5 +1,5 @@
 import { Icon } from '../core/Icon';
-import styles from './SiteFooter.module.css';
+import * as styles from './SiteFooter.css';
 
 export type SiteFooterLink = {
   label: string;

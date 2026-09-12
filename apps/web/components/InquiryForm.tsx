@@ -5,8 +5,8 @@ import { Button, Input } from '@nodi/design-system';
 import { postInquiry } from '../lib/api';
 import { CONSENT_LABEL, FORM_ERROR_LABEL, INQUIRY_DONE_LABEL } from '../lib/copy';
 import { getTurnstileToken } from '../lib/turnstile';
-import hp from './honeypot.module.css';
-import styles from './InquiryForm.module.css';
+import * as hp from './honeypot.css';
+import * as styles from './InquiryForm.css';
 
 export function InquiryForm() {
   const [submitted, setSubmitted] = useState(false);

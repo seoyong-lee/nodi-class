@@ -1,6 +1,7 @@
+import { Badge } from '../core/Badge';
 import { Icon } from '../core/Icon';
 import { Thumb16x9 } from './Thumb16x9';
-import styles from './ResourceCard.module.css';
+import * as styles from './ResourceCard.css';
 
 export type ResourceCardProps = {
   title: string;
@@ -8,6 +9,7 @@ export type ResourceCardProps = {
   locked: boolean;
   thumbnail?: string;
   openLabel?: string;
+  fromVideo?: boolean;
 };
 
 export function ResourceCard({
@@ -16,6 +18,7 @@ export function ResourceCard({
   locked,
   thumbnail,
   openLabel = '받기',
+  fromVideo = true,
 }: ResourceCardProps) {
   const href = `/free/${slug}`;
 
@@ -27,6 +30,7 @@ export function ResourceCard({
       <div className={styles.body}>
         <h3 className={styles.title}>{title}</h3>
         <div className={styles.meta}>
+          {fromVideo ? <Badge>영상에서 소개</Badge> : null}
           {locked ? (
             <span className={styles.locked}>
               <Icon name="lock" size={14} />

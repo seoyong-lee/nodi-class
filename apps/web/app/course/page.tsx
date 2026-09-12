@@ -3,7 +3,7 @@ import { COURSE_WAITLIST_SLUG } from '@nodi/shared';
 import { ProductCard } from '@nodi/design-system';
 import { EmailGateForm } from '../../components/EmailGateForm';
 import { productCardProps } from '../../lib/products';
-import styles from '../../styles/page.module.css';
+import * as styles from '../../styles/page.css';
 
 const CURRICULUM = [
   '보는 기준 — 좋은 레퍼런스를 고르고 뜯어 쓰는 법',

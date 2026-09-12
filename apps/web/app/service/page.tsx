@@ -1,6 +1,6 @@
 import { Icon } from '@nodi/design-system';
 import { InquiryForm } from '../../components/InquiryForm';
-import styles from '../../styles/page.module.css';
+import * as styles from '../../styles/page.css';
 
 const FIT = [
   '클로드·러버블로 만들긴 했는데 어딘가 싸 보입니다',

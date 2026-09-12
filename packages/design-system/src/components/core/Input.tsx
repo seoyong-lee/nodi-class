@@ -1,6 +1,6 @@
 import type { ChangeEventHandler, InputHTMLAttributes } from 'react';
 import { useId } from 'react';
-import styles from './Input.module.css';
+import * as styles from './Input.css';
 
 export type InputProps = {
   label: string;

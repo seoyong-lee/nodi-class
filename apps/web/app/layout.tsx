@@ -11,7 +11,7 @@ import '@nodi/design-system/tokens/base.css';
 import '@nodi/design-system/tokens/styles.css';
 import { SiteHeader } from '../components/SiteHeader';
 import { getBusinessLines, getSocialLinks, getYoutubeUrl } from '../lib/business';
-import styles from '../styles/page.module.css';
+import * as styles from '../styles/page.css';
 
 export const metadata: Metadata = {
   title: '노디 AI 클래스',

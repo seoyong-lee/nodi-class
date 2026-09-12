@@ -3,7 +3,7 @@
 import { useId, useState, type FormEvent } from 'react';
 import { Button } from '../core/Button';
 import { Input } from '../core/Input';
-import styles from './EmailGate.module.css';
+import * as styles from './EmailGate.css';
 
 export type EmailGateExtraField = {
   name: string;

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@nodi/design-system';
-import styles from './SiteHeader.module.css';
+import * as styles from './SiteHeader.css';
 
 const NAV = [
   { href: '/#free', label: '무료 자료', match: (p: string) => p === '/' || p.startsWith('/free') },
@@ -18,7 +18,8 @@ export function SiteHeader({ youtubeUrl }: { youtubeUrl: string }) {
     <header className={styles.root}>
       <div className={styles.inner}>
         <Link href="/" className={styles.wordmark}>
-          노디 AI 클래스
+          <span className={styles.wordmarkStrong}>노디 AI</span>
+          <span className={styles.wordmarkSoft}>클래스</span>
         </Link>
         <nav className={styles.nav} aria-label="주요">
           {NAV.map((item) => {

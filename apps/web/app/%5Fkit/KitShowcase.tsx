@@ -15,7 +15,7 @@ import {
   Thumb16x9,
   VideoCard,
 } from '@nodi/design-system';
-import styles from './kit.module.css';
+import * as styles from './kit.css';
 
 export function KitShowcase() {
   const [submitted, setSubmitted] = useState(false);
