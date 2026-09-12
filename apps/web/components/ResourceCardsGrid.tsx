@@ -6,7 +6,7 @@ function cardBadges(access: 'free' | 'paid' | undefined): string[] {
   if (access === 'paid') {
     return ['강의 교재'];
   }
-  return ['무료 공개 중'];
+  return ['무료 자료'];
 }
 
 export async function ResourceCardsGrid() {

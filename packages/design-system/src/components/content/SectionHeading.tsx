@@ -5,7 +5,7 @@ const HANGUL = /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7A3]/;
 export type SectionHeadingProps = {
   index: '01' | string;
   label: string;
-  title: string;
+  title?: string;
   align?: 'left' | 'center';
 };
 
@@ -32,7 +32,11 @@ export function SectionHeading({
       >
         {index} / {label}
       </span>
-      <h2 className="m-0 text-h2 font-bold text-strong break-keep">{title}</h2>
+      {title ? (
+        <h2 className="m-0 text-h2 font-bold text-strong break-keep whitespace-pre-line">
+          {title}
+        </h2>
+      ) : null}
     </header>
   );
 }

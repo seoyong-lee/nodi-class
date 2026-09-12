@@ -42,6 +42,7 @@ export const ResourceUpsertInput = z.object({
   title: z.string().min(1).max(200),
   series: z.string().min(1).max(120),
   summary: z.string().min(1).max(1000),
+  included: z.array(z.string().min(1).max(200)).min(3).max(6).optional(),
   youtube: z.string().url().max(2048).optional(),
   freeParts: z.number().int().min(0).max(50).default(1),
   publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),

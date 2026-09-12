@@ -48,7 +48,7 @@ export async function handler(
       return badRequest({ error: 'invalid' });
     }
 
-    const env = getEnv();
+    const env = await getEnv();
     const okTs = await checkTurnstile(
       parsed.data.turnstile,
       ip,

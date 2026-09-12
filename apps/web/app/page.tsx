@@ -142,7 +142,7 @@ export default function HomePage() {
           <div className="flex flex-col gap-6 min-w-0">
             <span className="text-label text-muted">무료 자료</span>
             <h2 className="m-0 text-h2 font-bold text-strong max-w-[14em] max-[768px]:text-[26px] max-[768px]:max-w-[18em]">
-              내 사업에 바로 써볼 자료를 무료로 받아보세요.
+              바로 사용 가능한 프롬프트와 가이드를 무료로 받아보세요.
             </h2>
             <p className="m-0 max-w-measure text-body">
               노디 AI에서 소개한 프롬프트·가이드·체크리스트를 한곳에 정리했습니다.

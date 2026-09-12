@@ -6,8 +6,8 @@ import { json, internalError } from '../lib/response.js';
 import { log } from '../lib/log.js';
 import { parseJsonBody } from '../lib/request.js';
 
-function adminAuthorized(event: APIGatewayProxyEventV2): boolean {
-  const { adminApiKey } = getEnv();
+async function adminAuthorized(event: APIGatewayProxyEventV2): Promise<boolean> {
+  const { adminApiKey } = await getEnv();
   if (!adminApiKey) return false;
   const header =
     event.headers['x-admin-key'] ??
@@ -20,7 +20,7 @@ export async function handler(
   event: APIGatewayProxyEventV2,
 ): Promise<APIGatewayProxyResultV2> {
   try {
-    if (!adminAuthorized(event)) {
+    if (!(await adminAuthorized(event))) {
       return json(401, { ok: false, error: 'unauthorized' });
     }
 

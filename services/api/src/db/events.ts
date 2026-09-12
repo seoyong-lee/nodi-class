@@ -30,7 +30,7 @@ function ttl(): number {
 }
 
 export async function putEvent(input: PutEventInput): Promise<void> {
-  const { eventsTable } = getEnv();
+  const { eventsTable } = await getEnv();
   const now = new Date().toISOString();
   const pk = input.ip
     ? `IP#${input.ip}`
@@ -60,7 +60,7 @@ export async function countRecentIpEvents(
   ip: string,
   sinceIso: string,
 ): Promise<number> {
-  const { eventsTable } = getEnv();
+  const { eventsTable } = await getEnv();
   const res = await getDocClient().send(
     new QueryCommand({
       TableName: eventsTable,

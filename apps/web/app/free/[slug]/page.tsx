@@ -4,7 +4,6 @@ import { Suspense } from 'react';
 import {
   AccessBadge,
   Button,
-  ContentsList,
   Icon,
   ResourceCard,
   SectionHeading,
@@ -19,7 +18,28 @@ import { MdxContent } from '../../../components/MdxContent';
 import { StickyUnlockBar } from '../../../components/StickyUnlockBar';
 import { hasValidAccessCookie } from '../../../lib/access';
 import { BUILDING_EXTRA_FIELD } from '../../../lib/building';
-import { GATE_ACTIVE_LABEL } from '../../../lib/copy';
+import {
+  GATE_ACTIVE_LABEL,
+  RESOURCE_AUDIENCE_HEADING,
+  RESOURCE_AUDIENCE_ITEMS,
+  RESOURCE_AUTHOR_BODY,
+  RESOURCE_AUTHOR_NAME,
+  RESOURCE_AUTHOR_SMALL,
+  RESOURCE_GATE_BUTTON,
+  RESOURCE_GATE_DESCRIPTION,
+  RESOURCE_GATE_HELPER,
+  RESOURCE_GATE_NOTICE,
+  RESOURCE_GATE_TITLE,
+  RESOURCE_HERO_CTA,
+  RESOURCE_HERO_HELPER,
+  RESOURCE_INCLUDED_AFTER,
+  RESOURCE_INCLUDED_HEADING,
+  RESOURCE_INTRO_BODY,
+  RESOURCE_INTRO_LEAD,
+  RESOURCE_ORIGIN_BODY,
+  RESOURCE_RELATED_HEADING,
+  RESOURCE_VALUE_BODY,
+} from '../../../lib/copy';
 import { getOtherResources, getResource, listResourceSlugs } from '../../../lib/resources';
 
 export const dynamic = 'force-dynamic';
@@ -32,16 +52,7 @@ const section = 'max-w-page mx-auto pt-section px-gutter break-keep';
 const hero = 'max-w-page mx-auto pt-section max-[720px]:pt-20 px-gutter break-keep';
 const sectionLast = `${section} pb-section`;
 const bodyCol = 'max-w-[720px] mx-auto w-full';
-
-function formatPublishedAt(iso: string): string {
-  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
-  if (m) return `${m[1]}.${m[2]}.${m[3]}`;
-  return iso;
-}
-
-function SectionLabel({ children }: { children: string }) {
-  return <span className="text-label text-muted leading-[1.4] tracking-normal">{children}</span>;
-}
+const prose = 'm-0 text-body whitespace-pre-line break-keep';
 
 function resolveCoverSrc(slug: string, cover?: string): string {
   const fallback = resourceThumbnail(slug);
@@ -75,18 +86,10 @@ export default async function FreeResourcePage({ params }: Props) {
 
   const access = doc.frontmatter.access ?? 'free';
   const cover = resolveCoverSrc(slug, doc.frontmatter.cover);
-  const readingMinutes = doc.frontmatter.readingMinutes;
-  const publishedLabel = formatPublishedAt(doc.frontmatter.publishedAt);
-  const accessMeta = access === 'paid' ? '유료' : '무료';
-  const metaParts = [
-    readingMinutes != null ? `약 ${readingMinutes}분` : null,
-    publishedLabel || null,
-    accessMeta,
-  ].filter(Boolean);
-
   const youtube = doc.frontmatter.youtube;
-  const contents = doc.frontmatter.contents ?? [];
+  const included = doc.frontmatter.included ?? [];
   const showLocked = !unlocked && !isPlaceholder && restParts.length > 0;
+  const heroCtaHref = unlocked ? '#part-00' : '#gate';
 
   return (
     <main>
@@ -100,38 +103,33 @@ export default async function FreeResourcePage({ params }: Props) {
             <h1 className="m-0 font-hero font-bold text-strong text-[60px] leading-[var(--leading-hero)] tracking-[var(--tracking-hero)] max-[720px]:text-[36px]">
               {doc.frontmatter.title}
             </h1>
-            <p className="m-0 max-w-[30em] text-body">{doc.frontmatter.summary}</p>
-            {slug === 'claude-ppt-guidebook' ? (
-              <p className="m-0 max-w-measure text-body break-keep sm:whitespace-pre-line">
-                {`이 가이드북은 VOD 「클로드 디자인 실전」 교재로 들어갈 예정입니다.\n출시 기념 한정 수량 무료 배포중이며, 지금 이메일을 남겨주신 분들에 한해서만 무료로 공개합니다.`}
-              </p>
-            ) : null}
-            {metaParts.length > 0 ? (
-              <p className="m-0 text-[13px] text-muted">{metaParts.join(' · ')}</p>
-            ) : null}
-            <div className="flex flex-wrap gap-inline max-[720px]:flex-col max-[720px]:[&_a]:w-full max-[720px]:[&_button]:w-full">
-              {unlocked ? (
-                <Button variant="primary" href="#part-00">
-                  본문으로
-                </Button>
-              ) : access === 'free' ? (
-                <Button variant="primary" href="#gate">
-                  무료로 열기
-                </Button>
-              ) : (
-                <Button variant="primary" href="/course">
-                  강의 보기
-                </Button>
-              )}
-              {youtube ? (
-                <Button
-                  variant="secondary"
-                  href={youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  영상으로 보기
-                </Button>
+            <p className="m-0 max-w-[30em] text-body whitespace-pre-line">
+              {doc.frontmatter.summary}
+            </p>
+            <div className="flex flex-col gap-inline-tight max-[720px]:hidden">
+              <div className="flex flex-wrap gap-inline">
+                {access === 'paid' && !unlocked ? (
+                  <Button variant="primary" href="/course">
+                    강의 보기
+                  </Button>
+                ) : (
+                  <Button variant="primary" href={heroCtaHref}>
+                    {RESOURCE_HERO_CTA}
+                  </Button>
+                )}
+                {youtube ? (
+                  <Button
+                    variant="secondary"
+                    href={youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    영상으로 보기
+                  </Button>
+                ) : null}
+              </div>
+              {access === 'free' && !unlocked ? (
+                <p className="m-0 text-[13px] text-muted">{RESOURCE_HERO_HELPER}</p>
               ) : null}
             </div>
           </div>
@@ -151,67 +149,73 @@ export default async function FreeResourcePage({ params }: Props) {
         </div>
       </section>
 
-      {contents.length > 0 ? (
-        <section className={section}>
-          <div className={`${bodyCol} flex flex-col gap-block`}>
-            <SectionHeading
-              index="01"
-              label="들어 있는 것"
-              title={
-                slug === 'claude-ppt-guidebook'
-                  ? '프롬프트 7개와 그걸 쓰는 순서를 담았습니다'
-                  : slug === 'claude-prompt-set'
-                    ? '맞춤 설정과 프로젝트 지침을 바로 붙여넣을 수 있게 담았습니다'
-                    : slug === 'ai-design-5-principles'
-                      ? 'AI 티를 줄이는 다섯 가지 원칙과 진단 프롬프트를 담았습니다'
-                      : '이 자료에 들어 있는 것을 정리했습니다'
-              }
-            />
-            <ContentsList items={contents} />
-          </div>
-        </section>
-      ) : null}
-
       <section className={section}>
-        <div className={bodyCol}>
-          <span className="text-label tracking-[var(--tracking-label)] text-muted">
-            02 / 만든 사람
-          </span>
-          <div className="h-block-tight" />
-          <div className="flex gap-10 items-start max-[960px]:flex-col max-[960px]:gap-6">
-            <div className="flex-none w-[240px] aspect-[1/1] rounded-full overflow-hidden bg-raised border-hairline relative isolate max-[960px]:w-full max-[960px]:max-w-[240px]">
-              <Image
-                className="object-cover object-center rounded"
-                src="/img/profile.png"
-                alt="nodi"
-                fill
-                sizes="240px"
-                quality={100}
-              />
-            </div>
-            <div className="flex flex-col gap-6 pt-inline-tight">
-              <ul className="list-none m-0 p-0 flex flex-col gap-y-0">
-                <li className="text-h2 font-bold text-strong max-[720px]:text-[20px]">노디</li>
-                <li className="text-body max-[720px]:text-body-sm pt-2">
-                  직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어입니다.
-                </li>
-                <li className="text-body max-[720px]:text-body-sm">
-                  시각디자인 학사, 컴퓨터소프트웨어공학 석사
-                </li>
-                <li className="text-body max-[720px]:text-body-sm">풀스택 개발 부트캠프 강사</li>
-              </ul>
-              <a href="https://www.youtube.com/@nodiworks" className="text-label text-muted">
-                유튜브 노디 AI
-              </a>
-            </div>
+        <div className={`${bodyCol} flex flex-col gap-block`}>
+          <div className="flex flex-col gap-6">
+            <p className="m-0 text-h2 font-bold text-strong break-keep max-[720px]:text-[20px]">
+              {RESOURCE_INTRO_LEAD}
+            </p>
+            {RESOURCE_INTRO_BODY.map((paragraph) => (
+              <p key={paragraph} className={prose}>
+                {paragraph}
+              </p>
+            ))}
           </div>
+
+          {included.length > 0 ? (
+            <div className="flex flex-col gap-6">
+              <h2 className="m-0 text-h2 font-bold text-strong break-keep max-[720px]:text-[20px]">
+                {RESOURCE_INCLUDED_HEADING}
+              </h2>
+              <ul className="list-none m-0 p-0 flex flex-col">
+                {included.map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-baseline gap-3 py-inline border-b border-line text-body break-keep"
+                  >
+                    <span className="text-accent shrink-0" aria-hidden>
+                      ·
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              {RESOURCE_INCLUDED_AFTER.map((paragraph) => (
+                <p key={paragraph} className={prose}>
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          ) : null}
+
+          <div className="flex flex-col gap-6">
+            <h2 className="m-0 text-h2 font-bold text-strong break-keep max-[720px]:text-[20px]">
+              {RESOURCE_AUDIENCE_HEADING}
+            </h2>
+            <ul className="list-none m-0 p-0 flex flex-col">
+              {RESOURCE_AUDIENCE_ITEMS.map((item) => (
+                <li
+                  key={item}
+                  className="flex items-baseline gap-3 py-inline border-b border-line text-body break-keep"
+                >
+                  <span className="text-accent shrink-0" aria-hidden>
+                    ·
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <p className={prose}>{RESOURCE_VALUE_BODY}</p>
+          <p className={prose}>{RESOURCE_ORIGIN_BODY}</p>
         </div>
       </section>
 
       {doc.parts.length > 0 ? (
         <section className={section}>
           <div className={`${bodyCol} flex flex-col gap-block`}>
-            <SectionLabel>03 / 목차</SectionLabel>
+            <SectionHeading index="02" label="들어 있는 내용" />
             <Toc
               parts={doc.parts.map((p) => ({ id: p.id, heading: p.heading }))}
               freeParts={freeCount}
@@ -281,13 +285,10 @@ export default async function FreeResourcePage({ params }: Props) {
                 <div id="gate" className="scroll-mt-24">
                   <Suspense fallback={null}>
                     <EmailGateForm
-                      title="지금 남기면, 유료 전환 뒤에도 계속 열립니다"
-                      description={
-                        freeCount === 0
-                          ? '이메일 등록 후 본문 전체를 열 수 있습니다.'
-                          : 'Part 01부터 부록의 프롬프트 7개까지 전부 열립니다. 강의 출시 후 새로 오는 분은 유료로 보게 됩니다.'
-                      }
-                      buttonLabel="무료로 열기"
+                      title={RESOURCE_GATE_TITLE}
+                      description={RESOURCE_GATE_DESCRIPTION}
+                      buttonLabel={RESOURCE_GATE_BUTTON}
+                      helper={RESOURCE_GATE_HELPER}
                       slug={slug}
                       extraField={BUILDING_EXTRA_FIELD}
                       layout="stack"
@@ -295,7 +296,7 @@ export default async function FreeResourcePage({ params }: Props) {
                   </Suspense>
                 </div>
                 <p className="m-0 text-[13px] text-muted break-keep">
-                  무료 공개 종료 시점은 강의 출시일에 맞춰 이 페이지와 메일로 먼저 알립니다.
+                  {RESOURCE_GATE_NOTICE}
                 </p>
               </>
             )}
@@ -340,11 +341,45 @@ export default async function FreeResourcePage({ params }: Props) {
         </section>
       ) : null}
 
+      <section className={section}>
+        <div className={bodyCol}>
+          <span className="text-label tracking-[var(--tracking-label)] text-muted">
+            03 / 만든 사람
+          </span>
+          <div className="h-block-tight" />
+          <div className="flex gap-10 items-start max-[960px]:flex-col max-[960px]:gap-6">
+            <div className="flex-none w-[240px] aspect-[1/1] rounded-full overflow-hidden bg-raised border-hairline relative isolate max-[960px]:w-full max-[960px]:max-w-[240px]">
+              <Image
+                className="object-cover object-center rounded"
+                src="/img/profile.png"
+                alt="nodi"
+                fill
+                sizes="240px"
+                quality={100}
+              />
+            </div>
+            <div className="flex flex-col gap-6 pt-inline-tight">
+              <div className="flex flex-col gap-y-0">
+                <p className="m-0 text-h2 font-bold text-strong max-[720px]:text-[20px]">
+                  {RESOURCE_AUTHOR_NAME}
+                </p>
+                <p className="m-0 text-body max-[720px]:text-body-sm pt-2 whitespace-pre-line">
+                  {RESOURCE_AUTHOR_BODY}
+                </p>
+              </div>
+              <a href="https://www.youtube.com/@nodiworks" className="text-label text-muted">
+                {RESOURCE_AUTHOR_SMALL}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {others.length > 0 ? (
         <section className={sectionLast}>
           <div className={`${bodyCol} flex flex-col gap-block-tight`}>
             <span className="text-label tracking-[var(--tracking-label)] text-muted">
-              다른 자료
+              {RESOURCE_RELATED_HEADING}
             </span>
             <div className="grid grid-cols-2 gap-6 max-[720px]:grid-cols-1">
               {others.map((resource) => (
@@ -355,7 +390,7 @@ export default async function FreeResourcePage({ params }: Props) {
                   thumbnail={
                     resource.frontmatter.cover ?? resourceThumbnail(resource.frontmatter.slug)
                   }
-                  badges={resource.frontmatter.access === 'paid' ? ['강의 교재'] : ['무료 공개 중']}
+                  badges={resource.frontmatter.access === 'paid' ? ['강의 교재'] : ['무료 자료']}
                 />
               ))}
             </div>
@@ -363,7 +398,9 @@ export default async function FreeResourcePage({ params }: Props) {
         </section>
       ) : null}
 
-      {showLocked && access === 'free' ? <StickyUnlockBar /> : null}
+      {showLocked && access === 'free' ? (
+        <StickyUnlockBar label={RESOURCE_HERO_CTA} />
+      ) : null}
     </main>
   );
 }

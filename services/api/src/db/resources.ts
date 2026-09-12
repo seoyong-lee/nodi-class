@@ -10,6 +10,7 @@ export type ResourceRecord = {
   title: string;
   series: string;
   summary: string;
+  included?: string[];
   youtube?: string;
   freeParts: number;
   publishedAt: string;
@@ -27,6 +28,7 @@ export type ResourcePublic = {
   title: string;
   series: string;
   summary: string;
+  included?: string[];
   youtube?: string;
   freeParts: number;
   publishedAt: string;
@@ -46,6 +48,7 @@ function toPublic(item: ResourceRecord): ResourcePublic {
     title: item.title,
     series: item.series,
     summary: item.summary,
+    included: item.included,
     youtube: item.youtube,
     freeParts: item.freeParts,
     publishedAt: item.publishedAt,
@@ -59,7 +62,7 @@ function toPublic(item: ResourceRecord): ResourcePublic {
 export async function getResourceBySlug(
   slug: string,
 ): Promise<ResourcePublic | null> {
-  const { resourcesTable } = getEnv();
+  const { resourcesTable } = await getEnv();
   const res = await getDocClient().send(
     new GetCommand({
       TableName: resourcesTable,
@@ -71,7 +74,7 @@ export async function getResourceBySlug(
 }
 
 export async function listPublishedResources(): Promise<ResourcePublic[]> {
-  const { resourcesTable } = getEnv();
+  const { resourcesTable } = await getEnv();
   const res = await getDocClient().send(
     new QueryCommand({
       TableName: resourcesTable,
@@ -87,7 +90,7 @@ export async function listPublishedResources(): Promise<ResourcePublic[]> {
 export async function upsertResource(
   input: ResourceUpsertInput,
 ): Promise<ResourcePublic> {
-  const { resourcesTable } = getEnv();
+  const { resourcesTable } = await getEnv();
   const now = new Date().toISOString();
   const raw = await getDocClient().send(
     new GetCommand({
@@ -105,6 +108,7 @@ export async function upsertResource(
     title: input.title,
     series: input.series,
     summary: input.summary,
+    included: input.included,
     youtube: input.youtube,
     freeParts: input.freeParts,
     publishedAt: input.publishedAt,

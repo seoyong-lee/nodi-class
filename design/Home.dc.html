@@ -1,227 +1,814 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
-</head>
-<body>
-<x-dc>
-<helmet>
-<meta name="design_doc_mode" content="canvas">
-<link rel="stylesheet" href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/fonts.css">
-<link rel="stylesheet" href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/colors.css">
-<link rel="stylesheet" href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/typography.css">
-<link rel="stylesheet" href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/spacing.css">
-<link rel="stylesheet" href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/shape.css">
-<link rel="stylesheet" href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/motion.css">
-<link rel="stylesheet" href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/base.css">
-<link rel="stylesheet" href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/styles.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@700&amp;display=swap">
-<script src="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/_ds_bundle.js"></script>
-<style>body{margin:0;background:#07100D}button,a{box-sizing:border-box}article>dl{flex:1 1 auto}article{height:100%}article>div:last-child{flex:1 1 auto;justify-content:space-between}[data-gate] form>div{flex:1 1 240px !important;width:auto !important}[data-gate] form>div>input{flex:0 0 auto !important}[data-gate="m"] section{padding:24px !important}[data-gate="m"] form{flex-direction:column !important}[data-gate="m"] form>div{flex:0 0 auto !important;width:100% !important}[data-gate="m"] form>button{width:100% !important}[data-cta="secondary"] article button,[data-cta="secondary"] article a{background:transparent !important;color:var(--text-strong) !important;border-color:var(--border-subtle) !important}</style>
-</helmet>
-<div style="display:flex;gap:64px;align-items:flex-start;padding:56px;background:#07100D;font-family:var(--font-sans);width:max-content">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="./support.js"></script>
+  </head>
+  <body>
+    <x-dc>
+      <helmet>
+        <meta name="design_doc_mode" content="canvas" />
+        <link
+          rel="stylesheet"
+          href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/fonts.css"
+        />
+        <link
+          rel="stylesheet"
+          href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/colors.css"
+        />
+        <link
+          rel="stylesheet"
+          href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/typography.css"
+        />
+        <link
+          rel="stylesheet"
+          href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/spacing.css"
+        />
+        <link
+          rel="stylesheet"
+          href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/shape.css"
+        />
+        <link
+          rel="stylesheet"
+          href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/motion.css"
+        />
+        <link
+          rel="stylesheet"
+          href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/tokens/base.css"
+        />
+        <link
+          rel="stylesheet"
+          href="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/styles.css"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@700&amp;display=swap"
+        />
+        <script src="_ds/design-system-e515391b-b84f-475c-aaa6-84d47abb851f/_ds_bundle.js"></script>
+        <style>
+          body {
+            margin: 0;
+            background: #07100d;
+          }
+          button,
+          a {
+            box-sizing: border-box;
+          }
+          article > dl {
+            flex: 1 1 auto;
+          }
+          article {
+            height: 100%;
+          }
+          article > div:last-child {
+            flex: 1 1 auto;
+            justify-content: space-between;
+          }
+          [data-gate] form > div {
+            flex: 1 1 240px !important;
+            width: auto !important;
+          }
+          [data-gate] form > div > input {
+            flex: 0 0 auto !important;
+          }
+          [data-gate='m'] section {
+            padding: 24px !important;
+          }
+          [data-gate='m'] form {
+            flex-direction: column !important;
+          }
+          [data-gate='m'] form > div {
+            flex: 0 0 auto !important;
+            width: 100% !important;
+          }
+          [data-gate='m'] form > button {
+            width: 100% !important;
+          }
+          [data-cta='secondary'] article button,
+          [data-cta='secondary'] article a {
+            background: transparent !important;
+            color: var(--text-strong) !important;
+            border-color: var(--border-subtle) !important;
+          }
+        </style>
+      </helmet>
+      <div
+        style="
+          display: flex;
+          gap: 64px;
+          align-items: flex-start;
+          padding: 56px;
+          background: #07100d;
+          font-family: var(--font-sans);
+          width: max-content;
+        "
+      >
+        <div style="display: flex; flex-direction: column; gap: 14px">
+          <span style="font-size: 12px; letter-spacing: 0.08em; color: #4a5854">HOME · 1440</span>
+          <div
+            data-screen-label="홈 1440"
+            style="
+              width: 1440px;
+              background: var(--surface-page);
+              border: 1px solid var(--border-subtle);
+              border-radius: 11px;
+              overflow: hidden;
+              color: var(--text-body);
+              font-size: 16px;
+              line-height: 1.7;
+              letter-spacing: -0.01em;
+              word-break: keep-all;
+            "
+          >
+            <header
+              style="
+                background: rgba(13, 18, 16, 0.92);
+                border-bottom: 1px solid var(--border-subtle);
+              "
+            >
+              <div
+                style="
+                  max-width: 1120px;
+                  margin: 0 auto;
+                  padding: 0 24px;
+                  height: 64px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  gap: 24px;
+                "
+              >
+                <a
+                  href="Home.dc.html"
+                  style="display: flex; align-items: baseline; gap: 6px; text-decoration: none"
+                  ><span
+                    style="
+                      font-size: 19px;
+                      font-weight: 700;
+                      letter-spacing: -0.03em;
+                      color: var(--text-strong);
+                    "
+                    >노디 AI</span
+                  ><span style="font-size: 19px; color: var(--text-body)">클래스</span></a
+                >
+                <nav style="display: flex; align-items: center; gap: 24px">
+                  <a href="FreeGuidebook.dc.html" style="font-size: 15px; color: var(--text-body)"
+                    >무료 자료</a
+                  >
+                  <a href="Course.dc.html" style="font-size: 15px; color: var(--text-body)"
+                    >클래스</a
+                  >
+                  <a href="Service.dc.html" style="font-size: 15px; color: var(--text-body)"
+                    >서비스</a
+                  >
+                  <x-import
+                    component-from-global-scope="DesignSystem_e51539.Button"
+                    variant="secondary"
+                    size="sm"
+                    icon="arrow-up-right"
+                    href="https://www.youtube.com/@nodiworks"
+                    hint-size="96px,34px"
+                    >유튜브</x-import
+                  >
+                </nav>
+              </div>
+            </header>
 
-<div style="display:flex;flex-direction:column;gap:14px">
-<span style="font-size:12px;letter-spacing:0.08em;color:#4A5854">HOME · 1440</span>
-<div data-screen-label="홈 1440" style="width:1440px;background:var(--surface-page);border:1px solid var(--border-subtle);border-radius:11px;overflow:hidden;color:var(--text-body);font-size:16px;line-height:1.7;letter-spacing:-0.01em;word-break:keep-all">
+            <section style="max-width: 1120px; margin: 0 auto; padding: 120px 24px 0">
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 24px;
+                  text-align: center;
+                "
+              >
+                <span style="font-size: 12px; color: var(--text-muted)">노디 AI 클래스</span>
+                <h1
+                  style="
+                    margin: 0;
+                    font-family: 'IBM Plex Sans KR', 'Pretendard', sans-serif;
+                    font-size: 60px;
+                    font-weight: 700;
+                    line-height: 1.2;
+                    letter-spacing: -0.035em;
+                    color: var(--text-strong);
+                  "
+                >
+                  코딩 몰라도,<br />이제 AI로 직접 만들 수 있습니다
+                </h1>
+                <p style="margin: 0; max-width: 32em">
+                  노디 AI&nbsp;<span style="letter-spacing: -0.16px">유튜브</span>에서 소개한
+                  프롬프트 · 가이드를 한곳에 정리했습니다. <br />내 사업에 바로 써볼 수 있는
+                  자료부터 무료로 시작해보세요.
+                </p>
+                <div style="display: flex; gap: 12px; justify-content: center; margin-top: 8px">
+                  <x-import
+                    component-from-global-scope="DesignSystem_e51539.Button"
+                    href="#free"
+                    hint-size="150px,48px"
+                    >무료 자료 받기</x-import
+                  >
+                  <x-import
+                    component-from-global-scope="DesignSystem_e51539.Button"
+                    variant="secondary"
+                    href="https://www.youtube.com/@nodiworks"
+                    hint-size="150px,48px"
+                    >유튜브에서 보기</x-import
+                  >
+                </div>
+              </div>
+            </section>
 
-<header style="background:rgba(13,18,16,0.92);border-bottom:1px solid var(--border-subtle)">
-<div style="max-width:1120px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:24px">
-<a href="Home.dc.html" style="display:flex;align-items:baseline;gap:6px;text-decoration:none"><span style="font-size:19px;font-weight:700;letter-spacing:-0.03em;color:var(--text-strong)">노디 AI</span><span style="font-size:19px;color:var(--text-body)">클래스</span></a>
-<nav style="display:flex;align-items:center;gap:24px">
-<a href="FreeGuidebook.dc.html" style="font-size:15px;color:var(--text-body)">무료 자료</a>
-<a href="Course.dc.html" style="font-size:15px;color:var(--text-body)">클래스</a>
-<a href="Service.dc.html" style="font-size:15px;color:var(--text-body)">서비스</a>
-<x-import component-from-global-scope="DesignSystem_e51539.Button" variant="secondary" size="sm" icon="arrow-up-right" href="https://www.youtube.com/@nodiworks" hint-size="96px,34px">유튜브</x-import>
-</nav>
-</div>
-</header>
+            <section id="free" style="max-width: 1120px; margin: 0 auto; padding: 120px 24px 0">
+              <x-import
+                component-from-global-scope="DesignSystem_e51539.SectionHeading"
+                index="01"
+                label="무료 자료"
+                title="영상에서 쓴 자료, 내 사업에 바로 써보세요"
+                hint-size="100%,80px"
+              ></x-import>
+              <div style="height: 40px"></div>
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px">
+                <a
+                  href="FreeGuidebook.dc.html"
+                  style="display: grid; text-decoration: none; color: inherit"
+                  ><x-import
+                    component-from-global-scope="DesignSystem_e51539.ResourceCard"
+                    title="클로드 PPT 실전 가이드북"
+                    locked-label=""
+                    hint-size="100%,280px"
+                  ></x-import
+                ></a>
+                <a
+                  href="FreeGuidebook.dc.html"
+                  style="display: grid; text-decoration: none; color: inherit"
+                  ><x-import
+                    component-from-global-scope="DesignSystem_e51539.ResourceCard"
+                    title="클로드 맞춤 설정·프로젝트 지침 프롬프트 세트"
+                    locked-label=""
+                    hint-size="100%,280px"
+                  ></x-import
+                ></a>
+                <a
+                  href="FreeGuidebook.dc.html"
+                  style="display: grid; text-decoration: none; color: inherit"
+                  ><x-import
+                    component-from-global-scope="DesignSystem_e51539.ResourceCard"
+                    title="클로드 디자인 랜딩페이지 체크리스트"
+                    locked-label=""
+                    hint-size="100%,280px"
+                  ></x-import
+                ></a>
+                <a
+                  href="FreeGuidebook.dc.html"
+                  style="display: grid; text-decoration: none; color: inherit"
+                  ><x-import
+                    component-from-global-scope="DesignSystem_e51539.ResourceCard"
+                    title="AI 티 없애는 디자인 5원칙 요약본"
+                    locked-label=""
+                    hint-size="100%,280px"
+                  ></x-import
+                ></a>
+              </div>
+            </section>
 
-<section style="max-width:1120px;margin:0 auto;padding:120px 24px 0">
-<div style="display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center">
-<span style="font-size:12px;color:var(--text-muted)">노디 AI 클래스</span>
-<h1 style="margin:0;font-family:'IBM Plex Sans KR','Pretendard',sans-serif;font-size:60px;font-weight:700;line-height:1.2;letter-spacing:-0.035em;color:var(--text-strong)">코딩 몰라도,<br>이제 AI로 직접 만들 수 있습니다</h1>
-<p style="margin:0;max-width:32em">노디 AI&nbsp;<span style="letter-spacing: -0.16px;">유튜브</span>에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다. <br>내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.</p>
-<div style="display:flex;gap:12px;justify-content:center;margin-top:8px">
-<x-import component-from-global-scope="DesignSystem_e51539.Button" href="#free" hint-size="150px,48px">무료 자료 받기</x-import>
-<x-import component-from-global-scope="DesignSystem_e51539.Button" variant="secondary" href="https://www.youtube.com/@nodiworks" hint-size="150px,48px">유튜브에서 보기</x-import>
-</div>
-</div>
-</section>
+            <section style="max-width: 1120px; margin: 0 auto; padding: 120px 24px 0">
+              <span style="font-size: 12px; letter-spacing: 0.08em; color: var(--text-muted)"
+                >02 / 이렇게 달라집니다</span
+              >
+              <div style="height: 24px"></div>
+              <x-import
+                component-from-global-scope="DesignSystem_e51539.BeforeAfter"
+                beforeCaption="만들기 전"
+                afterCaption="기준을 준 뒤"
+                before="{{ slot }}"
+                after="{{ slot }}"
+                hint-size="100%,260px"
+              ></x-import>
+              <p
+                style="margin: 24px 0 0; max-width: 34em; font-size: 15px; color: var(--text-muted)"
+              >
+                같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.
+              </p>
+            </section>
 
-<section id="free" style="max-width:1120px;margin:0 auto;padding:120px 24px 0">
-<x-import component-from-global-scope="DesignSystem_e51539.SectionHeading" index="01" label="무료 자료" title="영상에서 쓴 자료, 내 사업에 바로 써보세요" hint-size="100%,80px"></x-import>
-<div style="height:40px"></div>
-<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px">
-<a href="FreeGuidebook.dc.html" style="display:grid;text-decoration:none;color:inherit"><x-import component-from-global-scope="DesignSystem_e51539.ResourceCard" title="클로드 PPT 실전 가이드북" locked-label="" hint-size="100%,280px"></x-import></a>
-<a href="FreeGuidebook.dc.html" style="display:grid;text-decoration:none;color:inherit"><x-import component-from-global-scope="DesignSystem_e51539.ResourceCard" title="클로드 맞춤 설정·프로젝트 지침 프롬프트 세트" locked-label="" hint-size="100%,280px"></x-import></a>
-<a href="FreeGuidebook.dc.html" style="display:grid;text-decoration:none;color:inherit"><x-import component-from-global-scope="DesignSystem_e51539.ResourceCard" title="클로드 디자인 랜딩페이지 체크리스트" locked-label="" hint-size="100%,280px"></x-import></a>
-<a href="FreeGuidebook.dc.html" style="display:grid;text-decoration:none;color:inherit"><x-import component-from-global-scope="DesignSystem_e51539.ResourceCard" title="AI 티 없애는 디자인 5원칙 요약본" locked-label="" hint-size="100%,280px"></x-import></a>
-</div>
-</section>
+            <section style="max-width: 1120px; margin: 0 auto; padding: 120px 24px 0">
+              <x-import
+                component-from-global-scope="DesignSystem_e51539.SectionHeading"
+                index="03"
+                label="클래스"
+                title="직접 만들어봤다면, 이제 기준을 배워보세요"
+                hint-size="100%,80px"
+              ></x-import>
+              <div style="height: 40px"></div>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px">
+                <x-import
+                  component-from-global-scope="DesignSystem_e51539.ProductCard"
+                  label="VOD · 준비 중"
+                  title="클로드 디자인 실전"
+                  summary="디자이너 없이 내 사업의 페이지를 반복해서 만드는 과정"
+                  rows="{{ vodRows }}"
+                  ctaLabel="출시 알림 받기"
+                  ctaHref="Course.dc.html"
+                  hint-size="100%,380px"
+                ></x-import>
+                <div data-cta="secondary">
+                  <x-import
+                    component-from-global-scope="DesignSystem_e51539.ProductCard"
+                    label="워크숍 · 준비 중"
+                    title="라이브 첨삭"
+                    summary="직접 만든 결과물을 가져오면 화면을 보며 함께 고칩니다"
+                    rows="{{ workshopRows }}"
+                    ctaLabel="알림 받기"
+                    hint-size="100%,380px"
+                  ></x-import>
+                </div>
+                <div data-cta="secondary">
+                  <x-import
+                    component-from-global-scope="DesignSystem_e51539.ProductCard"
+                    label="서비스"
+                    title="AI 결과물 마무리"
+                    summary="AI로 만든 초안을, 내놓을 수 있는 결과물로 마무리합니다"
+                    rows="{{ serviceRows }}"
+                    ctaLabel="프로젝트 검토 요청하기"
+                    ctaHref="Service.dc.html"
+                    hint-size="100%,380px"
+                  ></x-import>
+                </div>
+              </div>
+            </section>
 
-<section style="max-width:1120px;margin:0 auto;padding:120px 24px 0">
-<span style="font-size:12px;letter-spacing:0.08em;color:var(--text-muted)">02 / 이렇게 달라집니다</span>
-<div style="height:24px"></div>
-<x-import component-from-global-scope="DesignSystem_e51539.BeforeAfter" beforeCaption="만들기 전" afterCaption="기준을 준 뒤" before="{{ slot }}" after="{{ slot }}" hint-size="100%,260px"></x-import>
-<p style="margin:24px 0 0;max-width:34em;font-size:15px;color:var(--text-muted)">같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.</p>
-</section>
+            <section style="max-width: 1120px; margin: 0 auto; padding: 120px 24px 0">
+              <span style="font-size: 12px; letter-spacing: 0.08em; color: var(--text-muted)"
+                >04 / 만든 사람</span
+              >
+              <div style="height: 24px"></div>
+              <div style="display: flex; gap: 40px; align-items: flex-start">
+                <div
+                  style="
+                    flex: none;
+                    width: 280px;
+                    aspect-ratio: 4/5;
+                    background: var(--surface-raised);
+                    border: 1px solid var(--border-subtle);
+                    border-radius: 11px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <span style="font-size: 12px; letter-spacing: 0.08em; color: var(--text-disabled)"
+                    >4:5</span
+                  >
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 24px; padding-top: 8px">
+                  <ul
+                    style="
+                      list-style: none;
+                      margin: 0;
+                      padding: 0;
+                      display: flex;
+                      flex-direction: column;
+                      gap: 12px;
+                    "
+                  >
+                    <li
+                      style="
+                        font-size: 20px;
+                        font-weight: 700;
+                        line-height: 1.45;
+                        letter-spacing: -0.015em;
+                        color: var(--text-strong);
+                      "
+                    >
+                      직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어
+                    </li>
+                    <li style="font-size: 16px; color: var(--text-body)">
+                      컴퓨터소프트웨어공학 석사
+                    </li>
+                    <li style="font-size: 16px; color: var(--text-body)">
+                      비전공자 대상 풀스택 개발 부트캠프 강사
+                    </li>
+                  </ul>
+                  <span style="font-size: 12px; color: var(--text-muted)">유튜브 노디 AI 운영</span>
+                </div>
+              </div>
+            </section>
 
-<section style="max-width:1120px;margin:0 auto;padding:120px 24px 0">
-<x-import component-from-global-scope="DesignSystem_e51539.SectionHeading" index="03" label="클래스" title="직접 만들어봤다면, 이제 기준을 배워보세요" hint-size="100%,80px"></x-import>
-<div style="height:40px"></div>
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
-<x-import component-from-global-scope="DesignSystem_e51539.ProductCard" label="VOD · 준비 중" title="클로드 디자인 실전" summary="디자이너 없이 내 사업의 페이지를 반복해서 만드는 과정" rows="{{ vodRows }}" ctaLabel="출시 알림 받기" ctaHref="Course.dc.html" hint-size="100%,380px"></x-import>
-<div data-cta="secondary"><x-import component-from-global-scope="DesignSystem_e51539.ProductCard" label="워크숍 · 준비 중" title="라이브 첨삭" summary="직접 만든 결과물을 가져오면 화면을 보며 함께 고칩니다" rows="{{ workshopRows }}" ctaLabel="알림 받기" hint-size="100%,380px"></x-import></div>
-<div data-cta="secondary"><x-import component-from-global-scope="DesignSystem_e51539.ProductCard" label="서비스" title="AI 결과물 마무리" summary="AI로 만든 초안을, 내놓을 수 있는 결과물로 마무리합니다" rows="{{ serviceRows }}" ctaLabel="프로젝트 검토 요청하기" ctaHref="Service.dc.html" hint-size="100%,380px"></x-import></div>
-</div>
-</section>
+            <section style="max-width: 1120px; margin: 0 auto; padding: 120px 24px">
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 40px">
+                <h2
+                  style="
+                    margin: 0;
+                    font-size: 30px;
+                    font-weight: 700;
+                    line-height: 1.3;
+                    letter-spacing: -0.015em;
+                    color: var(--text-strong);
+                    text-align: center;
+                  "
+                >
+                  무료 자료로 먼저 직접 만들어보세요
+                </h2>
+                <div style="width: 100%; max-width: 640px">
+                  <div data-gate="true">
+                    <x-import
+                      component-from-global-scope="DesignSystem_e51539.EmailGate"
+                      title="한 번 등록하면 모든 자료가 열립니다"
+                      description=""
+                      button-label="받기"
+                      consent="개인정보 수집·이용에 동의합니다"
+                      submitted-label="입력한 이메일로도 보내드렸습니다"
+                      submitted="{{ sentEnd }}"
+                      onSubmit="{{ submitEnd }}"
+                      hint-size="100%,200px"
+                    ></x-import>
+                  </div>
+                </div>
+              </div>
+            </section>
 
-<section style="max-width:1120px;margin:0 auto;padding:120px 24px 0">
-<span style="font-size:12px;letter-spacing:0.08em;color:var(--text-muted)">04 / 만든 사람</span>
-<div style="height:24px"></div>
-<div style="display:flex;gap:40px;align-items:flex-start">
-<div style="flex:none;width:280px;aspect-ratio:4/5;background:var(--surface-raised);border:1px solid var(--border-subtle);border-radius:11px;display:flex;align-items:center;justify-content:center"><span style="font-size:12px;letter-spacing:0.08em;color:var(--text-disabled)">4:5</span></div>
-<div style="display:flex;flex-direction:column;gap:24px;padding-top:8px">
-<ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px">
-<li style="font-size:20px;font-weight:700;line-height:1.45;letter-spacing:-0.015em;color:var(--text-strong)">직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어</li>
-<li style="font-size:16px;color:var(--text-body)">컴퓨터소프트웨어공학 석사</li>
-<li style="font-size:16px;color:var(--text-body)">비전공자 대상 풀스택 개발 부트캠프 강사</li>
-</ul>
-<span style="font-size:12px;color:var(--text-muted)">유튜브 노디 AI 운영</span>
-</div>
-</div>
-</section>
+            <x-import
+              component-from-global-scope="DesignSystem_e51539.SiteFooter"
+              operator="노디 AI 클래스 · 운영 Cascades"
+              business="{{ biz }}"
+              socialLinks="{{ social }}"
+              hint-size="100%,240px"
+            ></x-import>
+          </div>
+        </div>
 
-<section style="max-width:1120px;margin:0 auto;padding:120px 24px">
-<div style="display:flex;flex-direction:column;align-items:center;gap:40px">
-<h2 style="margin:0;font-size:30px;font-weight:700;line-height:1.3;letter-spacing:-0.015em;color:var(--text-strong);text-align:center">무료 자료로 먼저 직접 만들어보세요</h2>
-<div style="width:100%;max-width:640px">
-<div data-gate="true"><x-import component-from-global-scope="DesignSystem_e51539.EmailGate" title="한 번 등록하면 모든 자료가 열립니다" description="" button-label="받기" consent="개인정보 수집·이용에 동의합니다" submitted-label="입력한 이메일로도 보내드렸습니다" submitted="{{ sentEnd }}" onSubmit="{{ submitEnd }}" hint-size="100%,200px"></x-import></div>
-</div>
-</div>
-</section>
+        <div style="display: flex; flex-direction: column; gap: 14px">
+          <span style="font-size: 12px; letter-spacing: 0.08em; color: #4a5854">HOME · 375</span>
+          <div
+            data-screen-label="홈 375"
+            style="
+              width: 375px;
+              background: var(--surface-page);
+              border: 1px solid var(--border-subtle);
+              border-radius: 11px;
+              overflow: hidden;
+              color: var(--text-body);
+              font-size: 16px;
+              line-height: 1.7;
+              letter-spacing: -0.01em;
+              word-break: keep-all;
+            "
+          >
+            <header
+              style="
+                background: rgba(13, 18, 16, 0.92);
+                border-bottom: 1px solid var(--border-subtle);
+              "
+            >
+              <div
+                style="
+                  padding: 0 24px;
+                  height: 56px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  gap: 16px;
+                "
+              >
+                <a
+                  href="Home.dc.html"
+                  style="display: flex; align-items: baseline; gap: 5px; text-decoration: none"
+                  ><span
+                    style="
+                      font-size: 17px;
+                      font-weight: 700;
+                      letter-spacing: -0.03em;
+                      color: var(--text-strong);
+                    "
+                    >노디 AI</span
+                  ><span style="font-size: 17px; color: var(--text-body)">클래스</span></a
+                >
+                <x-import
+                  component-from-global-scope="DesignSystem_e51539.Button"
+                  variant="secondary"
+                  size="sm"
+                  icon="arrow-up-right"
+                  href="https://www.youtube.com/@nodiworks"
+                  hint-size="88px,32px"
+                  >유튜브</x-import
+                >
+              </div>
+              <nav style="display: flex; gap: 20px; padding: 0 24px 14px">
+                <a href="FreeGuidebook.dc.html" style="font-size: 14px; color: var(--text-body)"
+                  >무료 자료</a
+                >
+                <a href="Course.dc.html" style="font-size: 14px; color: var(--text-body)">클래스</a>
+                <a href="Service.dc.html" style="font-size: 14px; color: var(--text-body)"
+                  >서비스</a
+                >
+              </nav>
+            </header>
 
-<x-import component-from-global-scope="DesignSystem_e51539.SiteFooter" operator="노디 AI 클래스 · 운영 Cascades" business="{{ biz }}" socialLinks="{{ social }}" hint-size="100%,240px"></x-import>
-</div>
-</div>
+            <section style="padding: 80px 24px 0">
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  gap: 24px;
+                  text-align: center;
+                "
+              >
+                <span style="font-size: 12px; color: var(--text-muted)">노디 AI 클래스</span>
+                <h1
+                  style="
+                    margin: 0;
+                    font-family: 'IBM Plex Sans KR', 'Pretendard', sans-serif;
+                    font-size: 30px;
+                    font-weight: 700;
+                    line-height: 1.26;
+                    letter-spacing: -0.035em;
+                    color: var(--text-strong);
+                  "
+                >
+                  코딩·디자인 몰라도,<br />내 사업에 필요한<br />결과물을 AI로 직접<br />만들 수
+                  있습니다.
+                </h1>
+                <p style="margin: 0; font-size: 15px">
+                  유튜브 노디 AI에서 소개한 프롬프트·가이드·체크리스트를 한곳에 정리했습니다. 내
+                  사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.
+                </p>
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    width: 100%;
+                    margin-top: 8px;
+                  "
+                >
+                  <x-import
+                    component-from-global-scope="DesignSystem_e51539.Button"
+                    href="#free-m"
+                    hint-size="100%,48px"
+                    >무료 자료 받기</x-import
+                  >
+                  <x-import
+                    component-from-global-scope="DesignSystem_e51539.Button"
+                    variant="secondary"
+                    href="https://www.youtube.com/@nodiworks"
+                    hint-size="100%,48px"
+                    >유튜브에서 보기</x-import
+                  >
+                </div>
+              </div>
+            </section>
 
-<div style="display:flex;flex-direction:column;gap:14px">
-<span style="font-size:12px;letter-spacing:0.08em;color:#4A5854">HOME · 375</span>
-<div data-screen-label="홈 375" style="width:375px;background:var(--surface-page);border:1px solid var(--border-subtle);border-radius:11px;overflow:hidden;color:var(--text-body);font-size:16px;line-height:1.7;letter-spacing:-0.01em;word-break:keep-all">
+            <section id="free-m" style="padding: 120px 24px 0">
+              <x-import
+                component-from-global-scope="DesignSystem_e51539.SectionHeading"
+                index="01"
+                label="무료 자료"
+                title="영상에서 쓴 자료, 내 사업에 바로 써보세요"
+                hint-size="100%,80px"
+              ></x-import>
+              <div style="height: 24px"></div>
+              <div style="display: flex; flex-direction: column; gap: 24px">
+                <a
+                  href="FreeGuidebook.dc.html"
+                  style="display: grid; text-decoration: none; color: inherit"
+                  ><x-import
+                    component-from-global-scope="DesignSystem_e51539.ResourceCard"
+                    title="클로드 PPT 실전 가이드북"
+                    locked-label=""
+                    hint-size="100%,280px"
+                  ></x-import
+                ></a>
+                <a
+                  href="FreeGuidebook.dc.html"
+                  style="display: grid; text-decoration: none; color: inherit"
+                  ><x-import
+                    component-from-global-scope="DesignSystem_e51539.ResourceCard"
+                    title="클로드 맞춤 설정·프로젝트 지침 프롬프트 세트"
+                    locked-label=""
+                    hint-size="100%,280px"
+                  ></x-import
+                ></a>
+                <a
+                  href="FreeGuidebook.dc.html"
+                  style="display: grid; text-decoration: none; color: inherit"
+                  ><x-import
+                    component-from-global-scope="DesignSystem_e51539.ResourceCard"
+                    title="클로드 디자인 랜딩페이지 체크리스트"
+                    locked-label=""
+                    hint-size="100%,280px"
+                  ></x-import
+                ></a>
+                <a
+                  href="FreeGuidebook.dc.html"
+                  style="display: grid; text-decoration: none; color: inherit"
+                  ><x-import
+                    component-from-global-scope="DesignSystem_e51539.ResourceCard"
+                    title="AI 티 없애는 디자인 5원칙 요약본"
+                    locked-label=""
+                    hint-size="100%,280px"
+                  ></x-import
+                ></a>
+              </div>
+            </section>
 
-<header style="background:rgba(13,18,16,0.92);border-bottom:1px solid var(--border-subtle)">
-<div style="padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px">
-<a href="Home.dc.html" style="display:flex;align-items:baseline;gap:5px;text-decoration:none"><span style="font-size:17px;font-weight:700;letter-spacing:-0.03em;color:var(--text-strong)">노디 AI</span><span style="font-size:17px;color:var(--text-body)">클래스</span></a>
-<x-import component-from-global-scope="DesignSystem_e51539.Button" variant="secondary" size="sm" icon="arrow-up-right" href="https://www.youtube.com/@nodiworks" hint-size="88px,32px">유튜브</x-import>
-</div>
-<nav style="display:flex;gap:20px;padding:0 24px 14px">
-<a href="FreeGuidebook.dc.html" style="font-size:14px;color:var(--text-body)">무료 자료</a>
-<a href="Course.dc.html" style="font-size:14px;color:var(--text-body)">클래스</a>
-<a href="Service.dc.html" style="font-size:14px;color:var(--text-body)">서비스</a>
-</nav>
-</header>
+            <section style="padding: 120px 24px 0">
+              <span style="font-size: 12px; letter-spacing: 0.08em; color: var(--text-muted)"
+                >02 / 이렇게 달라집니다</span
+              >
+              <div style="height: 24px"></div>
+              <x-import
+                component-from-global-scope="DesignSystem_e51539.BeforeAfter"
+                beforeCaption="만들기 전"
+                afterCaption="기준을 준 뒤"
+                before="{{ slot }}"
+                after="{{ slot }}"
+                style="grid-template-columns: 1fr"
+                hint-size="100%,360px"
+              ></x-import>
+              <p style="margin: 24px 0 0; font-size: 15px; color: var(--text-muted)">
+                같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.
+              </p>
+            </section>
 
-<section style="padding:80px 24px 0">
-<div style="display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center">
-<span style="font-size:12px;color:var(--text-muted)">노디 AI 클래스</span>
-<h1 style="margin:0;font-family:'IBM Plex Sans KR','Pretendard',sans-serif;font-size:30px;font-weight:700;line-height:1.26;letter-spacing:-0.035em;color:var(--text-strong)">코딩·디자인 몰라도,<br>내 사업에 필요한<br>결과물을 AI로 직접<br>만들 수 있습니다.</h1>
-<p style="margin:0;font-size:15px">유튜브 노디 AI에서 소개한 프롬프트·가이드·체크리스트를 한곳에 정리했습니다. 내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.</p>
-<div style="display:flex;flex-direction:column;gap:12px;width:100%;margin-top:8px">
-<x-import component-from-global-scope="DesignSystem_e51539.Button" href="#free-m" hint-size="100%,48px">무료 자료 받기</x-import>
-<x-import component-from-global-scope="DesignSystem_e51539.Button" variant="secondary" href="https://www.youtube.com/@nodiworks" hint-size="100%,48px">유튜브에서 보기</x-import>
-</div>
-</div>
-</section>
+            <section style="padding: 120px 24px 0">
+              <x-import
+                component-from-global-scope="DesignSystem_e51539.SectionHeading"
+                index="03"
+                label="클래스"
+                title="직접 만들어봤다면, 이제 기준을 배워보세요"
+                hint-size="100%,80px"
+              ></x-import>
+              <div style="height: 24px"></div>
+              <div style="display: flex; flex-direction: column; gap: 24px">
+                <x-import
+                  component-from-global-scope="DesignSystem_e51539.ProductCard"
+                  label="VOD · 준비 중"
+                  title="클로드 디자인 실전 가이드"
+                  summary="디자이너 없이 내 사업의 페이지를 반복해서 만드는 과정"
+                  rows="{{ vodRows }}"
+                  ctaLabel="출시 알림 받기"
+                  ctaHref="Course.dc.html"
+                  hint-size="100%,380px"
+                ></x-import>
+                <div data-cta="secondary">
+                  <x-import
+                    component-from-global-scope="DesignSystem_e51539.ProductCard"
+                    label="워크숍 · 준비 중"
+                    title="라이브 첨삭"
+                    summary="직접 만든 결과물을 가져오면 화면을 보며 함께 고칩니다"
+                    rows="{{ workshopRows }}"
+                    ctaLabel="알림 받기"
+                    hint-size="100%,380px"
+                  ></x-import>
+                </div>
+                <div data-cta="secondary">
+                  <x-import
+                    component-from-global-scope="DesignSystem_e51539.ProductCard"
+                    label="서비스"
+                    title="AI 결과물 마무리"
+                    summary="AI로 만든 초안을, 내놓을 수 있는 결과물로 마무리합니다"
+                    rows="{{ serviceRows }}"
+                    ctaLabel="프로젝트 검토 요청하기"
+                    ctaHref="Service.dc.html"
+                    hint-size="100%,380px"
+                  ></x-import>
+                </div>
+              </div>
+            </section>
 
-<section id="free-m" style="padding:120px 24px 0">
-<x-import component-from-global-scope="DesignSystem_e51539.SectionHeading" index="01" label="무료 자료" title="영상에서 쓴 자료, 내 사업에 바로 써보세요" hint-size="100%,80px"></x-import>
-<div style="height:24px"></div>
-<div style="display:flex;flex-direction:column;gap:24px">
-<a href="FreeGuidebook.dc.html" style="display:grid;text-decoration:none;color:inherit"><x-import component-from-global-scope="DesignSystem_e51539.ResourceCard" title="클로드 PPT 실전 가이드북" locked-label="" hint-size="100%,280px"></x-import></a>
-<a href="FreeGuidebook.dc.html" style="display:grid;text-decoration:none;color:inherit"><x-import component-from-global-scope="DesignSystem_e51539.ResourceCard" title="클로드 맞춤 설정·프로젝트 지침 프롬프트 세트" locked-label="" hint-size="100%,280px"></x-import></a>
-<a href="FreeGuidebook.dc.html" style="display:grid;text-decoration:none;color:inherit"><x-import component-from-global-scope="DesignSystem_e51539.ResourceCard" title="클로드 디자인 랜딩페이지 체크리스트" locked-label="" hint-size="100%,280px"></x-import></a>
-<a href="FreeGuidebook.dc.html" style="display:grid;text-decoration:none;color:inherit"><x-import component-from-global-scope="DesignSystem_e51539.ResourceCard" title="AI 티 없애는 디자인 5원칙 요약본" locked-label="" hint-size="100%,280px"></x-import></a>
-</div>
-</section>
+            <section style="padding: 120px 24px 0">
+              <span style="font-size: 12px; letter-spacing: 0.08em; color: var(--text-muted)"
+                >04 / 만든 사람</span
+              >
+              <div style="height: 24px"></div>
+              <div style="display: flex; flex-direction: column; gap: 24px">
+                <div
+                  style="
+                    width: 100%;
+                    aspect-ratio: 4/5;
+                    background: var(--surface-raised);
+                    border: 1px solid var(--border-subtle);
+                    border-radius: 11px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <span style="font-size: 12px; letter-spacing: 0.08em; color: var(--text-disabled)"
+                    >4:5</span
+                  >
+                </div>
+                <ul
+                  style="
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                  "
+                >
+                  <li
+                    style="
+                      font-size: 18px;
+                      font-weight: 700;
+                      line-height: 1.45;
+                      letter-spacing: -0.015em;
+                      color: var(--text-strong);
+                    "
+                  >
+                    직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어
+                  </li>
+                  <li style="font-size: 15px; color: var(--text-body)">
+                    컴퓨터소프트웨어공학 석사
+                  </li>
+                  <li style="font-size: 15px; color: var(--text-body)">
+                    비전공자 대상 풀스택 개발 부트캠프 강사
+                  </li>
+                </ul>
+                <span style="font-size: 12px; color: var(--text-muted)">유튜브 노디 AI 운영</span>
+              </div>
+            </section>
 
-<section style="padding:120px 24px 0">
-<span style="font-size:12px;letter-spacing:0.08em;color:var(--text-muted)">02 / 이렇게 달라집니다</span>
-<div style="height:24px"></div>
-<x-import component-from-global-scope="DesignSystem_e51539.BeforeAfter" beforeCaption="만들기 전" afterCaption="기준을 준 뒤" before="{{ slot }}" after="{{ slot }}" style="grid-template-columns:1fr" hint-size="100%,360px"></x-import>
-<p style="margin:24px 0 0;font-size:15px;color:var(--text-muted)">같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.</p>
-</section>
+            <section style="padding: 120px 24px">
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 24px">
+                <h2
+                  style="
+                    margin: 0;
+                    font-size: 26px;
+                    font-weight: 700;
+                    line-height: 1.3;
+                    letter-spacing: -0.015em;
+                    color: var(--text-strong);
+                    text-align: center;
+                  "
+                >
+                  무료 자료로 먼저 직접 만들어보세요
+                </h2>
+                <div data-gate="m">
+                  <x-import
+                    component-from-global-scope="DesignSystem_e51539.EmailGate"
+                    title="한 번 등록하면 모든 자료가 열립니다"
+                    description=""
+                    button-label="받기"
+                    consent="개인정보 수집·이용에 동의합니다"
+                    submitted-label="입력한 이메일로도 보내드렸습니다"
+                    submitted="{{ sentEnd }}"
+                    onSubmit="{{ submitEnd }}"
+                    style="padding: 24px; width: 100%"
+                    hint-size="100%,240px"
+                  ></x-import>
+                </div>
+              </div>
+            </section>
 
-<section style="padding:120px 24px 0">
-<x-import component-from-global-scope="DesignSystem_e51539.SectionHeading" index="03" label="클래스" title="직접 만들어봤다면, 이제 기준을 배워보세요" hint-size="100%,80px"></x-import>
-<div style="height:24px"></div>
-<div style="display:flex;flex-direction:column;gap:24px">
-<x-import component-from-global-scope="DesignSystem_e51539.ProductCard" label="VOD · 준비 중" title="클로드 디자인 실전" summary="디자이너 없이 내 사업의 페이지를 반복해서 만드는 과정" rows="{{ vodRows }}" ctaLabel="출시 알림 받기" ctaHref="Course.dc.html" hint-size="100%,380px"></x-import>
-<div data-cta="secondary"><x-import component-from-global-scope="DesignSystem_e51539.ProductCard" label="워크숍 · 준비 중" title="라이브 첨삭" summary="직접 만든 결과물을 가져오면 화면을 보며 함께 고칩니다" rows="{{ workshopRows }}" ctaLabel="알림 받기" hint-size="100%,380px"></x-import></div>
-<div data-cta="secondary"><x-import component-from-global-scope="DesignSystem_e51539.ProductCard" label="서비스" title="AI 결과물 마무리" summary="AI로 만든 초안을, 내놓을 수 있는 결과물로 마무리합니다" rows="{{ serviceRows }}" ctaLabel="프로젝트 검토 요청하기" ctaHref="Service.dc.html" hint-size="100%,380px"></x-import></div>
-</div>
-</section>
-
-<section style="padding:120px 24px 0">
-<span style="font-size:12px;letter-spacing:0.08em;color:var(--text-muted)">04 / 만든 사람</span>
-<div style="height:24px"></div>
-<div style="display:flex;flex-direction:column;gap:24px">
-<div style="width:100%;aspect-ratio:4/5;background:var(--surface-raised);border:1px solid var(--border-subtle);border-radius:11px;display:flex;align-items:center;justify-content:center"><span style="font-size:12px;letter-spacing:0.08em;color:var(--text-disabled)">4:5</span></div>
-<ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px">
-<li style="font-size:18px;font-weight:700;line-height:1.45;letter-spacing:-0.015em;color:var(--text-strong)">직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어</li>
-<li style="font-size:15px;color:var(--text-body)">컴퓨터소프트웨어공학 석사</li>
-<li style="font-size:15px;color:var(--text-body)">비전공자 대상 풀스택 개발 부트캠프 강사</li>
-</ul>
-<span style="font-size:12px;color:var(--text-muted)">유튜브 노디 AI 운영</span>
-</div>
-</section>
-
-<section style="padding:120px 24px">
-<div style="display:flex;flex-direction:column;align-items:center;gap:24px">
-<h2 style="margin:0;font-size:26px;font-weight:700;line-height:1.3;letter-spacing:-0.015em;color:var(--text-strong);text-align:center">무료 자료로 먼저 직접 만들어보세요</h2>
-<div data-gate="m"><x-import component-from-global-scope="DesignSystem_e51539.EmailGate" title="한 번 등록하면 모든 자료가 열립니다" description="" button-label="받기" consent="개인정보 수집·이용에 동의합니다" submitted-label="입력한 이메일로도 보내드렸습니다" submitted="{{ sentEnd }}" onSubmit="{{ submitEnd }}" style="padding:24px;width:100%" hint-size="100%,240px"></x-import></div>
-</div>
-</section>
-
-<x-import component-from-global-scope="DesignSystem_e51539.SiteFooter" operator="노디 AI 클래스 · 운영 Cascades" business="{{ biz }}" socialLinks="{{ social }}" hint-size="100%,320px"></x-import>
-</div>
-</div>
-
-</div>
-</x-dc>
-<script type="text/x-dc" data-dc-script>
-class Component extends DCLogic {
-  renderVals() {
-    const DS = typeof window !== 'undefined' ? window.DesignSystem_e51539 : null;
-    return {
-      sentEnd: this.state.sentEnd,
-      submitEnd: () => this.setState({ sentEnd: true }),
-      slot: DS && DS.Thumb16x9 ? React.createElement(DS.Thumb16x9, null) : null,
-      vodRows: [
-        { label: '누구에게', value: '내 사업 페이지를 직접 만들어야 하는 분' },
-        { label: '남는 것', value: '매주 파일 하나' },
-        { label: '가격', value: '얼리버드 가격 예정' },
-      ],
-      workshopRows: [
-        { label: '누구에게', value: 'VOD 수료 후 실제 프로젝트가 있는 분' },
-        { label: '남는 것', value: '고친 결과물 + 기준표' },
-        { label: '가격', value: '추후 안내' },
-      ],
-      serviceRows: [
-        { label: '누구에게', value: '직접 해보다 한계를 느낀 분' },
-        { label: '남는 것', value: '내놓을 수 있는 완성본' },
-        { label: '가격', value: '300만원부터' },
-      ],
-      biz: ['상호 [ ]', '대표 [ ]', '사업자등록번호 [ ]', '문의 contact@cascades.studio'],
-      social: [
-        { label: '유튜브', href: 'https://www.youtube.com/@nodiworks', icon: 'youtube' },
-        { label: '스레드', href: 'https://www.threads.net/@nodiworks', icon: 'at-sign' },
-      ],
-    };
-  }
-}
-</script>
-</body>
+            <x-import
+              component-from-global-scope="DesignSystem_e51539.SiteFooter"
+              operator="노디 AI 클래스 · 운영 Cascades"
+              business="{{ biz }}"
+              socialLinks="{{ social }}"
+              hint-size="100%,320px"
+            ></x-import>
+          </div>
+        </div>
+      </div>
+    </x-dc>
+    <script type="text/x-dc" data-dc-script>
+      class Component extends DCLogic {
+        renderVals() {
+          const DS = typeof window !== 'undefined' ? window.DesignSystem_e51539 : null;
+          return {
+            sentEnd: this.state.sentEnd,
+            submitEnd: () => this.setState({ sentEnd: true }),
+            slot: DS && DS.Thumb16x9 ? React.createElement(DS.Thumb16x9, null) : null,
+            vodRows: [
+              { label: '누구에게', value: '내 사업 페이지를 직접 만들어야 하는 분' },
+              { label: '남는 것', value: '매주 파일 하나' },
+              { label: '가격', value: '얼리버드 가격 예정' },
+            ],
+            workshopRows: [
+              { label: '누구에게', value: 'VOD 수료 후 실제 프로젝트가 있는 분' },
+              { label: '남는 것', value: '고친 결과물 + 기준표' },
+              { label: '가격', value: '추후 안내' },
+            ],
+            serviceRows: [
+              { label: '누구에게', value: '직접 해보다 한계를 느낀 분' },
+              { label: '남는 것', value: '내놓을 수 있는 완성본' },
+              { label: '가격', value: '300만원부터' },
+            ],
+            biz: ['상호 [ ]', '대표 [ ]', '사업자등록번호 [ ]', '문의 contact@cascades.studio'],
+            social: [
+              { label: '유튜브', href: 'https://www.youtube.com/@nodiworks', icon: 'youtube' },
+              { label: '스레드', href: 'https://www.threads.net/@nodiworks', icon: 'at-sign' },
+            ],
+          };
+        }
+      }
+    </script>
+  </body>
 </html>

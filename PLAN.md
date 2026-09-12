@@ -9,19 +9,23 @@
 ## 0. 이 프로젝트가 무엇인가
 
 ### 0.1 한 줄
+
 유튜브 채널 **노디 AI**(@nodiworks)의 고정댓글 링크가 가리키는 사이트. 영상에서 쓴 자료를 이메일과 교환해 나눠주고, 그 리스트에 강의(VOD)와 마무리 서비스를 판다.
 
 ### 0.2 보는 사람 (타겟 한 명)
+
 코딩도 디자인도 모르지만 AI로 자기 사업의 랜딩페이지·브랜드·PPT·간단한 서비스를 직접 만들어야 하는 1인 사업자·예비창업자. **100% 유튜브 영상 → 고정댓글 링크로 들어온다.** 검색 유입은 없다고 가정한다.
 
 ### 0.3 사다리 (사이트가 파는 것의 순서)
-| 단계 | 상품 | 사이트 위치 | Step |
-|---|---|---|---|
-| 무료 | 영상별 자료 (가이드북·프롬프트·체크리스트) ↔ 이메일 | `/`, `/free`, `/free/[slug]` | **1** |
-| 할인→정가 | VOD "클로드 디자인 실전" 10~20만 | `/course` (지금은 대기 등록만) | 2 |
-| 프리미엄 | 워크숍(라이브 첨삭) / "AI 결과물 마무리" 300~500만 | `/service` (문의 폼만) | 1(폼) / 2 |
+
+| 단계      | 상품                                                | 사이트 위치                    | Step      |
+| --------- | --------------------------------------------------- | ------------------------------ | --------- |
+| 무료      | 영상별 자료 (가이드북·프롬프트·체크리스트) ↔ 이메일 | `/`, `/free`, `/free/[slug]`   | **1**     |
+| 할인→정가 | VOD "클로드 디자인 실전" 10~20만                    | `/course` (지금은 대기 등록만) | 2         |
+| 프리미엄  | 워크숍(라이브 첨삭) / "AI 결과물 마무리" 300~500만  | `/service` (문의 폼만)         | 1(폼) / 2 |
 
 ### 0.4 브랜드 규칙 (코드에도 적용)
+
 - 화자는 **전문가가 아니라 먼저 해본 사람**. 담백한 존댓말, 느낌표·이모지 없음.
 - 사이트명 **노디 AI 클래스**. 운영 주체 **Cascades**는 푸터와 `/service` 계약 문구 한 줄에만 등장한다. 내비·히어로·카드에 Cascades를 쓰지 않는다.
 - 금지 어휘: 에이전시, 외주, 포트폴리오, 학원, 수강생, 혁신, 솔루션, 파트너.
@@ -29,6 +33,7 @@
 - 채널 bio와 겹치는 문장은 **채널이 기준**이다. 사이트가 채널 문장을 바꾸지 않는다.
 
 ### 0.5 절대 만들지 않는 것 (Step 1)
+
 회원가입, 로그인, 결제, 영상 플레이어, 블로그, 채팅, 관리자 화면, 캠페인 발송 도구, 애널리틱스 파이프라인. 필요해 보여도 Step 2 TODO에 적고 넘어간다.
 
 ---
@@ -58,6 +63,7 @@ nodi-class/
 ```
 
 ### 1.1 도구 버전 고정
+
 - Node 22 LTS, pnpm 9
 - Next.js 15 (App Router, React 19, TypeScript strict)
 - AWS CDK v2 최신, `aws-cdk-lib` + `constructs`, Lambda 런타임 Node 22, 번들은 `NodejsFunction`(esbuild)
@@ -66,9 +72,11 @@ nodi-class/
 - **Tailwind** + 디자인 토큰 CSS 변수(`--surface-*`, `--accent` 등)를 쓴다. vanilla-extract·CSS Modules는 쓰지 않는다. 임의의 hex/`rgb(`/`box-shadow`는 컴포넌트에서 금지(토큰·theme만).
 
 ### 1.2 워크스페이스 이름
+
 - `@nodi/web`, `@nodi/design-system`, `@nodi/shared`, `@nodi/api`, `@nodi/infra`
 
 ### 1.3 루트 스크립트
+
 ```json
 {
   "dev": "pnpm --filter @nodi/web dev",
@@ -89,30 +97,33 @@ nodi-class/
 Claude Design 산출물(`design/`)은 **참고용 원본**이다. 그대로 실행하지 않고 아래 규칙으로 옮긴다.
 
 ### 2.1 토큰: 그대로 복사
+
 `design/_ds/*/tokens/{fonts,colors,typography,spacing,shape,motion,base}.css` 와 `styles.css` 를 `packages/design-system/src/tokens/` 로 **값 하나 바꾸지 않고** 복사한다. `apps/web/app/layout.tsx`에서 순서대로 import한다 (fonts → colors → typography → spacing → shape → motion → base → styles).
 
 Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 넣고 self-host**한다 (Regular·Bold 두 벌만). `fonts.css`의 `src` 경로만 로컬로 바꾼다. 이유: CDN 장애·CORS·성능.
 
 ### 2.2 컴포넌트: 매니페스트 기준으로 재작성
+
 `_ds_manifest.json`의 12개 컴포넌트를 같은 이름·같은 props로 `packages/design-system/src/components/`에 TSX로 만든다. 번들(`_ds_bundle.js`)을 그대로 쓰지 않는다 (React 전역 의존, 런타임 템플릿).
 
-| 컴포넌트 | 경로 | Props (디자인 파일에서 확인된 것) | 비고 |
-|---|---|---|---|
-| Button | core | `variant: 'primary'\|'secondary'`, `size?: 'md'\|'sm'`, `icon?`, `href?`, `type?`, `disabled?`, `loading?` | primary=민트 채움+`--text-on-accent`, secondary=투명+1px 보더. 3단계 없음 |
-| Input | core | `label`, `description?`, `type?`, `name`, `placeholder?`, `error?`, `required?`, `multiline?`(textarea) | 포커스 보더만 민트. description은 라벨 아래 보조 설명 |
-| Badge | core | `children`, `tone?: 'default'\|'current'` | 현재 상태만 `--accent-quiet` 배경 |
-| Icon | core | `name` (lucide 이름), `size?` | lucide-react 사용, 색은 `currentColor` |
-| SectionHeading | content | `index: '01'`, `label`, `title`, `align?: 'left'\|'center'` | 라벨 12px 0.08em은 영문에만. 한글 라벨은 자간 0 |
-| BeforeAfter | content | `beforeCaption`, `afterCaption`, `before: ReactNode`, `after: ReactNode` | 375에서 1열. hover(leave 시 복귀)·터치 탭 토글만. 뷰포트 벗어나면 off. 스크롤 진입 리빌 없음. `--dur-reveal`. 그림자·파티클 없음 |
-| ProductCard | cards | `label`, `title`, `summary`, `rows: {label,value}[3]`, `ctaLabel`, `ctaHref?`, `ctaVariant?: 'primary'\|'secondary'` | rows는 정확히 3개. VOD CTA=primary, 워크숍·서비스 CTA=secondary |
-| ResourceCard | cards | `title`, `slug`, `thumbnail?` | 타이틀만(유형 Badge·자물쇠 없음). 썸네일은 ThumbBook(4:5). 그리드 3열 |
-| ThumbBook | cards | `src?`, `alt?` | 책 커버. **원본 비율 유지**(`w-full h-auto`). 강제 크롭·스케일 없음 |
-| Thumb16x9 | cards | `src?`, `alt?` | 이미지 없으면 `--surface-raised` 플레이스홀더 |
-| VideoCard | cards | `title`, `note`, `href`, `thumbnail?` | 조회수 표시 없음. 유튜브 임베드는 클릭 후 로드(iframe 지연) |
-| EmailGate | blocks | `title`, `description?`, `buttonLabel`, `consent`, `consentDetail?`, `submittedLabel`, `submitted: boolean`, `onSubmit(email, extra)`, `extraField?`(select 1개), `layout?: 'inline'\|'stack'` | 동의 체크 기본 해제·필수. consent=한 줄 라벨, consentDetail=수집·목적·보관·해지(자료 페이지 닫힘)·처리방침 링크. stack=필드·버튼 전폭(홈 CTA). 375에서 입력 100% + 버튼 full width. **입력창이 카드 밖으로 넘치지 않게** |
-| SiteFooter | blocks | `operator`, `business: string[]`, `links: {label,href}[]`, `socialLinks: {label,href,icon}[]` | 사업자 정보 값은 env에서 |
+| 컴포넌트       | 경로    | Props (디자인 파일에서 확인된 것)                                                                                                                                                              | 비고                                                                                                                                                                                                                     |
+| -------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Button         | core    | `variant: 'primary'\|'secondary'`, `size?: 'md'\|'sm'`, `icon?`, `href?`, `type?`, `disabled?`, `loading?`                                                                                     | primary=민트 채움+`--text-on-accent`, secondary=투명+1px 보더. 3단계 없음                                                                                                                                                |
+| Input          | core    | `label`, `description?`, `type?`, `name`, `placeholder?`, `error?`, `required?`, `multiline?`(textarea)                                                                                        | 포커스 보더만 민트. description은 라벨 아래 보조 설명                                                                                                                                                                    |
+| Badge          | core    | `children`, `tone?: 'default'\|'current'`                                                                                                                                                      | 현재 상태만 `--accent-quiet` 배경                                                                                                                                                                                        |
+| Icon           | core    | `name` (lucide 이름), `size?`                                                                                                                                                                  | lucide-react 사용, 색은 `currentColor`                                                                                                                                                                                   |
+| SectionHeading | content | `index: '01'`, `label`, `title?`, `align?: 'left'\|'center'`                                                                                                                                   | 라벨 12px 0.08em은 영문에만. 한글 라벨은 자간 0. title 없으면 라벨만                                                                                                                                                     |
+| BeforeAfter    | content | `beforeCaption`, `afterCaption`, `before: ReactNode`, `after: ReactNode`                                                                                                                       | 375에서 1열. hover(leave 시 복귀)·터치 탭 토글만. 뷰포트 벗어나면 off. 스크롤 진입 리빌 없음. `--dur-reveal`. 그림자·파티클 없음                                                                                         |
+| ProductCard    | cards   | `label`, `title`, `summary`, `rows: {label,value}[3]`, `ctaLabel`, `ctaHref?`, `ctaVariant?: 'primary'\|'secondary'`                                                                           | rows는 정확히 3개. VOD CTA=primary, 워크숍·서비스 CTA=secondary                                                                                                                                                          |
+| ResourceCard   | cards   | `title`, `slug`, `thumbnail?`                                                                                                                                                                  | 타이틀만(유형 Badge·자물쇠 없음). 썸네일은 ThumbBook(4:5). 그리드 3열                                                                                                                                                    |
+| ThumbBook      | cards   | `src?`, `alt?`                                                                                                                                                                                 | 책 커버. **원본 비율 유지**(`w-full h-auto`). 강제 크롭·스케일 없음                                                                                                                                                      |
+| Thumb16x9      | cards   | `src?`, `alt?`                                                                                                                                                                                 | 이미지 없으면 `--surface-raised` 플레이스홀더                                                                                                                                                                            |
+| VideoCard      | cards   | `title`, `note`, `href`, `thumbnail?`                                                                                                                                                          | 조회수 표시 없음. 유튜브 임베드는 클릭 후 로드(iframe 지연)                                                                                                                                                              |
+| EmailGate      | blocks  | `title`, `description?`, `buttonLabel`, `consent`, `consentDetail?`, `submittedLabel`, `submitted: boolean`, `onSubmit(email, extra)`, `extraField?`(select 1개), `layout?: 'inline'\|'stack'` | 동의 체크 기본 해제·필수. consent=한 줄 라벨, consentDetail=수집·목적·보관·해지(자료 페이지 닫힘)·처리방침 링크. stack=필드·버튼 전폭(홈 CTA). 375에서 입력 100% + 버튼 full width. **입력창이 카드 밖으로 넘치지 않게** |
+| SiteFooter     | blocks  | `operator`, `business: string[]`, `links: {label,href}[]`, `socialLinks: {label,href,icon}[]`                                                                                                  | 사업자 정보 값은 env에서                                                                                                                                                                                                 |
 
 ### 2.3 이관하면서 정리할 것 (디자인 파일에 남아 있는 결함)
+
 - [x] 4개 페이지 `h1`은 시안대로 `IBM Plex Sans KR` Bold + `--tracking-hero`(-0.035em) + `--leading-hero`(1.2). 본문·UI는 Pretendard. `public/fonts/IBMPlexSansKR-Bold.woff2` self-host.
 - [ ] 홈 375 `h1`이 긴 버전("코딩·디자인 몰라도, 내 사업에 필요한…")으로 남아 있음 → 1440과 동일한 2줄 카피(§3.1)로 통일. 모바일 36px.
 - [x] 홈 03 상품 카드 3개 버튼 → VOD·워크숍·서비스 모두 primary.
@@ -121,10 +132,12 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 - [ ] 목차 `[ ]` 플레이스홀더와 본문 스켈레톤 → `content/resources/*`의 실제 MDX로 대체.
 
 ### 2.4 디자인 준수 자동 검사
+
 `design/_ds/*/_adherence.oxlintrc.json` 규칙 취지를 eslint 커스텀 룰 2개로 옮긴다.
+
 - `no-raw-color`: `apps/web`, `packages/design-system/components` 안에서 hex 리터럴·`rgb(` 금지 (토큰 변수만).
 - `no-shadow`: `box-shadow` 선언 금지.
-CI 없이 `pnpm lint`에서 걸리게만 한다.
+  CI 없이 `pnpm lint`에서 걸리게만 한다.
 
 ---
 
@@ -132,32 +145,38 @@ CI 없이 `pnpm lint`에서 걸리게만 한다.
 
 라우트는 App Router. 모든 페이지는 서버 컴포넌트 기본, 폼만 클라이언트 컴포넌트.
 
-공통 레이아웃: 상단 내비 [로고 마크 + `노디 AI`(Bold) + `클래스`(Regular) 워드마크](→`/`) · 무료 자료(`/free`) · 클래스(`/course`) · 서비스(`/service`) · [유튜브 ↗](secondary sm)`. 현재 페이지 항목만 `--accent` 색. favicon·OG는 `public/brand/*`. 푸터는 `SiteFooter`.
+공통 레이아웃: 상단 내비 [로고 마크 + `노디 AI`(Bold) + `클래스`(Regular) 워드마크](→`/`) · 무료 자료(`/free`) · 클래스(`/course`) · 서비스(`/service`) · [유튜브 ↗](secondary sm)`. 현재 페이지 항목만 `--accent`색. favicon·OG는`public/brand/*`. 푸터는 `SiteFooter`.
 
 ### 3.1 `/` 홈
+
 > 홈 레이아웃·카피는 `design/Home.dc.html` 1440 확정안을 따른다. (구 PLAN 3줄 h1·중간 EmailGate는 폐기.)
 
-| 블록 | 내용 |
-|---|---|
-| 히어로(중앙) | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` / `이제 AI로 직접 만들 수 있습니다` (2줄, `<br>`, keep-all, 마침표 없음) / 서브 `노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.` + `내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.` / Primary `무료 자료 받기`(→ `/free`) · Secondary `유튜브에서 보기` |
-| 01 / 무료 자료 (`id="free"`) | 제목 `바로 써볼 수 있는 자료, 부담 없이 무료로 가져가세요` / ResourceCard 4개 (§4 슬러그 순). **이 섹션에 EmailGate 없음** |
-| 02 / 이렇게 달라집니다 | BeforeAfter(캡션 `만들기 전` / `기준을 준 뒤`) / 캡션 `같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.` / 이미지는 `public/img/before.png`, `after.png` |
-| 03 / 클래스 | 제목 `직접 만들어봤다면, 이제 기준을 배워보세요` / ProductCard ×3 (§3.5, VOD primary · 워크숍·서비스 secondary) |
-| 04 / 만든 사람 | 프로필(4:5, `--surface-raised`) + `직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어`(Bold 20px) / `컴퓨터소프트웨어공학 석사` / `비전공자 대상 풀스택 개발 부트캠프 강사` / 소형 `유튜브 노디 AI 운영` |
-| 최종 CTA(2열) | eyebrow `무료 자료` / 제목 `내 사업에 바로 써볼 무료 자료부터 시작해보세요.` / 설명 `노디 AI에서 소개한 프롬프트·가이드·체크리스트를 한곳에 정리했습니다.` + EmailGate(제목 `무료 자료 받아보기`, 서브 `이메일을 한 번 등록하면 모든 무료 자료를 확인할 수 있습니다.`, 버튼 `무료 자료 받기`, select 라벨 `지금 만들고 있는 것은 무엇인가요?`, extraField=§5.2, **동의=§3.7**). 데스크톱 좌 카피·우 폼 카드(~520px), ≤768px 1열 |
+| 블록                         | 내용                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 히어로(중앙)                 | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` / `이제 AI로 직접 만들 수 있습니다` (2줄, `<br>`, keep-all, 마침표 없음) / 서브 `노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.` + `내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.` / Primary `무료 자료 받기`(→ `/free`) · Secondary `유튜브에서 보기`                                                                                            |
+| 01 / 무료 자료 (`id="free"`) | 제목 `바로 써볼 수 있는 자료, 부담 없이 무료로 가져가세요` / ResourceCard 4개 (§4 슬러그 순). **이 섹션에 EmailGate 없음**                                                                                                                                                                                                                                                                                                      |
+| 02 / 이렇게 달라집니다       | BeforeAfter(캡션 `만들기 전` / `기준을 준 뒤`) / 캡션 `같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.` / 이미지는 `public/img/before.png`, `after.png`                                                                                                                                                                                                                                                |
+| 03 / 클래스                  | 제목 `직접 만들어봤다면, 이제 기준을 배워보세요` / ProductCard ×3 (§3.5, VOD primary · 워크숍·서비스 secondary)                                                                                                                                                                                                                                                                                                                 |
+| 04 / 만든 사람               | 프로필(4:5, `--surface-raised`) + `직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어`(Bold 20px) / `컴퓨터소프트웨어공학 석사` / `비전공자 대상 풀스택 개발 부트캠프 강사` / 소형 `유튜브 노디 AI 운영`                                                                                                                                                                                                                      |
+| 최종 CTA(2열)                | eyebrow `무료 자료` / 제목 `내 사업에 바로 써볼 무료 자료부터 시작해보세요.` / 설명 `노디 AI에서 소개한 프롬프트·가이드·체크리스트를 한곳에 정리했습니다.` + EmailGate(제목 `무료 자료 받아보기`, 서브 `이메일을 한 번 등록하면 모든 무료 자료를 확인할 수 있습니다.`, 버튼 `무료 자료 받기`, select 라벨 `지금 만들고 있는 것은 무엇인가요?`, extraField=§5.2, **동의=§3.7**). 데스크톱 좌 카피·우 폼 카드(~520px), ≤768px 1열 |
 
 ### 3.2 `/free` 목록 · `/free/[slug]` 자료 상세
+
 - `/free`: 라벨 `무료 자료` / h1 `바로 써볼 수 있는 자료,` `부담 없이 무료로 가져가세요` / 서브 `AI 활용에 도움이 되는 프롬프트·가이드·체크리스트를 모았습니다.` + `필요한 자료를 골라 무료로 받아보세요.` / ResourceCard 그리드.
-- `/free/[slug]` 정적 경로: `generateStaticParams`로 API(또는 로컬 MDX) 슬러그 전부.
-- 상단: 라벨(frontmatter `series`), h1(frontmatter `title`), 서브(frontmatter `summary`), 우측 책 커버 이미지(`resourceThumbnail`) + 유형 Badge 안내 문구. (Step 1에서 VideoCard 비활성)
-- 목차: 본문 `##` 헤딩을 파싱해 번호 리스트로 자동 생성.
-- 본문 게이트: frontmatter `freeParts: 1` 만큼(기본 Part 00 하나) 공개, 이후는 잠금.
-  - 잠금(쿠키 없음): 공개 파트 → **EmailGate**(제목 `이메일을 남기면 지금 바로 열립니다`, 서브 `같은 주소로 다음 자료도 보내드립니다`, 버튼 `열기`, **동의=§3.7**) → 나머지 파트를 blur 6px + 오버레이로 렌더(텍스트는 DOM에 넣지 않는다. 스켈레톤 블록만. 크롤·복사 방지).
-  - 열림(쿠키 유효): 게이트 자리에 체크 아이콘 + `메일로도 보냈습니다` → 본문 전체.
-- 하단: `다른 자료` ResourceCard 2개 (현재 slug 제외, 최근순).
-- 게이트 제출 성공 시: `/unlock`로 쿠키 발급 후 그 자리에서 열림 상태로 전환. 소형 문구 `메일로도 보냈습니다` (§6.1). 메일 링크 클릭은 해금이 아니라 `pending→active`만.
+- `/free/[slug]` 정적 경로: `generateStaticParams`로 API(또는 로컬 MDX) 슬러그 전부. **자료별 if/switch 카피 분기 금지** — 자료 차이는 frontmatter `title` / `summary` / `included`만.
+- 페이지 구조(공통): Hero → 소개(공통 카피) → `이 자료에는`(`included[]`) → 대상(고정 4항) → 가치·제작 배경(공통) → `02 / 들어 있는 내용`(MDX 파트 Toc) → EmailGate(+잠금/본문) → `03 / 만든 사람` → `다른 무료 자료도 둘러보세요`.
+- Hero: `series` + Badge · h1=`title` · `summary` · Primary `무료 자료 바로 열기`(데스크톱만, 모바일은 하단 스티키) · 소형 `이메일 등록 후 바로 열립니다 · 무료` · 우측 책 커버. youtube 있으면 Secondary `영상으로 보기`.
+- 소개(전 자료 공통, `apps/web/lib/copy.ts`): 도입 4문단 · `이 자료에는`+`included`(3~6) · 이어지는 2문단 · `이런 분이라면 특히 유용합니다`+고정 4항 · 가치 설명 · 제작 배경. **공통 UI에 PPT·클로드·디자인·프롬프트·직업·개수 등 자료 종속 표현 금지.**
+- 본문 게이트: frontmatter `freeParts`만큼 공개, 이후 잠금.
+  - 잠금(쿠키 없음·free): **EmailGate**(제목 `지금 무료로 공개합니다`, 설명 `아래에서 이메일을 등록하면 전체 자료를 바로 확인할 수 있습니다.` + `한 번 등록하면 다른 무료 자료도 별도 입력 없이 계속 확인할 수 있습니다.`, 버튼 `무료 자료 바로 열기`, 버튼 아래 `등록 즉시 열립니다 · 비용이 발생하지 않습니다`, **동의=§3.7**) + 소형 `무료 공개 종료 일정은 강의 출시 전에 이 페이지와 이메일로 미리 안내드립니다.` → blur 잠금.
+  - 잠금·paid: reopen 게이트(기존 등록자) + 강의 CTA.
+  - 열림: 체크 + `메일로도 보냈습니다` → 본문 전체.
+- `03 / 만든 사람`(공통): 프로필 + `노디` / `5년차 프로덕트 엔지니어로 일하며 직접 제품을 만들고 운영해왔습니다.` / 소형 `유튜브 노디 AI 운영`.
+- 하단: `다른 무료 자료도 둘러보세요` ResourceCard 2개.
+- 게이트 성공 시 `/unlock` 쿠키 발급. 메일 링크는 `pending→active`만.
 
 ### 3.3 `/course` 클래스
+
 - 히어로(좌측): 라벨 `VOD · 준비 중` / h1 `클로드 디자인 실전` / 서브 `내 사업에 필요한 디자인, 이제 직접 만들 수 있습니다.` + `클로드로 결과물을 만드는 방법부터 좋은 디자인을 고르고, 고치고, 반복해서 활용하는 기준까지 배웁니다.` / EmailGate(제목 `출시 알림 받기`, 서브 `클래스가 오픈되면 이메일로 가장 먼저 안내드립니다.`, 버튼 `출시 알림 신청하기`, tag=`course-waitlist`, **동의=§3.7**)
 - 01 / 커리큘럼: 카드 4 — `보는 기준` / `좋은 디자인을 찾고 분석하는 법` · `만드는 기준` / `내 브랜드의 디자인 기준을 만들고 적용하는 법` · `고치는 기준` / `AI가 만든 결과물을 비교하고 개선하는 법` · `확장하는 방법` / `한 번 만든 기준을 랜딩페이지·PPT·SNS까지 확장하는 법`
 - 02 / 수강 후 완성하는 것: `내 브랜드 레퍼런스 보드` / `계속 재사용할 수 있는 디자인 시스템` / `내 사업에 활용할 랜딩페이지 완성본` / `다음 작업에도 활용할 수 있는 프롬프트 템플릿`
@@ -165,6 +184,7 @@ CI 없이 `pnpm lint`에서 걸리게만 한다.
 - 하단: ProductCard 워크숍·서비스 (secondary)
 
 ### 3.4 `/service` AI 결과물 마무리
+
 - 히어로(좌측): 라벨 `AI 결과물 마무리` / h1 `AI로 만든 초안을,` `고객이 선택하는 결과물로 완성합니다.` / 서브 `처음부터 새로 만드는 제작보다는, 기존 결과물을 다듬고 완성하는 데 집중합니다.`
 - 01 / 이런 상황이라면, 맡겨주세요 (체크 리스트 4): `클로드·러버블로 만들긴 했는데 어딘가 부족해 보입니다` / `광고를 돌렸는데 클릭만 있고 문의가 없습니다` / `수정하려고 손대면 다른 부분이 깨집니다` / `시장에 내놓을 수 있는 수준까지만 누군가가 정리해 줬으면 합니다`
 - 02 / 이런 경우에는 진행이 어렵습니다 (저대비 3): `아직 아무것도 만들어 보지 않은 경우` / `기획부터 전부 맡기고 싶은 경우` / `전체 구조를 새로 만들어야 할 정도의 대규모 개편이 필요한 경우`
@@ -174,34 +194,58 @@ CI 없이 `pnpm lint`에서 걸리게만 한다.
 - 이 페이지에 VideoCard·ResourceCard 없음.
 
 ### 3.5 상품 카드 데이터 (홈·클래스 공통, `packages/shared/src/products.ts`)
+
 ```ts
 export const products = {
-  vod:      { label: 'VOD · 준비 중', title: '클로드 디자인 실전',
-              summary: '내 사업에 필요한 디자인을 직접 만들고 개선하는 실전 과정',
-              rows: [['추천 대상','내 사업 페이지를 직접 만들어야 하는 분'],['완성 결과','재사용할 수 있는 디자인 기준과 랜딩페이지'],['가격','얼리버드 가격 예정']],
-              cta: { label: '출시 알림 신청하기', href: '/course', variant: 'primary' } },
-  workshop: { label: '워크숍 · 준비 중', title: '라이브 첨삭',
-              summary: '직접 만든 결과물을 가져와 함께 보며 개선합니다',
-              rows: [['추천 대상','VOD 수강 후 실제 프로젝트에 적용해보고 있는 분'],['완성 결과','개선된 결과물 + 이후에도 활용할 수 있는 점검 기준'],['가격','추후 안내']],
-              cta: { label: '출시 알림 신청하기', href: '/course', variant: 'secondary' } },
-  service:  { label: '서비스', title: 'AI 결과물 마무리',
-              summary: 'AI로 만든 초안을, 고객이 선택하는 결과물로 완성합니다',
-              rows: [['추천 대상','직접 만들어봤지만 완성도를 높이는 데 어려움을 겪고 있는 분'],['완성 결과','고객에게 보여줄 수 있는 수준의 최종 결과물'],['가격','300만 원부터']],
-              cta: { label: '프로젝트 검토 요청하기', href: '/service', variant: 'secondary' } },
+  vod: {
+    label: 'VOD · 준비 중',
+    title: '클로드 디자인 실전 가이드',
+    summary: '내 사업에 필요한 디자인을 직접 만들고 개선하는 실전 과정',
+    rows: [
+      ['추천 대상', '내 사업 페이지를 직접 만들어야 하는 분'],
+      ['완성 결과', '재사용할 수 있는 디자인 기준과 랜딩페이지'],
+      ['가격', '얼리버드 가격 예정'],
+    ],
+    cta: { label: '출시 알림 신청하기', href: '/course', variant: 'primary' },
+  },
+  workshop: {
+    label: '워크숍 · 준비 중',
+    title: '라이브 첨삭',
+    summary: '직접 만든 결과물을 가져와 함께 보며 개선합니다',
+    rows: [
+      ['추천 대상', 'VOD 수강 후 실제 프로젝트에 적용해보고 있는 분'],
+      ['완성 결과', '개선된 결과물 + 이후에도 활용할 수 있는 점검 기준'],
+      ['가격', '추후 안내'],
+    ],
+    cta: { label: '출시 알림 신청하기', href: '/course', variant: 'secondary' },
+  },
+  service: {
+    label: '서비스',
+    title: 'AI 결과물 마무리',
+    summary: 'AI로 만든 초안을, 고객이 선택하는 결과물로 완성합니다',
+    rows: [
+      ['추천 대상', '직접 만들어봤지만 완성도를 높이는 데 어려움을 겪고 있는 분'],
+      ['완성 결과', '고객에게 보여줄 수 있는 수준의 최종 결과물'],
+      ['가격', '300만 원부터'],
+    ],
+    cta: { label: '프로젝트 검토 요청하기', href: '/service', variant: 'secondary' },
+  },
 } as const;
 ```
 
 ### 3.6 그 외 필수 페이지 (Step 1)
-| 라우트 | 내용 |
-|---|---|
-| `/unlock` | 쿼리 `t=`(§6.2 토큰) 검증 → 쿠키 발급 → `next` 슬러그로 리다이렉트. 실패 시 `/free/[slug]?expired=1` |
+
+| 라우트         | 내용                                                                                                                       |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `/unlock`      | 쿼리 `t=`(§6.2 토큰) 검증 → 쿠키 발급 → `next` 슬러그로 리다이렉트. 실패 시 `/free/[slug]?expired=1`                       |
 | `/unsubscribe` | 쿼리 `t=` → API `POST /unsubscribe` + 접근 쿠키 삭제 → `수신을 해지했습니다.` 한 줄. **해지하면 자료 페이지도 닫힘**(§3.7) |
-| `/privacy` | 개인정보처리방침 — `content/legal/privacy.md` 렌더(표·목록). 문서 버전=`CONSENT_VERSION` |
-| `/terms` | 이용약관 — `content/legal/terms.md` 렌더. 유료 조항은 Step 2 |
-| `/refund` | 환불 정책 — Step 1은 "현재 유료 상품이 없습니다" 한 줄. Step 2에서 채움 |
-| `/not-found` | 시스템 톤으로 한 줄 |
+| `/privacy`     | 개인정보처리방침 — `content/legal/privacy.md` 렌더(표·목록). 문서 버전=`CONSENT_VERSION`                                   |
+| `/terms`       | 이용약관 — `content/legal/terms.md` 렌더. 유료 조항은 Step 2                                                               |
+| `/refund`      | 환불 정책 — Step 1은 "현재 유료 상품이 없습니다" 한 줄. Step 2에서 채움                                                    |
+| `/not-found`   | 시스템 톤으로 한 줄                                                                                                        |
 
 ### 3.7 구독 동의 (EmailGate 공통, 박스 1개·기본 해제·필수)
+
 폼의 정체는 **메일 구독**이다. 구독하면 자료가 메일로 오고 사이트도 열린다. 메일 수신이 서비스 자체이므로 동의 하나로 끝난다.
 
 - 체크 라벨: `이메일 수집·이용과 메일 수신에 동의합니다.`
@@ -226,6 +270,7 @@ content/resources/
 ```
 
 API:
+
 - `GET /resources` — published 목록 (body 제외)
 - `GET /resources/{slug}` — 단건 (published만)
 - `PUT /resources/{slug}` — upsert (`x-admin-key` = SSM `/nodi-class/ADMIN_API_KEY`)
@@ -233,18 +278,25 @@ API:
 시드: `API_URL=… ADMIN_API_KEY=… pnpm seed:resources`
 
 frontmatter (시드 입력):
+
 ```yaml
 ---
 slug: claude-ppt-guidebook
 title: 클로드 PPT 실전 가이드북
 series: 실전 가이드북 Vol.1
-summary: 레퍼런스를 찾고 디자인 시스템으로 저장해서, 실무에서 반복해 쓸 수 있는 AI 티 안 나는 PPT를 만드는 방법
-youtube: https://www.youtube.com/watch?v=uDvNvAEhWs4
-freeParts: 1
+summary: |
+  좋은 레퍼런스를 찾고 디자인 기준으로 저장해서,
+  실무에서 반복해서 쓸 수 있는 PPT를 만드는 방법을 정리했습니다.
+included:
+  - 레퍼런스 선정부터 실제 제작까지의 단계별 안내
+  - 바로 복사해서 쓸 수 있는 실전 프롬프트
+  - 반복해서 쓰는 디자인 기준 정리
+  - 기존 자료 리디자인과 최종 검수 방법
+freeParts: 0
 publishedAt: 2026-09-08
-downloads:            # 선택. 있으면 열림 상태에서 presigned 링크 버튼 노출
+downloads: # 선택
   - label: 프롬프트 7종 (txt)
-    key: claude-ppt-guidebook/prompts.zip   # S3 key
+    key: claude-ppt-guidebook/prompts.zip
 ---
 ```
 
@@ -260,64 +312,77 @@ downloads:            # 선택. 있으면 열림 상태에서 presigned 링크 �
 테이블 이름 prefix: `nodi-class-` (예: `nodi-class-subscribers`).
 
 ### 5.1 `nodi-class-subscribers`
-| 속성 | 타입 | 설명 |
-|---|---|---|
-| `pk` | S | `EMAIL#<lowercased email>` |
-| `sk` | S | `PROFILE` |
-| `email` | S | 원문(소문자) |
-| `status` | S | `pending` \| `active` \| `unsubscribed` |
-| `source` | S | 최초 유입 slug (`yt-ppt`, `course-waitlist` …) |
-| `building` | S | §5.2 select 값 |
-| `tags` | SS | `resource:claude-ppt-guidebook`, `course-waitlist` … (요청한 자료·대기 등록 누적) |
-| `consentAt` | S | ISO, 폼 제출 시각 |
-| `consentVersion` | S | 처리방침 문서 버전(`CONSENT_VERSION`, 예: `2026-09-12`) |
-| `confirmedAt` | S | 메일 링크 클릭 시각 |
-| `unsubscribedAt` | S | |
-| `unsubToken` | S | 랜덤 32자, 수신거부 링크용 (교체 없음) |
-| `ip`, `ua` | S | 동의 증빙용 (90일 후 삭제 TODO) |
-| `createdAt`, `updatedAt` | S | |
-| `gsi1pk` | S | `STATUS#<status>` |
-| `gsi1sk` | S | `<createdAt>` |
+
+| 속성                     | 타입 | 설명                                                                              |
+| ------------------------ | ---- | --------------------------------------------------------------------------------- |
+| `pk`                     | S    | `EMAIL#<lowercased email>`                                                        |
+| `sk`                     | S    | `PROFILE`                                                                         |
+| `email`                  | S    | 원문(소문자)                                                                      |
+| `status`                 | S    | `pending` \| `active` \| `unsubscribed`                                           |
+| `source`                 | S    | 최초 유입 slug (`yt-ppt`, `course-waitlist` …)                                    |
+| `building`               | S    | §5.2 select 값                                                                    |
+| `tags`                   | SS   | `resource:claude-ppt-guidebook`, `course-waitlist` … (요청한 자료·대기 등록 누적) |
+| `consentAt`              | S    | ISO, 폼 제출 시각                                                                 |
+| `consentVersion`         | S    | 처리방침 문서 버전(`CONSENT_VERSION`, 예: `2026-09-12`)                           |
+| `confirmedAt`            | S    | 메일 링크 클릭 시각                                                               |
+| `unsubscribedAt`         | S    |                                                                                   |
+| `unsubToken`             | S    | 랜덤 32자, 수신거부 링크용 (교체 없음)                                            |
+| `ip`, `ua`               | S    | 동의 증빙용 (90일 후 삭제 TODO)                                                   |
+| `createdAt`, `updatedAt` | S    |                                                                                   |
+| `gsi1pk`                 | S    | `STATUS#<status>`                                                                 |
+| `gsi1sk`                 | S    | `<createdAt>`                                                                     |
 
 GSI `gsi1` (`gsi1pk`, `gsi1sk`) — 발송 대상 조회용.
 
 ### 5.2 `building` select 값 (폼 extraField, 필수 아님)
+
 `landing`(랜딩페이지) · `brand`(브랜드·로고) · `ppt`(PPT) · `app`(서비스·앱) · `none`(아직 없음)
 필드는 **이 하나만**. 이름·전화·업종은 받지 않는다.
 
 ### 5.3 `nodi-class-inquiries`
-| 속성 | 타입 |
-|---|---|
-| `pk` | `INQ#<ulid>` |
-| `sk` | `META` |
-| `name`, `email`, `resultUrl`, `blocked`(막힌 지점), `status`(`new`\|`replied`\|`closed`), `createdAt`, `ip`, `ua` | |
-| `gsi1pk` = `STATUS#new`, `gsi1sk` = `createdAt` | |
+
+| 속성                                                                                                              | 타입         |
+| ----------------------------------------------------------------------------------------------------------------- | ------------ |
+| `pk`                                                                                                              | `INQ#<ulid>` |
+| `sk`                                                                                                              | `META`       |
+| `name`, `email`, `resultUrl`, `blocked`(막힌 지점), `status`(`new`\|`replied`\|`closed`), `createdAt`, `ip`, `ua` |              |
+| `gsi1pk` = `STATUS#new`, `gsi1sk` = `createdAt`                                                                   |              |
 
 ### 5.4 `nodi-class-events` (경량 로그, TTL 90일)
+
 `pk` = `EMAILHASH#<sha256>`, `sk` = `<ts>#<event>` — `subscribe.requested`, `subscribe.confirmed`, `gate.opened(slug)`, `mail.sent(template)`, `unsubscribe`. 대시보드 없음. 전환율은 이 테이블을 스크립트로 집계(§10).
 
 ### 5.5 `nodi-class-resources` (무료 자료)
-| 속성 | 타입 | 설명 |
-|---|---|---|
-| `pk` | S | `RESOURCE#<slug>` |
-| `sk` | S | `META` |
-| `slug`, `title`, `series`, `summary`, `youtube?`, `freeParts`, `publishedAt`, `body`, `downloads?` | | |
-| `status` | S | `published` \| `draft` |
-| `gsi1pk` | S | `STATUS#<status>` |
-| `gsi1sk` | S | `publishedAt` |
-| `createdAt`, `updatedAt` | S | |
+
+| 속성                                                                                               | 타입 | 설명                   |
+| -------------------------------------------------------------------------------------------------- | ---- | ---------------------- |
+| `pk`                                                                                               | S    | `RESOURCE#<slug>`      |
+| `sk`                                                                                               | S    | `META`                 |
+| `slug`, `title`, `series`, `summary`, `included?`, `youtube?`, `freeParts`, `publishedAt`, `body`, `downloads?` |      |                        |
+| `status`                                                                                           | S    | `published` \| `draft` |
+| `gsi1pk`                                                                                           | S    | `STATUS#<status>`      |
+| `gsi1sk`                                                                                           | S    | `publishedAt`          |
+| `createdAt`, `updatedAt`                                                                           | S    |                        |
 
 GSI `gsi1` — published 목록 조회.
 
 ### 5.6 zod 스키마 (`packages/shared/src/schemas.ts`)
+
 ```ts
 export const SubscribeInput = z.object({
-  email: z.string().email().max(254).transform(s => s.trim().toLowerCase()),
-  slug: z.string().regex(/^[a-z0-9-]{3,64}$/),          // 요청한 자료 또는 'course-waitlist'
-  source: z.string().regex(/^[a-z0-9-]{0,64}$/).optional(),
-  building: z.enum(['landing','brand','ppt','app','none']).optional(),
+  email: z
+    .string()
+    .email()
+    .max(254)
+    .transform((s) => s.trim().toLowerCase()),
+  slug: z.string().regex(/^[a-z0-9-]{3,64}$/), // 요청한 자료 또는 'course-waitlist'
+  source: z
+    .string()
+    .regex(/^[a-z0-9-]{0,64}$/)
+    .optional(),
+  building: z.enum(['landing', 'brand', 'ppt', 'app', 'none']).optional(),
   consent: z.literal(true),
-  website: z.string().max(0).optional(),                  // 허니팟: 채워지면 거절
+  website: z.string().max(0).optional(), // 허니팟: 채워지면 거절
   turnstile: z.string().min(10),
 });
 export const InquiryInput = z.object({
@@ -334,11 +399,15 @@ export const ResourceUpsertInput = z.object({
   title: z.string().min(1).max(200),
   series: z.string().min(1).max(120),
   summary: z.string().min(1).max(1000),
+  included: z.array(z.string().min(1).max(200)).min(3).max(6).optional(),
   youtube: z.string().url().max(2048).optional(),
   freeParts: z.number().int().min(0).max(50).default(1),
   publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   body: z.string().max(200_000),
-  downloads: z.array(z.object({ label: z.string(), key: z.string() })).max(20).optional(),
+  downloads: z
+    .array(z.object({ label: z.string(), key: z.string() }))
+    .max(20)
+    .optional(),
   status: z.enum(['published', 'draft']).default('published'),
 });
 ```
@@ -348,6 +417,7 @@ export const ResourceUpsertInput = z.object({
 ## 6. 게이트·인증 메커니즘
 
 ### 6.1 흐름
+
 1. 폼 제출 → `POST /subscribe` → Turnstile·허니팟·형식 검사 → `subscribers` upsert(`active`면 유지, 아니면 `pending`) → `tags`에 `resource:<slug>` 누적 → **자료 메일 1통** 발송(링크는 `/confirm?t=`) → `202 { ok, state, gateToken }` + `gate.opened(slug)` 이벤트
 2. 프론트는 `gateToken`으로 즉시 `/unlock?t=&next=/free/<slug>`(또는 `/course`) → 쿠키 발급 → **그 자리에서 열림**. 메일을 기다리지 않는다.
 3. 메일의 링크 → `GET /confirm?t=` → `status=active`, `confirmedAt` → `302` → `/free/<slug>`(또는 `/course`). **해금이 아니라 리스트 품질용 active 전환.** 쿠키가 없는 기기에서는 잠금 UI가 남을 수 있고, 그때는 폼을 다시 내면 쿠키가 발급된다.
@@ -357,6 +427,7 @@ export const ResourceUpsertInput = z.object({
 즉시 해금(전환)과 메일 클릭 active(리스트 품질)를 분리한다. 확인 메일과 자료 메일은 한 통(`resource`)으로 합친다.
 
 ### 6.2 토큰 (`packages/shared/src/token.ts`, HMAC-SHA256)
+
 - 형식 `v1.<payload-base64url>.<sig-base64url>`
 - confirm 토큰 payload: `{ t:'c', e:<email>, s:<slug>, x:<exp unix> }` — 만료 7일, 1회용 아님(재클릭 허용, 멱등)
 - gate 토큰 payload: `{ t:'g', h:<sha256(email)>, x:<exp> }` — 만료 5분(URL에 노출되는 시간 최소화)
@@ -365,6 +436,7 @@ export const ResourceUpsertInput = z.object({
 - 이메일 원문은 쿠키·URL에 넣지 않는다 (해시만).
 
 ### 6.3 수신거부
+
 메일 푸터 링크 `https://<site>/unsubscribe?t=<unsubToken>` → 페이지가 `POST /unsubscribe {t}` → `status=unsubscribed`. 모든 메일에 `List-Unsubscribe: <https://<site>/unsubscribe?t=…>` 와 `List-Unsubscribe-Post: List-Unsubscribe=One-Click` 헤더.
 
 ---
@@ -372,19 +444,22 @@ export const ResourceUpsertInput = z.object({
 ## 7. 이메일 (SES v2)
 
 ### 7.1 템플릿 3종 (`services/api/src/mail/templates/*.ts`, 텍스트+HTML)
-| 키 | 제목 | 본문 골자 |
-|---|---|---|
-| `resource` | `[노디 AI 클래스] <자료 제목>` | **(광고) 없음**. 안내 + 버튼(민트). 링크는 `/confirm?t=`(active 전환 후 `/free/<slug>`로 리다이렉트). 있으면 다운로드 presigned URL(1시간) + 푸터. (`confirm` 템플릿은 폐기·이 한 통으로 합침) |
-| `inquiry-notify` (나에게) | `[검토 요청] <이름> · <결과물 도메인>` | 폼 내용 전부 + DynamoDB 키. 같은 내용을 Slack Incoming Webhook(`/nodi-class/SLACK_INQUIRY_WEBHOOK_URL`)에도 전송(실패해도 메일·202은 유지) |
-| `inquiry-ack` (신청자) | `[노디 AI 클래스] 검토 요청을 받았습니다` | `2영업일 내 회신드립니다` + 푸터 |
+
+| 키                        | 제목                                      | 본문 골자                                                                                                                                                                                      |
+| ------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `resource`                | `[노디 AI 클래스] <자료 제목>`            | **(광고) 없음**. 안내 + 버튼(민트). 링크는 `/confirm?t=`(active 전환 후 `/free/<slug>`로 리다이렉트). 있으면 다운로드 presigned URL(1시간) + 푸터. (`confirm` 템플릿은 폐기·이 한 통으로 합침) |
+| `inquiry-notify` (나에게) | `[검토 요청] <이름> · <결과물 도메인>`    | 폼 내용 전부 + DynamoDB 키. 같은 내용을 Slack Incoming Webhook(`/nodi-class/SLACK_INQUIRY_WEBHOOK_URL`)에도 전송(실패해도 메일·202은 유지)                                                     |
+| `inquiry-ack` (신청자)    | `[노디 AI 클래스] 검토 요청을 받았습니다` | `2영업일 내 회신드립니다` + 푸터                                                                                                                                                               |
 
 푸터 공통: `노디 AI 클래스 · 운영 Cascades · 상호/대표/사업자번호/주소 · 문의 · [수신거부]`. 이모지·느낌표 없음. HTML은 테이블 레이아웃, 다크 아님(메일 클라이언트 호환) — 민트 버튼 하나만.
 
 발송 제목 규칙:
+
 - 자료 전달·새 자료 안내: 제목에 `(광고)` 없음
 - VOD 판매·할인·워크숍 모집(캠페인): 제목 앞에 `(광고)` — 누락 시 과태료 대상. Step 2 `scripts/send.ts`에서 강제
 
 ### 7.2 발송 설정
+
 - **리전 `ap-northeast-2`(서울) 고정** — 이메일이 국외로 나가지 않음. 국외 이전 동의 박스 없음(처리방침 고지로 충분: Turnstile만 미국).
 - 발신 도메인 `mail.<NODI_DOMAIN>` (메인 도메인 평판 분리). From `노디 AI 클래스 <hello@mail.<domain>>`, Reply-To `contact@cascades.studio`.
 - DKIM(Easy DKIM) + SPF + DMARC(`p=none`으로 시작) 레코드는 CDK가 Route53에 생성.
@@ -397,15 +472,16 @@ export const ResourceUpsertInput = z.object({
 
 Base: `https://api.<NODI_DOMAIN>` (커스텀 도메인, ACM 인증서 us-east-1 아님 — HTTP API는 리전 인증서). CORS: `https://<NODI_DOMAIN>`만.
 
-| 메서드 | 경로 | 핸들러 | 입력 | 응답 |
-|---|---|---|---|---|
-| POST | `/subscribe` | `subscribe.ts` | `SubscribeInput` JSON | `202 { ok, state, gateToken }` / `400 {error:'invalid'}` / `403 {error:'bot'}` / `429` |
-| GET | `/confirm` | `confirm.ts` | `?t=` | `302` → `/free/<slug>`(active 전환) / `302` → `/free/<slug>?expired=1` |
-| POST | `/inquiry` | `inquiry.ts` | `InquiryInput` | `202 {ok}` |
-| POST | `/unsubscribe` | `unsubscribe.ts` | `{t}` | `200 {ok}` (토큰 불일치도 200 — 열거 방지) |
-| POST | `/internal/ses-events` | `ses-events.ts` | SNS | SNS 구독, 외부 노출 안 함 |
+| 메서드 | 경로                   | 핸들러           | 입력                  | 응답                                                                                   |
+| ------ | ---------------------- | ---------------- | --------------------- | -------------------------------------------------------------------------------------- |
+| POST   | `/subscribe`           | `subscribe.ts`   | `SubscribeInput` JSON | `202 { ok, state, gateToken }` / `400 {error:'invalid'}` / `403 {error:'bot'}` / `429` |
+| GET    | `/confirm`             | `confirm.ts`     | `?t=`                 | `302` → `/free/<slug>`(active 전환) / `302` → `/free/<slug>?expired=1`                 |
+| POST   | `/inquiry`             | `inquiry.ts`     | `InquiryInput`        | `202 {ok}`                                                                             |
+| POST   | `/unsubscribe`         | `unsubscribe.ts` | `{t}`                 | `200 {ok}` (토큰 불일치도 200 — 열거 방지)                                             |
+| POST   | `/internal/ses-events` | `ses-events.ts`  | SNS                   | SNS 구독, 외부 노출 안 함                                                              |
 
 공통:
+
 - 스로틀: 라우트별 burst 10 / rate 5 rps. 추가로 IP당 분당 10회를 `nodi-events`로 카운트(초과 시 429).
 - Turnstile 시크릿은 SSM. 검증 실패 → 403.
 - 모든 핸들러는 `zod` parse → 비즈니스 → 응답. 예외는 `500 {error:'internal'}`, 상세는 CloudWatch만.
@@ -417,6 +493,7 @@ Base: `https://api.<NODI_DOMAIN>` (커스텀 도메인, ACM 인증서 us-east-1 
 ## 9. 인프라 (`infra/`, CDK v2)
 
 ### 9.1 단일 스택 (`stackName: nodi-class`, **리전 `ap-northeast-2` 고정**)
+
 ```
 NodiClassStack (nodi-class) @ ap-northeast-2
   DynamoDB ×4 (subscribers / inquiries / events / resources), PITR, RETAIN
@@ -424,18 +501,21 @@ NodiClassStack (nodi-class) @ ap-northeast-2
   Lambda ×8 (subscribe/confirm/inquiry/unsubscribe/ses-events/resources-list|get|put)
   HTTP API + 스로틀, 선택적 커스텀 도메인 api.<domain>
 ```
+
 - AWS 리소스 이름 prefix: `nodi-class-` (테이블·Lambda·API·SNS 등).
 - **스택 env.region은 항상 `ap-northeast-2`** (`infra/bin/nodi.ts`). SES·데이터가 서울에 머문다.
 - Route53 호스티드 존은 **CDK 밖에서 이미 존재**한다고 가정 (`fromLookup` 또는 `-c hostedZoneId=`).
-- 비밀: `/nodi-class/GATE_SECRET`, `/nodi-class/TURNSTILE_SECRET`, `/nodi-class/ADMIN_API_KEY`, `/nodi-class/SLACK_INQUIRY_WEBHOOK_URL` — SSM SecureString, 콘솔에서 수동 생성. CDK는 참조만. Slack 웹훅은 Inquiry Lambda에만 주입.
+- 비밀: `/nodi-class/GATE_SECRET`, `/nodi-class/TURNSTILE_SECRET`, `/nodi-class/ADMIN_API_KEY`, `/nodi-class/SLACK_INQUIRY_WEBHOOK_URL` — SSM SecureString, 콘솔에서 수동 생성. CDK는 **파라미터 경로**만 Lambda env(`*_PARAM`)에 넣고, 런타임에 `GetParameter(WithDecryption)`로 읽는다 (CFN은 Lambda env에 `ssm-secure` 동적 참조를 넣을 수 없음). Slack 웹훅은 Inquiry Lambda에만.
 - 출력: `ApiUrl`, 테이블 이름 → Amplify / `.env.local`에 손으로 옮긴다.
 - 웹 호스팅은 Amplify(스택에 웹 리소스 없음).
 - GA4·카카오 로그인 없음(Step 1).
 
 ### 9.2 호스팅 (Step 1)
+
 Amplify Hosting을 콘솔에서 GitHub 연결로 세팅한다 (모노레포 설정: appRoot `apps/web`, 빌드 `pnpm install --frozen-lockfile && pnpm --filter @nodi/web build`). 환경 변수는 §10. 커스텀 도메인 `<NODI_DOMAIN>` + `www` 리다이렉트. CDK로 옮기는 건 TODO.
 
 ### 9.3 비용 가드
+
 DynamoDB 온디맨드, Lambda arm64, CloudWatch 로그 보존 90일. 예산 알람 월 $10.
 
 ---
@@ -443,11 +523,13 @@ DynamoDB 온디맨드, Lambda arm64, CloudWatch 로그 보존 90일. 예산 알�
 ## 10. 환경 변수
 
 `.env.example` (웹 필수만):
+
 ```
 NEXT_PUBLIC_API_URL=
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=
 GATE_SECRET=
 ```
+
 사이트 URL·유튜브·Threads·푸터(상호 Cascades·문의 contact@cascades.studio)는 코드에 하드코딩.
 인프라 도메인·NOTIFY_EMAIL은 CDK `-c domain=` / `-c notifyEmail=` (기본 contact@cascades.studio).
 
@@ -458,6 +540,7 @@ GATE_SECRET=
 각 항목은 하나의 커밋. 완료 조건(DoD)이 안 맞으면 다음으로 안 넘어간다.
 
 ### S1-0 준비 (사람이 먼저, 코드 밖)
+
 - [ ] SES: `mail.<domain>` identity 생성 → **Production access 신청** (오늘)
 - [ ] Route53 호스티드 존 존재 확인
 - [ ] Cloudflare Turnstile 사이트 생성 → 키 2개
@@ -466,22 +549,26 @@ GATE_SECRET=
 - [ ] before/after 이미지, 프로필 이미지, 자료 썸네일 4장
 
 ### S1-1 리포 골격
+
 - [x] pnpm workspaces, tsconfig.base, eslint flat config, prettier, vitest 루트 설정
 - [x] 5개 워크스페이스 빈 패키지 + 각 `typecheck`/`lint`/`test` 스크립트
 - [x] `AGENTS.md`, `.cursor/rules/*` (§12)
 - DoD: `pnpm install && pnpm typecheck && pnpm lint` 통과
 
 ### S1-2 shared
+
 - [x] `schemas.ts`, `token.ts`(sign/verify + 테스트), `products.ts`, `constants.ts`(쿠키명·만료·slug 목록)
 - DoD: token 테스트 — 정상/만료/위조/타입 불일치 4케이스
 
 ### S1-3 design-system
+
 - [x] 토큰 CSS 복사 + Pretendard self-host
 - [x] 12개 컴포넌트 TSX (§2.2 props) + 각각 스토리 없이 `apps/web/app/kit/page.tsx`(개발용 킷 페이지 `/kit`, prod에서 404)
 - [x] eslint 룰 `no-raw-color`, `no-shadow`
 - DoD: 킷 페이지에서 1440/375 두 폭으로 전 컴포넌트 육안 확인, 375 EmailGate 오버플로 없음
 
 ### S1-4 web 페이지 (정적 부분)
+
 - [x] 레이아웃(내비·푸터), `/`, `/course`, `/service`, `/privacy`, `/terms`, `/refund`, not-found
 - [x] MDX 파이프라인(`@next/mdx` 또는 `next-mdx-remote`), frontmatter 파싱, 목차 생성, 파트 분리
 - [x] `content/resources` 4개 슬러그(본문은 2개 실제, 2개 준비 중)
@@ -489,16 +576,19 @@ GATE_SECRET=
 - DoD: `pnpm build` 성공, Lighthouse 모바일 성능 90+, 카피가 §3과 글자 단위로 일치 — **Lighthouse는 배포 후 수동**
 
 ### S1-5 infra (data + mail)
+
 - [x] `NodiClassStack` (`nodi-class`) 코드 — `cdk deploy -c domain=…`는 **사람/자격증명 필요**
 - DoD: 테이블 3개 존재, SES identity Verified, DKIM 3레코드 Success — **배포 후 확인**
 
 ### S1-6 api
+
 - [x] 핸들러 5개 + `mail/` 템플릿 3종(resource·inquiry×2) + `db/` 리포지토리 + Turnstile 클라이언트
 - [x] 단위 테스트: subscribe(신규/기존active/허니팟/bot), confirm(정상/만료), inquiry, unsubscribe
 - [x] `NodiClassStack` API 라우트·Lambda — 배포·커스텀 도메인은 **사람/자격증명 필요**
 - DoD: `curl`로 4개 엔드포인트 시나리오 통과, 실메일 2통 — **배포 후 확인**
 
 ### S1-7 web 연결
+
 - [x] EmailGate `onSubmit` → `/subscribe` 호출 → `gateToken`으로 `/unlock` 즉시 해금
 - [x] `/unlock`, `/unsubscribe` 라우트 핸들러
 - [x] `/free/[slug]` 열림 상태 렌더, 다운로드 버튼(presigned는 스텁 `#` — S3 연동 TODO)
@@ -507,6 +597,7 @@ GATE_SECRET=
 - DoD: 폼 → 즉시 열림 → 메일 클릭 → active → 시크릿 창에서 잠금 확인 — **API·SES 배포 후 브라우저 확인**
 
 ### S1-8 배포·연결
+
 - [x] `amplify.yml` + `DEPLOY.md` 체크리스트 작성
 - [ ] Amplify 앱 생성, 도메인 연결, 환경변수 — **사람**
 - [ ] prod 스택 배포, SES production access 승인 확인 — **사람**
@@ -515,6 +606,7 @@ GATE_SECRET=
 - DoD: 실제 시청자 유입 후 24시간 내 `nodi-events`에 `subscribe.confirmed` 1건 이상
 
 ### S1-9 측정 스크립트
+
 - [x] `scripts/report.ts`: 기간별 `subscribe.requested / confirmed / gate.opened` 카운트, slug별, `active` 총수 — 터미널 출력만 (`pnpm report`)
 - DoD: 매주 일요일 수동 실행 가능 (테이블 배포 후)
 
@@ -523,6 +615,7 @@ GATE_SECRET=
 ## 12. 에이전트 규칙 (`AGENTS.md`, `.cursor/rules`)
 
 `AGENTS.md`(루트, 짧게):
+
 ```
 - PLAN.md가 기준이다. 범위 밖 기능은 만들지 말고 PLAN.md §13 TODO에 한 줄 추가한다.
 - 카피는 PLAN.md §3의 문장을 글자 단위로 쓴다. 문구를 '개선'하지 않는다.
@@ -534,6 +627,7 @@ GATE_SECRET=
 ```
 
 `.cursor/rules/`:
+
 - `web.mdc` (glob `apps/web/**`): 서버 컴포넌트 기본, 클라이언트는 폼·Turnstile만. Tailwind. 이미지는 `next/image`. 한글 `break-keep`.
 - `api.mdc` (glob `services/api/**`): 핸들러 = parse → service → response. 응답 스키마는 shared에서. 콘솔 로그 대신 구조화 로그(JSON). 테스트 필수.
 - `infra.mdc` (glob `infra/**`): 스택 4개 이름 고정. `RemovalPolicy.RETAIN`은 prod 테이블만. 시크릿은 코드에 절대 없음.
@@ -562,6 +656,7 @@ GATE_SECRET=
 ## 14. TODO — Step 3 (조건부)
 
 착수 게이트: **VOD 월 매출 500만 이상 + 실제 유출 사례 1건**. 둘 다 아니면 하지 않는다.
+
 - [ ] DRM: MediaPackage + SPEKE + 벤더(PallyCon/EZDRM) Widevine·FairPlay·PlayReady. 비용 월 수십 달러부터. 화면 녹화는 못 막으므로 2차 워터마크가 실질 억제책이라는 전제 유지.
 
 ---

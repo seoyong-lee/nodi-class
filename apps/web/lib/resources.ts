@@ -10,6 +10,7 @@ export type ResourceFrontmatter = {
   title: string;
   series: string;
   summary: string;
+  included?: string[];
   youtube?: string;
   youtubeTitle?: string;
   cover?: string;
@@ -42,6 +43,7 @@ type ApiResource = {
   title: string;
   series: string;
   summary: string;
+  included?: string[];
   youtube?: string;
   freeParts: number;
   publishedAt: string;
@@ -117,6 +119,7 @@ function fromApiResource(resource: ApiResource): ResourceDoc {
       title: resource.title,
       series: resource.series,
       summary: resource.summary,
+      included: resource.included,
       youtube: resource.youtube,
       freeParts: resource.freeParts,
       publishedAt: resource.publishedAt,
@@ -171,6 +174,7 @@ function getLocalResource(slug: string): ResourceDoc {
       title: String(rawFm.title ?? ''),
       series: String(rawFm.series ?? ''),
       summary: String(rawFm.summary ?? ''),
+      included: parseStringList(rawFm.included),
       youtube: rawFm.youtube ? String(rawFm.youtube) : undefined,
       youtubeTitle: rawFm.youtubeTitle
         ? String(rawFm.youtubeTitle)

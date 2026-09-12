@@ -246,21 +246,11 @@ export class NodiClassStack extends Stack {
       INQUIRIES_TABLE: inquiriesTable.tableName,
       EVENTS_TABLE: eventsTable.tableName,
       RESOURCES_TABLE: resourcesTable.tableName,
-      GATE_SECRET: StringParameter.valueForSecureStringParameter(
-        this,
-        gateSecretParam,
-        1,
-      ),
-      TURNSTILE_SECRET: StringParameter.valueForSecureStringParameter(
-        this,
-        turnstileSecretParam,
-        1,
-      ),
-      ADMIN_API_KEY: StringParameter.valueForSecureStringParameter(
-        this,
-        adminApiKeyParam,
-        1,
-      ),
+      // SecureString cannot be {{resolve:ssm-secure}} into Lambda env (CFN).
+      // Pass parameter names; handlers fetch WithDecryption at runtime.
+      GATE_SECRET_PARAM: gateSecretParam,
+      TURNSTILE_SECRET_PARAM: turnstileSecretParam,
+      ADMIN_API_KEY_PARAM: adminApiKeyParam,
       SITE_URL: siteUrl,
       MAIL_FROM: mailFrom,
       NOTIFY_EMAIL: notifyEmail,
@@ -319,12 +309,8 @@ export class NodiClassStack extends Stack {
     const confirmFn = makeFn('ConfirmFn', 'confirm.ts');
     const inquiryFn = makeFn('InquiryFn', 'inquiry.ts');
     inquiryFn.addEnvironment(
-      'SLACK_INQUIRY_WEBHOOK_URL',
-      StringParameter.valueForSecureStringParameter(
-        this,
-        slackInquiryWebhookParam,
-        1,
-      ),
+      'SLACK_INQUIRY_WEBHOOK_URL_PARAM',
+      slackInquiryWebhookParam,
     );
     slackInquiryWebhook.grantRead(inquiryFn);
     const unsubscribeFn = makeFn('UnsubscribeFn', 'unsubscribe.ts');

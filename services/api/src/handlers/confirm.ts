@@ -25,7 +25,7 @@ export async function handler(
   event: APIGatewayProxyEventV2,
 ): Promise<APIGatewayProxyResultV2> {
   try {
-    const env = getEnv();
+    const env = await getEnv();
     const token = event.queryStringParameters?.t;
     if (!token) {
       return redirect(`${env.siteUrl}/`);

@@ -30,7 +30,7 @@ export type SaveInquiryInput = {
 };
 
 export async function saveInquiry(input: SaveInquiryInput): Promise<Inquiry> {
-  const { inquiriesTable } = getEnv();
+  const { inquiriesTable } = await getEnv();
   const now = new Date().toISOString();
   const id = randomUUID();
   const item: Inquiry = {

@@ -29,6 +29,8 @@ type Props = {
   /** Extra actions below form (e.g. course CTA). */
   footer?: ReactNode;
   notice?: ReactNode;
+  /** Small line under the submit button. */
+  helper?: string;
 };
 const honeypotClass =
   'absolute opacity-0 left-0 top-0 h-px w-px overflow-hidden pointer-events-none';
@@ -49,6 +51,7 @@ export function EmailGateForm({
   buttonVariant = 'primary',
   footer,
   notice,
+  helper,
 }: Props) {
   const searchParams = useSearchParams();
   const [submitted, setSubmitted] = useState(false);
@@ -146,6 +149,7 @@ export function EmailGateForm({
         extraField={intent === 'subscribe' ? extraField : undefined}
         layout={layout}
         requireConsent={intent === 'subscribe'}
+        helper={helper}
       />
       {notice && !submitted ? notice : null}
       {footer && !submitted ? (

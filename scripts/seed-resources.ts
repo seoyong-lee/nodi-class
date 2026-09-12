@@ -44,6 +44,7 @@ async function main(): Promise<void> {
       title: String(fm.title ?? ''),
       series: String(fm.series ?? ''),
       summary: String(fm.summary ?? ''),
+      included: fm.included,
       youtube: fm.youtube ? String(fm.youtube) : undefined,
       freeParts: Number(fm.freeParts ?? 1),
       publishedAt,

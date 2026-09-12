@@ -10,7 +10,7 @@ import {
   upsertSubscriber,
 } from '../db/subscribers.js';
 import { putEvent } from '../db/events.js';
-import { getEnv } from '../lib/env.js';
+import { getEnv, type ApiEnv } from '../lib/env.js';
 import { emailHashField, log } from '../lib/log.js';
 import { checkRateLimit } from '../lib/rate-limit.js';
 import {
@@ -31,10 +31,7 @@ import { sendMail } from '../mail/send.js';
 import { resourceMail } from '../mail/templates/resource.js';
 import { type FooterContext } from '../mail/templates/layout.js';
 
-function footerFrom(
-  env: ReturnType<typeof getEnv>,
-  unsubToken: string,
-): FooterContext {
+function footerFrom(env: ApiEnv, unsubToken: string): FooterContext {
   return {
     siteUrl: env.siteUrl,
     unsubToken,
@@ -67,7 +64,7 @@ export async function handler(
       return badRequest({ error: 'invalid' });
     }
 
-    const env = getEnv();
+    const env = await getEnv();
     const okTs = await checkTurnstile(
       parsed.data.turnstile,
       ip,

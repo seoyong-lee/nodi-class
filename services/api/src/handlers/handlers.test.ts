@@ -36,6 +36,7 @@ import { saveInquiry } from '../db/inquiries.js';
 import { sendMail } from '../mail/send.js';
 import { notifyInquirySlack } from '../lib/slack.js';
 import { setTurnstileVerify, resetTurnstileVerify } from '../lib/turnstile.js';
+import { resetEnvCache } from '../lib/env.js';
 import {
   setRateLimitCheck,
   resetRateLimitCheck,
@@ -51,6 +52,7 @@ const SECRET = 'test-gate-secret-at-least-32-chars-long!!';
 const SITE = 'https://nodi.example';
 
 function setTestEnv(): void {
+  resetEnvCache();
   process.env.SUBSCRIBERS_TABLE = 'nodi-class-subscribers';
   process.env.INQUIRIES_TABLE = 'nodi-class-inquiries';
   process.env.EVENTS_TABLE = 'nodi-class-events';

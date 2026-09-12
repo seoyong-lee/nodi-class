@@ -7,7 +7,7 @@ export type AccessBadgeProps = {
 export function AccessBadge({ access }: AccessBadgeProps) {
   return (
     <Badge tone="current">
-      {access === 'free' ? '무료 공개 중' : '유료 전환됨 · 기존 등록자 무료'}
+      {access === 'free' ? '무료 자료' : '유료 전환됨 · 기존 등록자 무료'}
     </Badge>
   );
 }

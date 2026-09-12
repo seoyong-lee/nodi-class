@@ -10,6 +10,9 @@ export type { IconProps } from './components/core/Icon';
 export { Input } from './components/core/Input';
 export type { InputProps } from './components/core/Input';
 
+export { Select } from './components/core/Select';
+export type { SelectProps } from './components/core/Select';
+
 export { SectionHeading } from './components/content/SectionHeading';
 export type { SectionHeadingProps } from './components/content/SectionHeading';
 

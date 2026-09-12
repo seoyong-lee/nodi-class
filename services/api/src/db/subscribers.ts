@@ -45,7 +45,7 @@ function newUnsubToken(): string {
 }
 
 export async function getSubscriber(email: string): Promise<Subscriber | null> {
-  const { subscribersTable } = getEnv();
+  const { subscribersTable } = await getEnv();
   const res = await getDocClient().send(
     new GetCommand({
       TableName: subscribersTable,
@@ -58,7 +58,7 @@ export async function getSubscriber(email: string): Promise<Subscriber | null> {
 export async function getSubscriberByUnsubToken(
   token: string,
 ): Promise<Subscriber | null> {
-  const { subscribersTable } = getEnv();
+  const { subscribersTable } = await getEnv();
   const link = await getDocClient().send(
     new GetCommand({
       TableName: subscribersTable,
@@ -95,7 +95,7 @@ export type UpsertSubscribeResult = {
 export async function upsertSubscriber(
   input: UpsertSubscribeInput,
 ): Promise<UpsertSubscribeResult> {
-  const { subscribersTable } = getEnv();
+  const { subscribersTable } = await getEnv();
   const now = new Date().toISOString();
   const email = input.email.trim().toLowerCase();
   const existing = await getSubscriber(email);
@@ -186,7 +186,7 @@ export async function upsertSubscriber(
 }
 
 export async function activateSubscriber(email: string): Promise<Subscriber | null> {
-  const { subscribersTable } = getEnv();
+  const { subscribersTable } = await getEnv();
   const now = new Date().toISOString();
   const pk = emailPk(email);
 
@@ -226,7 +226,7 @@ export async function markUnsubscribed(
   email: string,
   opts?: { bounceAt?: boolean },
 ): Promise<void> {
-  const { subscribersTable } = getEnv();
+  const { subscribersTable } = await getEnv();
   const now = new Date().toISOString();
   const names: Record<string, string> = { '#status': 'status' };
   const values: Record<string, string> = {
@@ -261,7 +261,7 @@ export async function queryByStatus(
   status: SubscriberStatus,
   limit = 25,
 ): Promise<Subscriber[]> {
-  const { subscribersTable } = getEnv();
+  const { subscribersTable } = await getEnv();
   const res = await getDocClient().send(
     new QueryCommand({
       TableName: subscribersTable,

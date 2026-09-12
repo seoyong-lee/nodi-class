@@ -5,7 +5,7 @@ const TITLES: Record<string, string> = {
   'claude-prompt-set': '클로드 프롬프트 세트',
   'claude-design-landing-checklist': '클로드 디자인 랜딩 체크리스트',
   'ai-design-5-principles': 'AI 디자인 5원칙',
-  [COURSE_WAITLIST_SLUG]: '클로드 디자인 실전 출시 알림',
+  [COURSE_WAITLIST_SLUG]: '클로드 디자인 실전 가이드 출시 알림',
 };
 
 export function resourceTitle(slug: string): string {

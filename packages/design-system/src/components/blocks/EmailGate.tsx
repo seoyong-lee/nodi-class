@@ -5,6 +5,7 @@ import { cn } from '../../lib/cn';
 import { Button } from '../core/Button';
 import { Icon } from '../core/Icon';
 import { Input } from '../core/Input';
+import { Select } from '../core/Select';
 
 export type EmailGateExtraField = {
   name: string;
@@ -30,6 +31,8 @@ export type EmailGateProps = {
   submitting?: boolean;
   /** `stack` = full-width fields (home CTA card). Default keeps email+button row. */
   layout?: 'inline' | 'stack';
+  /** Small line under the submit button. */
+  helper?: string;
 };
 
 export function EmailGate({
@@ -46,6 +49,7 @@ export function EmailGate({
   extraField,
   submitting = false,
   layout = 'inline',
+  helper,
 }: EmailGateProps) {
   const [email, setEmail] = useState('');
   const [extra, setExtra] = useState(extraField?.options[0]?.value ?? '');
@@ -71,7 +75,7 @@ export function EmailGate({
       <div className="flex flex-col gap-inline">
         <h3 className="m-0 text-h3 font-bold text-strong break-keep">{title}</h3>
         {description ? (
-          <p className="m-0 max-w-measure text-body-sm text-body break-keep">
+          <p className="m-0 max-w-measure text-body-sm text-body break-keep whitespace-pre-line">
             {description}
           </p>
         ) : null}
@@ -118,9 +122,8 @@ export function EmailGate({
               <label className="text-caption text-muted" htmlFor={selectId}>
                 {extraField.label}
               </label>
-              <select
+              <Select
                 id={selectId}
-                className="w-full box-border py-[14px] pl-4 pr-10 bg-field text-strong border border-line rounded font-sans text-body-sm leading-[1.4] outline-none transition-ui focus:border-accent"
                 name={extraField.name}
                 value={extra}
                 onChange={(e) => setExtra(e.target.value)}
@@ -130,7 +133,7 @@ export function EmailGate({
                     {opt.label}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
           ) : null}
           {requireConsent && consent ? (
@@ -164,7 +167,7 @@ export function EmailGate({
           <div
             className={
               stacked
-                ? 'w-full [&_button]:w-full [&_button]:min-w-[12rem]'
+                ? 'w-full flex flex-col gap-inline-tight [&_button]:w-full [&_button]:min-w-[12rem]'
                 : 'flex-none max-[480px]:flex-[1_1_100%] max-[480px]:w-full max-[480px]:[&_button]:w-full max-[480px]:[&_a]:w-full'
             }
           >
@@ -176,6 +179,11 @@ export function EmailGate({
             >
               {submitting ? '보내는 중' : buttonLabel}
             </Button>
+            {helper ? (
+              <p className="m-0 text-[13px] text-muted break-keep text-center max-[480px]:text-left">
+                {helper}
+              </p>
+            ) : null}
           </div>
         </form>
       )}

@@ -25,7 +25,7 @@ export type SendMailInput = {
 };
 
 export async function sendMail(input: SendMailInput): Promise<boolean> {
-  const env = getEnv();
+  const env = await getEnv();
   const headers: { Name: string; Value: string }[] = [];
   if (!input.skipListUnsub && input.unsubToken) {
     const h = listUnsubHeaders(env.siteUrl, input.unsubToken);
