@@ -368,8 +368,8 @@ export default async function FreeResourcePage({ params }: Props) {
                 quality={100}
               />
             </div>
-            <div className="flex flex-col gap-6 pt-inline-tight">
-              <div className="flex flex-col gap-y-0">
+            <div className="flex flex-col gap-6 pt-inline-tight max-[960px]:items-center max-[960px]:text-center">
+              <div className="flex flex-col gap-y-0 max-[960px]:items-center">
                 <p className="m-0 text-h2 font-bold text-strong max-[720px]:text-[20px]">
                   {RESOURCE_AUTHOR_NAME}
                 </p>

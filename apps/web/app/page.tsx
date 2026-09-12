@@ -121,7 +121,7 @@ export default function HomePage() {
       </section>
 
       <section className={section}>
-        <span className="text-label tracking-[var(--tracking-label)] text-muted">04 / 노디</span>
+        <span className="text-label tracking-[var(--tracking-label)] text-muted">04 / 소개</span>
         <div className="h-block-tight" />
         <div className="flex gap-10 items-start max-[960px]:flex-col max-[960px]:gap-6">
           <div className="flex-none w-[240px] aspect-[1/1] rounded-full overflow-hidden bg-raised border-hairline relative isolate max-[960px]:w-full max-[960px]:max-w-[240px] max-[960px]:mx-auto">
@@ -134,8 +134,8 @@ export default function HomePage() {
               quality={100}
             />
           </div>
-          <div className="flex flex-col gap-6 pt-inline-tight">
-            <ul className="list-none m-0 p-0 flex flex-col gap-y-0">
+          <div className="flex flex-col gap-6 pt-inline-tight max-[960px]:items-center max-[960px]:text-center">
+            <ul className="list-none m-0 p-0 flex flex-col gap-y-0 max-[960px]:items-center">
               <li className="text-h2 font-bold text-strong max-[720px]:text-[20px]">노디</li>
               <li className="text-body max-[720px]:text-body-sm pt-2">
                 직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어입니다.
