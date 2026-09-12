@@ -1,0 +1,10 @@
+:root{
+/* One radius for buttons, cards and inputs. */
+--radius:11px;
+--radius-badge:6px;
+
+/* Elevation is expressed as a background-lightness step only.
+   There is no shadow token in this system, by design. */
+--border-hairline:1px solid var(--border-subtle);
+--border-hairline-strong:1px solid var(--border-strong);
+}

@@ -1,0 +1,29 @@
+:root{
+--font-sans:"Pretendard",-apple-system,BlinkMacSystemFont,system-ui,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+
+/* Two weights. Never a third. */
+--weight-regular:400;
+--weight-bold:700;
+
+/* Scale — hero is the only jump. Section titles stay under 2x body. */
+--size-hero:60px;
+--size-hero-mobile:36px;
+--size-h2:30px;
+--size-h3:20px;
+--size-body:16px;
+--size-body-sm:15px;
+--size-caption:13px;
+--size-label:12px;
+
+--leading-hero:1.15;
+--leading-heading:1.3;
+--leading-body:1.7;
+--leading-tight:1.45;
+
+--tracking-hero:-0.02em;
+--tracking-heading:-0.015em;
+--tracking-body:-0.01em;
+--tracking-label:0.08em;
+
+--measure:34em; /* ~25-40 Korean characters per line */
+}

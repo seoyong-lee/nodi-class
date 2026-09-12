@@ -1,0 +1,9 @@
+---
+description: Lambda API rules (PLAN.md §12)
+globs: services/api/**
+---
+
+- 핸들러 = zod parse → service → response.
+- 응답 스키마는 `@nodi/shared`에서.
+- `console.log` 대신 구조화 로그(JSON). 이메일 원문 금지(해시만).
+- 단위 테스트 필수.

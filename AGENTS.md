@@ -1,0 +1,7 @@
+- PLAN.md가 기준이다. 범위 밖 기능은 만들지 말고 PLAN.md §13 TODO에 한 줄 추가한다.
+- 카피는 PLAN.md §3의 문장을 글자 단위로 쓴다. 문구를 '개선'하지 않는다.
+- 색·그림자·폰트: 토큰 변수만. hex 리터럴·box-shadow·Tailwind 금지.
+- 이메일 원문을 로그·URL·쿠키에 넣지 않는다.
+- Next(apps/web)는 AWS SDK를 import하지 않는다. 데이터 접근은 전부 services/api.
+- 새 npm 의존성은 추가 전에 이유를 커밋 메시지에 쓴다.
+- 커밋 단위는 PLAN.md §11 체크리스트 항목 하나.

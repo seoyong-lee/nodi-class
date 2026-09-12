@@ -1,0 +1,8 @@
+---
+description: AWS CDK infra rules (PLAN.md §12)
+globs: infra/**
+---
+
+- 스택 이름 고정: NodiDataStack, NodiMailStack, NodiApiStack, NodiWebStack.
+- `RemovalPolicy.RETAIN`은 prod 테이블만.
+- 시크릿은 코드에 절대 없음. SSM SecureString 참조만.

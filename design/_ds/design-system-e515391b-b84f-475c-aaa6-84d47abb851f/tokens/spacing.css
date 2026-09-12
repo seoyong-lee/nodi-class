@@ -1,0 +1,23 @@
+:root{
+/* 8px scale */
+--space-1:8px;
+--space-2:16px;
+--space-3:24px;
+--space-4:32px;
+--space-5:40px;
+--space-6:48px;
+--space-8:64px;
+--space-10:80px;
+--space-15:120px;
+
+/* Roles */
+--gap-section:120px;   /* between sections — fixed, never tuned per page */
+--gap-block:40px;      /* between elements inside a section */
+--gap-block-tight:24px;
+--gap-inline:12px;     /* inside a text block — always <= half of --gap-block */
+--gap-inline-tight:8px;
+
+--page-max:1120px;
+--page-gutter:24px;
+--card-pad:28px;
+}
