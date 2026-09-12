@@ -10,7 +10,7 @@ export function Select({ className, children, ...props }: SelectProps) {
     <div className="relative w-full min-w-0">
       <select
         className={cn(
-          'w-full box-border appearance-none py-[14px] pl-4 pr-12 bg-field text-strong border border-line rounded font-sans text-body-sm leading-[1.4] outline-none transition-ui focus:border-accent [color-scheme:dark]',
+          'w-full box-border appearance-none py-[14px] pl-4 pr-12 bg-field text-strong border border-line rounded font-sans text-body-sm leading-[1.4] outline-none transition-ui focus:border-accent',
           className,
         )}
         {...props}

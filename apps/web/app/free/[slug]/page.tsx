@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import {
   AccessBadge,
@@ -35,6 +36,7 @@ import {
   RESOURCE_GATE_TITLE,
   RESOURCE_HERO_CTA,
   RESOURCE_HERO_HELPER,
+  RESOURCE_HERO_UNLOCKED_CTA,
   RESOURCE_INCLUDED_AFTER,
   RESOURCE_INCLUDED_HEADING,
   RESOURCE_INTRO_BODY,
@@ -44,12 +46,33 @@ import {
   RESOURCE_VALUE_BODY,
 } from '../../../lib/copy';
 import { getOtherResources, getResource, listResourceSlugs } from '../../../lib/resources';
+import { pageMetadata } from '../../../lib/metadata';
 
 export const dynamic = 'force-dynamic';
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const doc = await getResource(slug);
+
+  if (!doc) {
+    return pageMetadata({
+      title: '자료를 찾을 수 없습니다',
+      description: '요청한 무료 자료를 찾을 수 없습니다.',
+      path: `/free/${slug}`,
+      noIndex: true,
+    });
+  }
+
+  return pageMetadata({
+    title: doc.frontmatter.title,
+    description: doc.frontmatter.summary.replace(/\s+/g, ' ').trim(),
+    path: `/free/${slug}`,
+  });
+}
 
 const section = 'max-w-page mx-auto pt-section px-gutter break-keep';
 const hero = 'max-w-page mx-auto pt-section max-[720px]:pt-20 px-gutter break-keep';
@@ -92,7 +115,6 @@ export default async function FreeResourcePage({ params }: Props) {
   const youtube = doc.frontmatter.youtube;
   const included = doc.frontmatter.included ?? [];
   const showLocked = !unlocked && !isPlaceholder && restParts.length > 0;
-  const heroCtaHref = unlocked ? '#part-00' : '#gate';
 
   return (
     <main>
@@ -126,8 +148,12 @@ export default async function FreeResourcePage({ params }: Props) {
                     강의 보기
                   </Button>
                 ) : (
-                  <Button variant="primary" href={heroCtaHref}>
-                    {RESOURCE_HERO_CTA}
+                  <Button
+                    variant="primary"
+                    href={unlocked ? undefined : '#gate'}
+                    disabled={unlocked}
+                  >
+                    {unlocked ? RESOURCE_HERO_UNLOCKED_CTA : RESOURCE_HERO_CTA}
                   </Button>
                 )}
                 {youtube ? (
@@ -325,7 +351,7 @@ export default async function FreeResourcePage({ params }: Props) {
       {unlocked && !isPlaceholder ? (
         <section className={section}>
           <div className={`flex flex-col gap-block ${bodyCol}`}>
-            <div id="gate" className="scroll-mt-24 flex items-center gap-inline-tight text-accent">
+            <div id="gate" className="scroll-mt-24 flex items-center gap-inline-tight text-link">
               <Icon name="check" size={18} />
               <span className="text-body-sm">{GATE_ACTIVE_LABEL}</span>
             </div>

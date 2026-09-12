@@ -36,7 +36,7 @@ export function Input({
   const descriptionId = description ? `${id}-desc` : undefined;
 
   const fieldClass = cn(
-    'w-full box-border px-4 py-[14px] bg-field text-strong rounded font-sans text-body-sm tracking-[var(--tracking-body)] outline-none transition-ui [color-scheme:dark] placeholder:text-disabled border focus:border-accent',
+    'w-full box-border px-4 py-[14px] bg-field text-strong rounded font-sans text-body-sm tracking-[var(--tracking-body)] outline-none transition-ui placeholder:text-disabled border focus:border-accent',
     multiline ? 'leading-[var(--leading-body)] resize-y py-[13px]' : 'leading-[1.4]',
     error ? 'border-line-strong' : 'border-line',
     className,

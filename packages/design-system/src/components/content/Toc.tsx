@@ -74,7 +74,7 @@ export function Toc({ parts, freeParts, unlocked }: TocProps) {
                 href={`#${part.id}`}
                 className={cn(
                   'flex items-center gap-inline py-inline no-underline transition-ui max-[720px]:min-h-[48px]',
-                  active ? 'text-accent' : 'text-strong hover:text-accent',
+                  active ? 'text-link' : 'text-strong hover:text-link',
                   locked && 'text-muted',
                 )}
                 aria-current={active ? 'true' : undefined}

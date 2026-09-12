@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { TrackYouTubeButton } from './TrackYouTubeButton';
+import { ThemeToggle } from './ThemeToggle';
 
 const NAV = [
   {
@@ -27,7 +28,7 @@ export function SiteHeader({ youtubeUrl }: { youtubeUrl: string }) {
   const pathname = usePathname() || '/';
 
   return (
-    <header className="sticky top-0 z-20 bg-[color-mix(in_srgb,var(--surface-page)_92%,transparent)] border-b border-line">
+    <header className="sticky top-0 z-20 bg-[var(--header-bg)] border-b border-line">
       <div className="max-w-page mx-auto px-gutter h-16 flex items-center justify-between gap-6 max-[720px]:h-14">
         <Link
           href="/"
@@ -63,7 +64,7 @@ export function SiteHeader({ youtubeUrl }: { youtubeUrl: string }) {
                 href={item.href}
                 className={
                   current
-                    ? 'text-body-sm no-underline break-keep text-accent hover:text-accent-hover'
+                    ? 'text-body-sm no-underline break-keep text-link hover:text-link-hover'
                     : 'text-body-sm no-underline break-keep text-body hover:text-strong'
                 }
               >
@@ -71,9 +72,11 @@ export function SiteHeader({ youtubeUrl }: { youtubeUrl: string }) {
               </Link>
             );
           })}
+          <ThemeToggle />
           <TrackYouTubeButton placement="nav" href={youtubeUrl} size="sm" label="유튜브" />
         </nav>
-        <div className="hidden max-[720px]:block">
+        <div className="hidden max-[720px]:flex items-center gap-2">
+          <ThemeToggle />
           <TrackYouTubeButton placement="nav" href={youtubeUrl} size="sm" label="유튜브" />
         </div>
       </div>
@@ -89,7 +92,7 @@ export function SiteHeader({ youtubeUrl }: { youtubeUrl: string }) {
               href={item.href}
               className={
                 current
-                  ? 'text-[14px] no-underline break-keep text-accent hover:text-accent-hover'
+                  ? 'text-[14px] no-underline break-keep text-link hover:text-link-hover'
                   : 'text-[14px] no-underline break-keep text-body hover:text-strong'
               }
             >

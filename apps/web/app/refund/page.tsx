@@ -1,3 +1,13 @@
+import type { Metadata } from 'next';
+import { pageMetadata } from '../../lib/metadata';
+
+export const metadata: Metadata = pageMetadata({
+  title: '환불 정책',
+  description: '노디 AI 클래스 환불 정책입니다.',
+  path: '/refund',
+  noIndex: true,
+});
+
 const sectionLast =
   'max-w-page mx-auto pt-section px-gutter pb-section break-keep';
 const legalTitle = 'm-0 mb-3 text-h2 font-bold text-strong';

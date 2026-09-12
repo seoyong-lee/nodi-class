@@ -16,17 +16,62 @@ import { AnalyticsProvider } from '../components/AnalyticsProvider';
 import {
   OPERATOR,
   SITE_URL,
+  THREADS_URL,
+  YOUTUBE_URL,
   getBusinessLines,
   getSocialLinks,
   getYoutubeUrl,
 } from '../lib/business';
+import {
+  DEFAULT_DESCRIPTION,
+  OG_IMAGE,
+  SITE_NAME,
+} from '../lib/metadata';
+
+const THEME_INIT_SCRIPT = `
+try {
+  document.documentElement.dataset.theme =
+    localStorage.getItem('nodi-theme') === 'light' ? 'light' : 'dark';
+} catch {
+  document.documentElement.dataset.theme = 'dark';
+}
+`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: '노디 AI 클래스',
-  description:
-    '랜딩페이지·브랜드·PPT. 유튜브 노디 AI에서 쓴 프롬프트와 가이드를 그대로 드립니다.',
-  applicationName: '노디 AI 클래스',
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DEFAULT_DESCRIPTION,
+  applicationName: SITE_NAME,
+  authors: [{ name: '노디', url: getYoutubeUrl() }],
+  creator: '노디',
+  publisher: OPERATOR,
+  category: 'education',
+  keywords: [
+    'AI 클래스',
+    '클로드',
+    'Claude',
+    'AI 디자인',
+    'AI 프롬프트',
+    'PPT',
+    '랜딩페이지',
+  ],
+  alternates: {
+    canonical: '/',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
   icons: {
     icon: [
       { url: '/brand/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
@@ -37,26 +82,26 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
   openGraph: {
-    title: '노디 AI 클래스',
-    description:
-      '랜딩페이지·브랜드·PPT. 유튜브 노디 AI에서 쓴 프롬프트와 가이드를 그대로 드립니다.',
+    title: SITE_NAME,
+    description: DEFAULT_DESCRIPTION,
+    url: '/',
+    siteName: SITE_NAME,
     type: 'website',
     locale: 'ko_KR',
     images: [
       {
-        url: '/brand/android-chrome-512x512.png',
-        width: 512,
-        height: 512,
-        alt: '노디 AI 클래스',
+        url: OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} — 코딩 몰라도, 이제 AI로 직접 만들 수 있습니다`,
       },
     ],
   },
   twitter: {
-    card: 'summary',
-    title: '노디 AI 클래스',
-    description:
-      '랜딩페이지·브랜드·PPT. 유튜브 노디 AI에서 쓴 프롬프트와 가이드를 그대로 드립니다.',
-    images: ['/brand/android-chrome-512x512.png'],
+    card: 'summary_large_image',
+    title: SITE_NAME,
+    description: DEFAULT_DESCRIPTION,
+    images: [OG_IMAGE],
   },
 };
 
@@ -64,10 +109,31 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const business = getBusinessLines();
   const socialLinks = getSocialLinks();
   const youtubeUrl = getYoutubeUrl();
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: DEFAULT_DESCRIPTION,
+    inLanguage: 'ko-KR',
+    publisher: {
+      '@type': 'Organization',
+      name: OPERATOR,
+      url: SITE_URL,
+      sameAs: [YOUTUBE_URL, THREADS_URL],
+    },
+  };
 
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <AnalyticsProvider />
         <div className="min-h-dvh flex flex-col">
           <SiteHeader youtubeUrl={youtubeUrl} />

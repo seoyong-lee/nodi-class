@@ -81,7 +81,7 @@ export function EmailGate({
         ) : null}
       </div>
       {submitted ? (
-        <p className="m-0 flex items-center gap-inline-tight text-body-sm text-accent">
+        <p className="m-0 flex items-center gap-inline-tight text-body-sm text-link">
           <Icon name="check" size={18} />
           <span>{submittedLabel}</span>
         </p>
@@ -145,7 +145,7 @@ export function EmailGate({
               )}
             >
               <label
-                className="flex items-start gap-[10px] text-label text-muted leading-[1.7] [color-scheme:dark] [&_input]:mt-[2px] [&_input]:w-4 [&_input]:h-4 [&_input]:accent-accent [&_input]:shrink-0"
+                className="flex items-start gap-[10px] text-label text-muted leading-[1.7] [&_input]:mt-[2px] [&_input]:w-4 [&_input]:h-4 [&_input]:accent-accent [&_input]:shrink-0"
                 htmlFor={consentId}
               >
                 <input

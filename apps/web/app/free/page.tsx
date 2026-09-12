@@ -1,5 +1,14 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { ResourceCardsGrid } from '../../components/ResourceCardsGrid';
+import { pageMetadata } from '../../lib/metadata';
+
+export const metadata: Metadata = pageMetadata({
+  title: '무료 AI 자료',
+  description:
+    'AI 활용에 도움이 되는 프롬프트·가이드·체크리스트를 모았습니다. 필요한 자료를 골라 무료로 받아보세요.',
+  path: '/free',
+});
 
 const section = 'max-w-page mx-auto pt-section px-gutter break-keep pb-section';
 const hero = 'max-w-page mx-auto pt-section max-[720px]:pt-20 px-gutter break-keep';

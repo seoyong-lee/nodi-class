@@ -88,10 +88,10 @@
   }
 }
 
-/* Prompt body scrollbar — match dark field surface (no system chrome). */
+/* Prompt body scrollbar — follows the active surface palette. */
 .nodi-prompt-scroll {
   scrollbar-width: thin;
-  scrollbar-color: var(--nd-600) transparent;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
 .nodi-prompt-scroll::-webkit-scrollbar {
@@ -103,10 +103,10 @@
 }
 
 .nodi-prompt-scroll::-webkit-scrollbar-thumb {
-  background: var(--nd-600);
+  background: var(--scrollbar-thumb);
   border-radius: var(--radius-badge);
 }
 
 .nodi-prompt-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--nd-300);
+  background: var(--scrollbar-thumb-hover);
 }

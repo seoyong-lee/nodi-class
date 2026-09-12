@@ -19,6 +19,7 @@ export const GATE_ACTIVE_LABEL = '메일로도 보냈습니다';
 
 /** `/free/[slug]` common conversion copy — PLAN §3.2 (resource-agnostic) */
 export const RESOURCE_HERO_CTA = '무료 자료 바로 열기';
+export const RESOURCE_HERO_UNLOCKED_CTA = '구입 완료';
 export const RESOURCE_HERO_HELPER = '이메일 등록 후 바로 열립니다 · 무료';
 
 export const RESOURCE_INTRO_LEAD =

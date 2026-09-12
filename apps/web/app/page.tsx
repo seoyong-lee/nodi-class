@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { BeforeAfter, Button, SectionHeading } from '@nodi/design-system';
 import { RESOURCE_SLUGS } from '@nodi/shared';
@@ -10,6 +11,15 @@ import { BUILDING_EXTRA_FIELD } from '../lib/building';
 import { getYoutubeUrl } from '../lib/business';
 import { productCardProps } from '../lib/products';
 import { TrackYouTubeButton } from '../components/TrackYouTubeButton';
+import { pageMetadata } from '../lib/metadata';
+
+export const metadata: Metadata = pageMetadata({
+  title: '노디 AI 클래스',
+  description:
+    '코딩 몰라도, 이제 AI로 직접 만들 수 있습니다. 내 사업에 필요한 결과물을 직접 만드는 기준과 방법을 배워보세요.',
+  path: '/',
+  absoluteTitle: true,
+});
 
 const HOME_GATE_SLUG = RESOURCE_SLUGS[0]!;
 
@@ -27,7 +37,7 @@ export default function HomePage() {
       <TrackPageView event={{ name: 'Viewed Home Page' }} />
       <section className={hero}>
         <div className="flex flex-col items-center gap-6 text-center">
-          <span className="text-label text-muted">노디 AI 클래스</span>
+          <span className=" text-muted text-[14px] sm:text-[16px]">노디 AI 클래스</span>
           <h1 className="m-0 font-hero text-hero max-[720px]:text-hero-m font-bold text-strong">
             코딩 몰라도,
             <br />

@@ -1,7 +1,16 @@
+import type { Metadata } from 'next';
 import { Icon } from '@nodi/design-system';
 import { InquiryForm } from '../../components/InquiryForm';
 import { ServiceHeroCta } from '../../components/ServiceHeroCta';
 import { TrackPageView } from '../../components/TrackPageView';
+import { pageMetadata } from '../../lib/metadata';
+
+export const metadata: Metadata = pageMetadata({
+  title: 'AI 결과물 마무리',
+  description:
+    'AI로 만든 초안을 고객이 선택하는 결과물로 완성합니다. 처음부터 새로 만드는 제작보다 기존 결과물을 다듬고 완성하는 데 집중합니다.',
+  path: '/service',
+});
 
 const FIT = [
   '클로드·러버블로 만들긴 했는데 어딘가 부족해 보입니다',

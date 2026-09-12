@@ -118,7 +118,7 @@ export function InquiryForm() {
         onChange={(e) => setBlocked(e.target.value)}
         className="amp-mask"
       />
-      <label className="flex items-center gap-[10px] text-label text-muted [color-scheme:dark] [&_input]:w-4 [&_input]:h-4 [&_input]:accent-accent">
+      <label className="flex items-center gap-[10px] text-label text-muted [&_input]:w-4 [&_input]:h-4 [&_input]:accent-accent">
         <input
           type="checkbox"
           checked={consent}

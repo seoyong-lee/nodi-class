@@ -16,6 +16,9 @@ export type ButtonProps = {
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
   disabled?: boolean;
   loading?: boolean;
+  title?: string;
+  'aria-label'?: string;
+  'aria-pressed'?: boolean;
   onClick?:
     | ButtonHTMLAttributes<HTMLButtonElement>['onClick']
     | AnchorHTMLAttributes<HTMLAnchorElement>['onClick'];
@@ -32,6 +35,9 @@ export function Button({
   type = 'button',
   disabled = false,
   loading = false,
+  title,
+  'aria-label': ariaLabel,
+  'aria-pressed': ariaPressed,
   onClick,
   children,
 }: ButtonProps) {
@@ -41,7 +47,7 @@ export function Button({
     'disabled:cursor-not-allowed aria-disabled:cursor-not-allowed',
     size === 'md' ? 'px-[22px] py-[14px] text-body-sm' : 'px-4 py-[9px] text-caption',
     variant === 'primary'
-      ? 'border-transparent bg-accent text-on-accent hover:enabled:bg-accent-hover hover:enabled:text-strong active:enabled:bg-accent-press active:enabled:text-strong disabled:bg-field disabled:text-disabled aria-disabled:bg-field aria-disabled:text-disabled'
+      ? 'border-transparent bg-accent text-on-accent hover:enabled:bg-accent-hover hover:enabled:text-on-accent active:enabled:bg-accent-press active:enabled:text-on-accent disabled:bg-field disabled:text-disabled aria-disabled:bg-field aria-disabled:text-disabled'
       : 'border-line bg-transparent text-strong hover:enabled:border-line-strong active:enabled:bg-raised disabled:bg-transparent disabled:text-disabled disabled:border-line aria-disabled:bg-transparent aria-disabled:text-disabled aria-disabled:border-line',
     loading && 'opacity-[0.72] pointer-events-none',
   );
@@ -60,6 +66,9 @@ export function Button({
         href={href}
         target={target}
         rel={rel}
+        title={title}
+        aria-label={ariaLabel}
+        aria-pressed={ariaPressed}
         onClick={onClick as AnchorHTMLAttributes<HTMLAnchorElement>['onClick']}
       >
         {content}
@@ -74,6 +83,9 @@ export function Button({
       disabled={isDisabled}
       aria-disabled={isDisabled || undefined}
       aria-busy={loading || undefined}
+      aria-label={ariaLabel}
+      aria-pressed={ariaPressed}
+      title={title}
       onClick={onClick as ButtonHTMLAttributes<HTMLButtonElement>['onClick']}
     >
       {content}

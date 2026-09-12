@@ -63,7 +63,7 @@ export function VideoCard({ title, note, href, thumbnail }: VideoCardProps) {
         >
           <Thumb16x9 src={thumbnail} alt="">
             <span
-              className="absolute left-3 bottom-3 inline-flex items-center justify-center w-8 h-8 border-0 rounded-badge bg-[color-mix(in_srgb,var(--text-on-accent)_72%,transparent)] text-strong cursor-pointer p-0"
+              className="absolute left-3 bottom-3 inline-flex items-center justify-center w-8 h-8 border-0 rounded-badge bg-[var(--media-control-bg)] text-[var(--media-control-ink)] cursor-pointer p-0"
               aria-hidden="true"
             >
               <Icon name="play" size={14} />

@@ -13,7 +13,7 @@ export function Badge({ children, tone = 'default' }: BadgeProps) {
     <span
       className={cn(
         'inline-flex items-center gap-[6px] px-[9px] py-[4px] border rounded-badge text-label leading-[1.4] tracking-[var(--tracking-body)] whitespace-nowrap',
-        tone === 'current' && 'bg-accent-quiet text-accent border-transparent',
+        tone === 'current' && 'bg-accent-quiet text-link border-transparent',
         tone === 'claude' && 'bg-tag-claude-quiet text-tag-claude border-transparent',
         tone === 'ppt' && 'bg-tag-ppt-quiet text-tag-ppt border-transparent',
         tone === 'design' && 'bg-tag-design-quiet text-tag-design border-transparent',

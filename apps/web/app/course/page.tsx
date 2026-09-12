@@ -1,9 +1,18 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { COURSE_WAITLIST_SLUG } from '@nodi/shared';
 import { EmailGateForm } from '../../components/EmailGateForm';
 import { TrackPageView } from '../../components/TrackPageView';
 import { TrackedProductCard } from '../../components/TrackedProductCard';
 import { productCardProps } from '../../lib/products';
+import { pageMetadata } from '../../lib/metadata';
+
+export const metadata: Metadata = pageMetadata({
+  title: '클로드 디자인 실전 가이드',
+  description:
+    '클로드로 결과물을 만드는 방법부터 좋은 디자인을 고르고, 고치고, 반복해서 활용하는 기준을 만드는 방법까지 한 번에 배웁니다.',
+  path: '/course',
+});
 
 const CURRICULUM = [
   {
