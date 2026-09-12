@@ -1,6 +1,8 @@
+import styles from '../styles/page.module.css';
+
 export default function NotFound() {
   return (
-    <main style={{ padding: 'var(--page-gutter)' }}>
+    <main className={styles.notFound}>
       <p>페이지를 찾을 수 없습니다.</p>
     </main>
   );
