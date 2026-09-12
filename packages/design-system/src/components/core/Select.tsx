@@ -18,10 +18,10 @@ export function Select({ className, children, ...props }: SelectProps) {
         {children}
       </select>
       <span
-        className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted"
+        className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted pt-2"
         aria-hidden
       >
-        <Icon name="chevron-down" size={16} />
+        <Icon name="chevron-down" size={18} />
       </span>
     </div>
   );

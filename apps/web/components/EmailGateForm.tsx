@@ -73,15 +73,10 @@ export function EmailGateForm({
       const turnstile = await getTurnstileToken(container);
 
       const building =
-        extraField && extra
-          ? (extra as 'landing' | 'brand' | 'ppt' | 'app' | 'none')
-          : undefined;
+        extraField && extra ? (extra as 'landing' | 'brand' | 'ppt' | 'app' | 'none') : undefined;
 
       const sourceRaw = searchParams.get('src')?.trim();
-      const source =
-        sourceRaw && /^[a-z0-9-]{0,64}$/.test(sourceRaw)
-          ? sourceRaw
-          : undefined;
+      const source = sourceRaw && /^[a-z0-9-]{0,64}$/.test(sourceRaw) ? sourceRaw : undefined;
 
       const result = await postSubscribe({
         email,
@@ -139,9 +134,7 @@ export function EmailGateForm({
         buttonLabel={buttonLabel}
         buttonVariant={buttonVariant}
         consent={intent === 'subscribe' ? SUBSCRIBE_CONSENT_LABEL : undefined}
-        consentDetail={
-          intent === 'subscribe' ? <SubscribeConsentDetail /> : undefined
-        }
+        consentDetail={intent === 'subscribe' ? <SubscribeConsentDetail /> : undefined}
         submittedLabel={submittedLabel}
         submitted={submitted}
         submitting={submitting}
@@ -152,9 +145,7 @@ export function EmailGateForm({
         helper={helper}
       />
       {notice && !submitted ? notice : null}
-      {footer && !submitted ? (
-        <div className="mt-6 flex flex-col gap-inline">{footer}</div>
-      ) : null}
+      {footer && !submitted ? <div className="mt-6 flex flex-col gap-inline">{footer}</div> : null}
       {error && !submitted ? (
         <p className="mt-2 mb-0 text-label text-body break-keep" role="alert">
           {error}
