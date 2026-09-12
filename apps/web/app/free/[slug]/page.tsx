@@ -335,7 +335,15 @@ export default async function FreeResourcePage({ params }: Props) {
                   key={resource.frontmatter.slug}
                   title={resource.frontmatter.title}
                   slug={resource.frontmatter.slug}
-                  thumbnail={resourceThumbnail(resource.frontmatter.slug)}
+                  thumbnail={
+                    resource.frontmatter.cover ??
+                    resourceThumbnail(resource.frontmatter.slug)
+                  }
+                  badges={
+                    resource.frontmatter.access === 'paid'
+                      ? ['강의 교재']
+                      : ['영상에서 소개', '무료 공개 중']
+                  }
                 />
               ))}
             </div>
