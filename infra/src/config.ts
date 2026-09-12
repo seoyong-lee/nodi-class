@@ -1,18 +1,8 @@
 import type { App } from 'aws-cdk-lib';
 
-export type NodiEnv = 'dev' | 'prod';
-
-export function requireNodiEnv(app: App): NodiEnv {
-  const value =
-    (app.node.tryGetContext('env') as string | undefined) ??
-    process.env.NODI_ENV ??
-    'dev';
-
-  if (value !== 'dev' && value !== 'prod') {
-    throw new Error(`Invalid env "${value}". Use -c env=dev|prod`);
-  }
-  return value;
-}
+/** Resource name prefix — one environment, one stack (`nodi-class`). */
+export const STACK_NAME = 'nodi-class';
+export const NAME_PREFIX = 'nodi-class';
 
 /** Domain from `-c domain=…`, `-c NODI_DOMAIN=…`, or env `NODI_DOMAIN`. */
 export function requireDomain(app: App): string {
@@ -33,4 +23,8 @@ export function optionalHostedZoneId(app: App): string | undefined {
   const value = app.node.tryGetContext('hostedZoneId') as string | undefined;
   if (!value || value.trim() === '') return undefined;
   return value.trim();
+}
+
+export function ssmPath(key: string): string {
+  return `/${NAME_PREFIX}/${key}`;
 }

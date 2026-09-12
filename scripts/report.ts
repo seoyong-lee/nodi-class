@@ -1,9 +1,9 @@
 /**
- * Weekly conversion report from nodi-events (PLAN.md §11 S1-9).
+ * Weekly conversion report from nodi-class-events.
  *
  * Usage:
- *   AWS_PROFILE=… NODI_ENV=dev \
- *   EVENTS_TABLE=nodi-events-dev SUBSCRIBERS_TABLE=nodi-subscribers-dev \
+ *   AWS_PROFILE=… \
+ *   EVENTS_TABLE=nodi-class-events SUBSCRIBERS_TABLE=nodi-class-subscribers \
  *   pnpm report -- --from 2026-09-01 --to 2026-09-12
  *
  * Prints terminal counts only — no dashboard.

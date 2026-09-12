@@ -1,17 +1,14 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
 import {
+  NAME_PREFIX,
   optionalHostedZoneId,
   requireDomain,
-  requireNodiEnv,
+  STACK_NAME,
 } from '../src/config';
-import { NodiApiStack } from '../src/stacks/nodi-api-stack';
-import { NodiDataStack } from '../src/stacks/nodi-data-stack';
-import { NodiMailStack } from '../src/stacks/nodi-mail-stack';
-import { NodiWebStack } from '../src/stacks/nodi-web-stack';
+import { NodiClassStack } from '../src/stacks/nodi-class-stack';
 
 const app = new cdk.App();
-const nodiEnv = requireNodiEnv(app);
 const domain = requireDomain(app);
 const hostedZoneId = optionalHostedZoneId(app);
 const enableCustomDomain =
@@ -31,7 +28,7 @@ const awsEnv =
     : undefined;
 
 // fromLookup requires account+region on the stack; attributes path does not.
-const mailEnv =
+const stackEnv =
   hostedZoneId != null
     ? awsEnv
     : {
@@ -39,43 +36,14 @@ const mailEnv =
         region: process.env.CDK_DEFAULT_REGION,
       };
 
-const data = new NodiDataStack(app, 'NodiDataStack', {
-  stackName: `NodiDataStack-${nodiEnv}`,
-  nodiEnv,
-  env: awsEnv,
-  description: `Nodi DynamoDB tables (${nodiEnv})`,
-});
-
-const mail = new NodiMailStack(app, 'NodiMailStack', {
-  stackName: `NodiMailStack-${nodiEnv}`,
-  nodiEnv,
+new NodiClassStack(app, 'NodiClassStack', {
+  stackName: STACK_NAME,
   domain,
-  hostedZoneId,
-  env: mailEnv,
-  description: `Nodi SES mail identity + DNS (${nodiEnv})`,
-});
-
-new NodiApiStack(app, 'NodiApiStack', {
-  stackName: `NodiApiStack-${nodiEnv}`,
-  nodiEnv,
-  domain,
-  subscribersTable: data.subscribersTable,
-  inquiriesTable: data.inquiriesTable,
-  eventsTable: data.eventsTable,
-  configurationSetName: mail.configurationSet.configurationSetName,
-  bounceComplaintTopic: mail.bounceComplaintTopic,
   hostedZoneId,
   enableCustomDomain,
   notifyEmail,
-  env: awsEnv,
-  description: `Nodi HTTP API + Lambdas (${nodiEnv})`,
-});
-
-new NodiWebStack(app, 'NodiWebStack', {
-  stackName: `NodiWebStack-${nodiEnv}`,
-  nodiEnv,
-  env: awsEnv,
-  description: `Nodi web hosting placeholder (${nodiEnv})`,
+  env: stackEnv,
+  description: `Nodi class infra (${NAME_PREFIX})`,
 });
 
 app.synth();
