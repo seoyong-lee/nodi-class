@@ -128,9 +128,7 @@ export default function HomePage() {
               <li className="text-body max-[720px]:text-body-sm">
                 시각디자인 학사, 컴퓨터소프트웨어공학 석사
               </li>
-              <li className="text-body max-[720px]:text-body-sm">
-                비전공자 대상 풀스택 개발 부트캠프 강사
-              </li>
+              <li className="text-body max-[720px]:text-body-sm">풀스택 개발 부트캠프 강사</li>
             </ul>
             <a href="https://www.youtube.com/@nodiworks" className="text-label text-muted">
               유튜브 노디 AI

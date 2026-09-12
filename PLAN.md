@@ -249,7 +249,7 @@ downloads:            # 선택. 있으면 열림 상태에서 presigned 링크 �
 ```
 
 - 본문은 `## Part 00. 먼저 알아두기` 형식의 `##` 헤딩으로 파트를 나눈다. 목차와 게이트 분리는 이 헤딩 기준.
-- 기존 노션 페이지 2개를 MDX로 옮긴다: `cascades-studio.notion.site/PPT-3d540dc0dcc08009bc18cce26662df57` → `claude-ppt-guidebook`, `.../3cf40dc0dcc080db9593fb7631b44953`(워크스페이스 동등본 `클로드 무료 프롬프트 세트`) → `claude-prompt-set`. 나머지 2개 슬러그는 frontmatter만 만들고 본문은 `준비 중` (카드는 노출하되 클릭 시 `/free/[slug]`에서 알림 게이트만).
+- 기존 노션 페이지를 MDX로 옮긴다: `cascades-studio.notion.site/PPT-…` → `claude-ppt-guidebook`, `…/3cf40dc0…`(동등본 `클로드 무료 프롬프트 세트`) → `claude-prompt-set`, `…/AI-5-3d940dc0…`(동등본 `죽은 AI 디자인 살리는 방법`의 5원칙) → `ai-design-5-principles`. 체크리스트 슬러그는 frontmatter만 두고 본문은 `준비 중`일 수 있다.
 - 코드블록(프롬프트)은 복사 버튼 있는 컴포넌트로 렌더.
 - 웹은 `NEXT_PUBLIC_API_URL`이 있으면 API를 읽고, 없으면(로컬) MDX 폴백.
 

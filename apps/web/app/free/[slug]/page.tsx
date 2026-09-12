@@ -9,7 +9,6 @@ import {
   ResourceCard,
   SectionHeading,
   Toc,
-  VideoCard,
 } from '@nodi/design-system';
 import { resourceThumbnail } from '@nodi/shared';
 import { notFound } from 'next/navigation';
@@ -86,7 +85,6 @@ export default async function FreeResourcePage({ params }: Props) {
   ].filter(Boolean);
 
   const youtube = doc.frontmatter.youtube;
-  const youtubeTitle = doc.frontmatter.youtubeTitle;
   const contents = doc.frontmatter.contents ?? [];
   const showLocked = !unlocked && !isPlaceholder && restParts.length > 0;
 
@@ -104,9 +102,8 @@ export default async function FreeResourcePage({ params }: Props) {
             </h1>
             <p className="m-0 max-w-[30em] text-body">{doc.frontmatter.summary}</p>
             {slug === 'claude-ppt-guidebook' ? (
-              <p className="m-0 max-w-measure text-body break-keep">
-                이 가이드북은 VOD 「클로드 디자인 실전」 교재로 들어갈 예정입니다. 강의가 나오면
-                무료 공개를 끝내고, 지금 이메일을 남긴 분은 그 뒤에도 계속 볼 수 있습니다.
+              <p className="m-0 max-w-measure text-body break-keep sm:whitespace-pre-line">
+                {`이 가이드북은 VOD 「클로드 디자인 실전」 교재로 들어갈 예정입니다.\n출시 기념 한정 수량 무료 배포중이며, 지금 이메일을 남겨주신 분들에 한해서만 무료로 공개합니다.`}
               </p>
             ) : null}
             {metaParts.length > 0 ? (
@@ -160,7 +157,15 @@ export default async function FreeResourcePage({ params }: Props) {
             <SectionHeading
               index="01"
               label="들어 있는 것"
-              title="프롬프트 7개와 그걸 쓰는 순서를 담았습니다"
+              title={
+                slug === 'claude-ppt-guidebook'
+                  ? '프롬프트 7개와 그걸 쓰는 순서를 담았습니다'
+                  : slug === 'claude-prompt-set'
+                    ? '맞춤 설정과 프로젝트 지침을 바로 붙여넣을 수 있게 담았습니다'
+                    : slug === 'ai-design-5-principles'
+                      ? 'AI 티를 줄이는 다섯 가지 원칙과 진단 프롬프트를 담았습니다'
+                      : '이 자료에 들어 있는 것을 정리했습니다'
+              }
             />
             <ContentsList items={contents} />
           </div>
@@ -168,37 +173,37 @@ export default async function FreeResourcePage({ params }: Props) {
       ) : null}
 
       <section className={section}>
-        <span className="text-label tracking-[var(--tracking-label)] text-muted">
-          02 / 만든 사람
-        </span>
-        <div className="h-block-tight" />
-        <div className="flex gap-10 items-start max-[960px]:flex-col max-[960px]:gap-6">
-          <div className="flex-none w-[240px] aspect-[1/1] rounded-full overflow-hidden bg-raised border-hairline relative isolate max-[960px]:w-full max-[960px]:max-w-[240px]">
-            <Image
-              className="object-cover object-center rounded"
-              src="/img/profile.png"
-              alt="nodi"
-              fill
-              sizes="240px"
-              quality={100}
-            />
-          </div>
-          <div className="flex flex-col gap-6 pt-inline-tight">
-            <ul className="list-none m-0 p-0 flex flex-col gap-y-0">
-              <li className="text-h2 font-bold text-strong max-[720px]:text-[20px]">노디</li>
-              <li className="text-body max-[720px]:text-body-sm pt-2">
-                직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어입니다.
-              </li>
-              <li className="text-body max-[720px]:text-body-sm">
-                시각디자인 학사, 컴퓨터소프트웨어공학 석사
-              </li>
-              <li className="text-body max-[720px]:text-body-sm">
-                비전공자 대상 풀스택 개발 부트캠프 강사
-              </li>
-            </ul>
-            <a href="https://www.youtube.com/@nodiworks" className="text-label text-muted">
-              유튜브 노디 AI
-            </a>
+        <div className={bodyCol}>
+          <span className="text-label tracking-[var(--tracking-label)] text-muted">
+            02 / 만든 사람
+          </span>
+          <div className="h-block-tight" />
+          <div className="flex gap-10 items-start max-[960px]:flex-col max-[960px]:gap-6">
+            <div className="flex-none w-[240px] aspect-[1/1] rounded-full overflow-hidden bg-raised border-hairline relative isolate max-[960px]:w-full max-[960px]:max-w-[240px]">
+              <Image
+                className="object-cover object-center rounded"
+                src="/img/profile.png"
+                alt="nodi"
+                fill
+                sizes="240px"
+                quality={100}
+              />
+            </div>
+            <div className="flex flex-col gap-6 pt-inline-tight">
+              <ul className="list-none m-0 p-0 flex flex-col gap-y-0">
+                <li className="text-h2 font-bold text-strong max-[720px]:text-[20px]">노디</li>
+                <li className="text-body max-[720px]:text-body-sm pt-2">
+                  직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어입니다.
+                </li>
+                <li className="text-body max-[720px]:text-body-sm">
+                  시각디자인 학사, 컴퓨터소프트웨어공학 석사
+                </li>
+                <li className="text-body max-[720px]:text-body-sm">풀스택 개발 부트캠프 강사</li>
+              </ul>
+              <a href="https://www.youtube.com/@nodiworks" className="text-label text-muted">
+                유튜브 노디 AI
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -279,7 +284,7 @@ export default async function FreeResourcePage({ params }: Props) {
                       title="지금 남기면, 유료 전환 뒤에도 계속 열립니다"
                       description={
                         freeCount === 0
-                          ? '이메일 등록 후 프롬프트 본문 전체를 열 수 있습니다.'
+                          ? '이메일 등록 후 본문 전체를 열 수 있습니다.'
                           : 'Part 01부터 부록의 프롬프트 7개까지 전부 열립니다. 강의 출시 후 새로 오는 분은 유료로 보게 됩니다.'
                       }
                       buttonLabel="무료로 열기"
@@ -336,7 +341,7 @@ export default async function FreeResourcePage({ params }: Props) {
       ) : null}
 
       {others.length > 0 ? (
-        <section className={youtube && youtubeTitle ? section : sectionLast}>
+        <section className={sectionLast}>
           <div className={`${bodyCol} flex flex-col gap-block-tight`}>
             <span className="text-label tracking-[var(--tracking-label)] text-muted">
               다른 자료
@@ -354,14 +359,6 @@ export default async function FreeResourcePage({ params }: Props) {
                 />
               ))}
             </div>
-          </div>
-        </section>
-      ) : null}
-
-      {youtube && youtubeTitle ? (
-        <section className={sectionLast}>
-          <div className={bodyCol}>
-            <VideoCard title={youtubeTitle} note="이 영상에서 소개했습니다" href={youtube} />
           </div>
         </section>
       ) : null}

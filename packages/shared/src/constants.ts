@@ -29,11 +29,27 @@ export function resourceBadge(slug: string): string {
 }
 
 const PPT_THUMB = '/img/book-ppt.png';
+const PROMPT_THUMB = '/img/book-prompt.png';
+const PRINCIPLES_THUMB = '/img/book-design-principle.png';
 const PLACEHOLDER_THUMB = '/img/book-placeholder.png';
 
-/** Book-cover thumbnail — PPT guidebook has art, others share a book placeholder. */
+const RESOURCE_THUMB: Partial<
+  Record<(typeof RESOURCE_SLUGS)[number], string>
+> = {
+  'claude-ppt-guidebook': PPT_THUMB,
+  'claude-prompt-set': PROMPT_THUMB,
+  'ai-design-5-principles': PRINCIPLES_THUMB,
+};
+
+/** Book-cover thumbnail per slug; unknown slugs use the placeholder. */
 export function resourceThumbnail(slug: string): string {
-  return slug === 'claude-ppt-guidebook' ? PPT_THUMB : PLACEHOLDER_THUMB;
+  if ((RESOURCE_SLUGS as readonly string[]).includes(slug)) {
+    return (
+      RESOURCE_THUMB[slug as (typeof RESOURCE_SLUGS)[number]] ??
+      PLACEHOLDER_THUMB
+    );
+  }
+  return PLACEHOLDER_THUMB;
 }
 
 export const BUILDING_OPTIONS = [
