@@ -32,7 +32,7 @@ type Props = {
 const section = 'max-w-page mx-auto pt-section px-gutter break-keep';
 const hero = 'max-w-page mx-auto pt-section max-[720px]:pt-20 px-gutter break-keep';
 const sectionLast = `${section} pb-section`;
-const bodyCol = 'max-w-[720px]';
+const bodyCol = 'max-w-[720px] mx-auto w-full';
 
 function formatPublishedAt(iso: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
@@ -41,11 +41,7 @@ function formatPublishedAt(iso: string): string {
 }
 
 function SectionLabel({ children }: { children: string }) {
-  return (
-    <span className="text-label text-muted leading-[1.4] tracking-normal">
-      {children}
-    </span>
-  );
+  return <span className="text-label text-muted leading-[1.4] tracking-normal">{children}</span>;
 }
 
 function resolveCoverSrc(slug: string, cover?: string): string {
@@ -109,15 +105,12 @@ export default async function FreeResourcePage({ params }: Props) {
             <p className="m-0 max-w-[30em] text-body">{doc.frontmatter.summary}</p>
             {slug === 'claude-ppt-guidebook' ? (
               <p className="m-0 max-w-measure text-body break-keep">
-                이 가이드북은 VOD 「클로드 디자인 실전」 교재로 들어갈 예정입니다.
-                강의가 나오면 무료 공개를 끝내고, 지금 이메일을 남긴 분은 그 뒤에도
-                계속 볼 수 있습니다.
+                이 가이드북은 VOD 「클로드 디자인 실전」 교재로 들어갈 예정입니다. 강의가 나오면
+                무료 공개를 끝내고, 지금 이메일을 남긴 분은 그 뒤에도 계속 볼 수 있습니다.
               </p>
             ) : null}
             {metaParts.length > 0 ? (
-              <p className="m-0 text-[13px] text-muted">
-                {metaParts.join(' · ')}
-              </p>
+              <p className="m-0 text-[13px] text-muted">{metaParts.join(' · ')}</p>
             ) : null}
             <div className="flex flex-wrap gap-inline max-[720px]:flex-col max-[720px]:[&_a]:w-full max-[720px]:[&_button]:w-full">
               {unlocked ? (
@@ -192,9 +185,7 @@ export default async function FreeResourcePage({ params }: Props) {
           </div>
           <div className="flex flex-col gap-6 pt-inline-tight">
             <ul className="list-none m-0 p-0 flex flex-col gap-y-0">
-              <li className="text-h2 font-bold text-strong max-[720px]:text-[20px]">
-                노디
-              </li>
+              <li className="text-h2 font-bold text-strong max-[720px]:text-[20px]">노디</li>
               <li className="text-body max-[720px]:text-body-sm pt-2">
                 직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어입니다.
               </li>
@@ -205,10 +196,7 @@ export default async function FreeResourcePage({ params }: Props) {
                 비전공자 대상 풀스택 개발 부트캠프 강사
               </li>
             </ul>
-            <a
-              href="https://www.youtube.com/@nodiworks"
-              className="text-label text-muted"
-            >
+            <a href="https://www.youtube.com/@nodiworks" className="text-label text-muted">
               유튜브 노디 AI
             </a>
           </div>
@@ -228,12 +216,10 @@ export default async function FreeResourcePage({ params }: Props) {
         </section>
       ) : null}
 
-      <section className={section}>
-        <div className={`flex flex-col gap-block ${bodyCol}`}>
-          {isPlaceholder ? (
-            <p className="m-0 text-body">준비 중</p>
-          ) : (
-            previewParts.map((part, index) => (
+      {!isPlaceholder && previewParts.length > 0 ? (
+        <section className={section}>
+          <div className={`flex flex-col gap-block ${bodyCol}`}>
+            {previewParts.map((part, index) => (
               <article
                 key={part.id}
                 className={`flex flex-col gap-4 ${
@@ -250,10 +236,18 @@ export default async function FreeResourcePage({ params }: Props) {
                 </h2>
                 <MdxContent source={part.body} />
               </article>
-            ))
-          )}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {isPlaceholder ? (
+        <section className={section}>
+          <div className={`flex flex-col gap-block ${bodyCol}`}>
+            <p className="m-0 text-body">준비 중</p>
+          </div>
+        </section>
+      ) : null}
 
       {showLocked ? (
         <section className={section}>
@@ -283,7 +277,11 @@ export default async function FreeResourcePage({ params }: Props) {
                   <Suspense fallback={null}>
                     <EmailGateForm
                       title="지금 남기면, 유료 전환 뒤에도 계속 열립니다"
-                      description="Part 01부터 부록의 프롬프트 7개까지 전부 열립니다. 강의 출시 후 새로 오는 분은 유료로 보게 됩니다."
+                      description={
+                        freeCount === 0
+                          ? '이메일 등록 후 프롬프트 본문 전체를 열 수 있습니다.'
+                          : 'Part 01부터 부록의 프롬프트 7개까지 전부 열립니다. 강의 출시 후 새로 오는 분은 유료로 보게 됩니다.'
+                      }
                       buttonLabel="무료로 열기"
                       slug={slug}
                       extraField={BUILDING_EXTRA_FIELD}
@@ -292,8 +290,7 @@ export default async function FreeResourcePage({ params }: Props) {
                   </Suspense>
                 </div>
                 <p className="m-0 text-[13px] text-muted break-keep">
-                  무료 공개 종료 시점은 강의 출시일에 맞춰 이 페이지와 메일로
-                  먼저 알립니다.
+                  무료 공개 종료 시점은 강의 출시일에 맞춰 이 페이지와 메일로 먼저 알립니다.
                 </p>
               </>
             )}
@@ -310,10 +307,7 @@ export default async function FreeResourcePage({ params }: Props) {
       {unlocked && !isPlaceholder ? (
         <section className={section}>
           <div className={`flex flex-col gap-block ${bodyCol}`}>
-            <div
-              id="gate"
-              className="scroll-mt-24 flex items-center gap-inline-tight text-accent"
-            >
+            <div id="gate" className="scroll-mt-24 flex items-center gap-inline-tight text-accent">
               <Icon name="check" size={18} />
               <span className="text-body-sm">{GATE_ACTIVE_LABEL}</span>
             </div>
@@ -354,14 +348,9 @@ export default async function FreeResourcePage({ params }: Props) {
                   title={resource.frontmatter.title}
                   slug={resource.frontmatter.slug}
                   thumbnail={
-                    resource.frontmatter.cover ??
-                    resourceThumbnail(resource.frontmatter.slug)
+                    resource.frontmatter.cover ?? resourceThumbnail(resource.frontmatter.slug)
                   }
-                  badges={
-                    resource.frontmatter.access === 'paid'
-                      ? ['강의 교재']
-                      : ['영상에서 소개', '무료 공개 중']
-                  }
+                  badges={resource.frontmatter.access === 'paid' ? ['강의 교재'] : ['무료 공개 중']}
                 />
               ))}
             </div>
@@ -372,11 +361,7 @@ export default async function FreeResourcePage({ params }: Props) {
       {youtube && youtubeTitle ? (
         <section className={sectionLast}>
           <div className={bodyCol}>
-            <VideoCard
-              title={youtubeTitle}
-              note="이 영상에서 소개했습니다"
-              href={youtube}
-            />
+            <VideoCard title={youtubeTitle} note="이 영상에서 소개했습니다" href={youtube} />
           </div>
         </section>
       ) : null}

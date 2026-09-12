@@ -6,7 +6,7 @@ function cardBadges(access: 'free' | 'paid' | undefined): string[] {
   if (access === 'paid') {
     return ['강의 교재'];
   }
-  return ['영상에서 소개', '무료 공개 중'];
+  return ['무료 공개 중'];
 }
 
 export async function ResourceCardsGrid() {
@@ -19,10 +19,7 @@ export async function ResourceCardsGrid() {
           key={resource.frontmatter.slug}
           title={resource.frontmatter.title}
           slug={resource.frontmatter.slug}
-          thumbnail={
-            resource.frontmatter.cover ??
-            resourceThumbnail(resource.frontmatter.slug)
-          }
+          thumbnail={resource.frontmatter.cover ?? resourceThumbnail(resource.frontmatter.slug)}
           badges={cardBadges(resource.frontmatter.access)}
         />
       ))}

@@ -15,7 +15,9 @@ export type PromptProps = {
   name: string;
   when?: string;
   kind?: 'quick';
-  children: ReactNode;
+  /** Prefer over children — JSX `{expr}` children are dropped by RSC MDX. */
+  body?: string;
+  children?: ReactNode;
 };
 
 function extractText(node: ReactNode): string {
@@ -43,9 +45,10 @@ export function Prompt({
   name,
   when,
   kind,
+  body,
   children,
 }: PromptProps) {
-  const text = childrenToText(children);
+  const text = (body ?? childrenToText(children)).replace(/^\n+|\n+$/g, '');
   const preRef = useRef<HTMLPreElement>(null);
   const [copied, setCopied] = useState(false);
   const [overflows, setOverflows] = useState(false);
@@ -104,11 +107,7 @@ export function Prompt({
           expanded ? 'max-h-none' : 'max-h-[480px] max-[720px]:max-h-[360px]',
         )}
       >
-        {typeof children === 'string' ||
-        (Array.isArray(children) &&
-          children.every((c) => typeof c === 'string'))
-          ? text
-          : children}
+        {text}
       </pre>
       {overflows || expanded ? (
         <button
