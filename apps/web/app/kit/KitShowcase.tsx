@@ -45,13 +45,7 @@ export function KitShowcase() {
         <h2 className={styles.sectionTitle}>Input</h2>
         <div className={styles.stack}>
           <Input label="이메일" name="email" type="email" placeholder="you@example.com" />
-          <Input
-            label="메모"
-            name="memo"
-            multiline
-            placeholder="여러 줄"
-            error="오류 예시"
-          />
+          <Input label="메모" name="memo" multiline placeholder="여러 줄" error="오류 예시" />
         </div>
       </section>
 
@@ -91,7 +85,7 @@ export function KitShowcase() {
         <div className={styles.grid3}>
           <ProductCard
             label="VOD · 준비 중"
-            title="클로드 디자인 실전"
+            title="클로드 디자인 실전 가이드"
             summary="디자이너 없이 내 사업용 페이지를 반복해서 만드는 과정"
             rows={[
               { label: '누구에게', value: '내 사업 페이지를 직접 만들어야 하는 분' },

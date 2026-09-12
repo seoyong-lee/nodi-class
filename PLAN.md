@@ -436,7 +436,7 @@ NOTIFY_EMAIL=contact@cascades.studio
 
 ### S1-3 design-system
 - [x] 토큰 CSS 복사 + Pretendard self-host
-- [x] 12개 컴포넌트 TSX (§2.2 props) + 각각 스토리 없이 `apps/web/app/_kit/page.tsx`(개발용 킷 페이지, prod에서 404)
+- [x] 12개 컴포넌트 TSX (§2.2 props) + 각각 스토리 없이 `apps/web/app/kit/page.tsx`(개발용 킷 페이지 `/kit`, prod에서 404)
 - [x] eslint 룰 `no-raw-color`, `no-shadow`
 - DoD: 킷 페이지에서 1440/375 두 폭으로 전 컴포넌트 육안 확인, 375 EmailGate 오버플로 없음
 
