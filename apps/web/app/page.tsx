@@ -1,21 +1,12 @@
 import Image from 'next/image';
 import { Suspense } from 'react';
-import {
-  BeforeAfter,
-  Button,
-  ProductCard,
-  ResourceCard,
-  SectionHeading,
-} from '@nodi/design-system';
+import { BeforeAfter, Button, ProductCard, SectionHeading } from '@nodi/design-system';
 import { RESOURCE_SLUGS } from '@nodi/shared';
 import { EmailGateForm } from '../components/EmailGateForm';
+import { HomeResourceCards } from '../components/HomeResourceCards';
 import { BUILDING_EXTRA_FIELD } from '../lib/building';
 import { getYoutubeUrl } from '../lib/business';
 import { productCardProps } from '../lib/products';
-import { listResources } from '../lib/resources';
-import { hasValidAccessCookie } from '../lib/access';
-
-export const dynamic = 'force-dynamic';
 
 const HOME_GATE_SLUG = RESOURCE_SLUGS[0]!;
 
@@ -23,10 +14,8 @@ const section = 'max-w-page mx-auto pt-section px-gutter break-keep';
 const hero = 'max-w-page mx-auto pt-section max-[720px]:pt-20 px-gutter break-keep';
 const sectionLast = `${section} pb-section`;
 
-export default async function HomePage() {
+export default function HomePage() {
   const youtube = getYoutubeUrl();
-  const unlocked = await hasValidAccessCookie();
-  const resources = await listResources();
   const vod = productCardProps('vod');
   const workshop = productCardProps('workshop');
   const service = productCardProps('service');
@@ -41,10 +30,10 @@ export default async function HomePage() {
             <br />
             이제 AI로 직접 만들 수 있습니다
           </h1>
-          <p className="m-0 max-w-measure text-body">
-            AI가 만들어주는 시대, 이제 중요한 건 무엇을 만들고 어떻게 완성할지 판단하는 능력입니다.
-            <br />
-            노디 클래스에서 내 사업에 필요한 결과물을 직접 만드는 방법을 배워보세요.
+          <p className="m-0 text-body sm:whitespace-pre-line">
+            {
+              'AI가 만들어주는 시대, 이제 중요한 건 어떻게 완성할지 판단하는 능력입니다.\n노디 클래스에서 내 사업에 필요한 결과물을 직접 만드는 기준과 방법을 배워보세요.'
+            }
           </p>
           <div className="flex gap-inline justify-center mt-inline-tight flex-wrap max-[720px]:flex-col max-[720px]:w-full max-[720px]:[&_a]:w-full max-[720px]:[&_button]:w-full">
             <Button variant="primary" href="#free">
@@ -63,16 +52,9 @@ export default async function HomePage() {
           label="무료 자료"
           title="영상에서 쓴 자료, 내 사업에 바로 써보세요"
         />
-        <div className="grid grid-cols-4 gap-6 mt-block max-[960px]:grid-cols-2 max-[720px]:grid-cols-1 max-[720px]:mt-block-tight">
-          {resources.map((resource) => (
-            <ResourceCard
-              key={resource.frontmatter.slug}
-              title={resource.frontmatter.title}
-              slug={resource.frontmatter.slug}
-              locked={!unlocked}
-            />
-          ))}
-        </div>
+        <Suspense fallback={<div className="mt-block min-h-[280px] max-[720px]:mt-block-tight" />}>
+          <HomeResourceCards />
+        </Suspense>
       </section>
 
       <section className={section}>
@@ -85,20 +67,20 @@ export default async function HomePage() {
           afterCaption="기준을 준 뒤"
           before={
             <Image
-              className="w-full h-auto block rounded"
+              className="rounded"
               src="/img/before.png"
               alt="만들기 전"
-              width={640}
-              height={360}
+              fill
+              sizes="(max-width: 960px) 100vw, 560px"
             />
           }
           after={
             <Image
-              className="w-full h-auto block rounded"
+              className="rounded"
               src="/img/after.png"
               alt="기준을 준 뒤"
-              width={640}
-              height={360}
+              fill
+              sizes="(max-width: 960px) 100vw, 560px"
             />
           }
         />
@@ -124,23 +106,25 @@ export default async function HomePage() {
         <span className="text-label tracking-[var(--tracking-label)] text-muted">04 / 노디</span>
         <div className="h-block-tight" />
         <div className="flex gap-10 items-start max-[960px]:flex-col max-[960px]:gap-6">
-          <div className="flex-none w-[280px] aspect-[4/5] rounded overflow-hidden bg-raised border-hairline relative isolate max-[960px]:w-full">
+          <div className="flex-none w-[240px] aspect-[1/1] rounded-full overflow-hidden bg-raised border-hairline relative isolate max-[960px]:w-full max-[960px]:max-w-[240px]">
             <Image
               className="object-cover object-center rounded"
               src="/img/profile.png"
               alt="nodi"
               fill
-              sizes="280px"
+              sizes="240px"
             />
           </div>
           <div className="flex flex-col gap-6 pt-inline-tight">
             <ul className="list-none m-0 p-0 flex flex-col gap-inline">
-              <li className="text-h3 font-bold text-strong max-[720px]:text-[18px]">노디</li>
+              <li className="text-h2 font-bold text-strong max-[720px]:text-[20px]">노디</li>
               <li className="text-body max-[720px]:text-body-sm">
                 직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어
               </li>
-              <li className="text-body max-[720px]:text-body-sm">시각디자인 학사</li>
-              <li className="text-body max-[720px]:text-body-sm">컴퓨터소프트웨어공학 석사</li>
+
+              <li className="text-body max-[720px]:text-body-sm">
+                시각디자인 학사 | 컴퓨터소프트웨어공학 석사
+              </li>
               <li className="text-body max-[720px]:text-body-sm">
                 비전공자 대상 풀스택 개발 부트캠프 강사
               </li>
