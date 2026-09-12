@@ -19,7 +19,7 @@ export const products = {
       ['남는 것', '고친 결과물 + 기준표'],
       ['가격', '추후 안내'],
     ],
-    cta: { label: '알림 받기', href: '/course', variant: 'primary' },
+    cta: { label: '알림 받기', href: '/course', variant: 'secondary' },
   },
   service: {
     label: '서비스',
@@ -30,7 +30,7 @@ export const products = {
       ['남는 것', '내놓을 수 있는 완성본'],
       ['가격', '300만원부터'],
     ],
-    cta: { label: '프로젝트 검토 요청하기', href: '/service', variant: 'primary' },
+    cta: { label: '프로젝트 검토 요청하기', href: '/service', variant: 'secondary' },
   },
 } as const;
 

@@ -45,7 +45,7 @@ export function EmailGate({
   }
 
   return (
-    <section className="bg-raised border-hairline rounded p-5 flex flex-col gap-block-tight min-w-0 box-border overflow-hidden">
+    <section className="bg-raised border-hairline rounded p-10 max-[720px]:p-6 flex flex-col gap-block-tight min-w-0 box-border overflow-hidden">
       <div className="flex flex-col gap-inline">
         <h3 className="m-0 text-h3 font-bold text-strong break-keep">{title}</h3>
         {description ? (

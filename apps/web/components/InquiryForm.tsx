@@ -62,7 +62,7 @@ export function InquiryForm() {
 
   return (
     <form
-      className="max-w-[720px] bg-raised border-hairline rounded p-5 flex flex-col gap-3 break-keep relative"
+      className="max-w-[720px] bg-raised border-hairline rounded p-10 max-[720px]:p-6 flex flex-col gap-6 break-keep relative"
       onSubmit={handleSubmit}
     >
       <input
@@ -76,7 +76,7 @@ export function InquiryForm() {
         onChange={(e) => setWebsite(e.target.value)}
       />
       <div ref={turnstileRef} />
-      <div className="grid grid-cols-2 gap-3 max-[720px]:grid-cols-1">
+      <div className="grid grid-cols-2 gap-6 max-[720px]:grid-cols-1">
         <Input
           label="이름"
           name="name"
@@ -105,11 +105,12 @@ export function InquiryForm() {
         label="어디에서 막혔나요?"
         name="blocked"
         multiline
+        rows={5}
         required
         value={blocked}
         onChange={(e) => setBlocked(e.target.value)}
       />
-      <label className="flex items-center gap-[10px] text-label text-muted [&_input]:w-4 [&_input]:h-4 [&_input]:accent-accent">
+      <label className="flex items-center gap-[10px] text-label text-muted [color-scheme:dark] [&_input]:w-4 [&_input]:h-4 [&_input]:accent-accent">
         <input
           type="checkbox"
           checked={consent}
@@ -123,8 +124,13 @@ export function InquiryForm() {
           {error}
         </p>
       ) : null}
-      <div className="self-start max-[720px]:self-stretch max-[720px]:[&_a]:w-full max-[720px]:[&_button]:w-full">
-        <Button variant="primary" type="submit" disabled={submitting} loading={submitting}>
+      <div className="self-start max-[720px]:self-stretch max-[720px]:[&_button]:w-full">
+        <Button
+          variant="primary"
+          type="submit"
+          disabled={submitting}
+          loading={submitting}
+        >
           프로젝트 검토 요청하기
         </Button>
       </div>

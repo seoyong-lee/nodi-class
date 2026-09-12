@@ -38,7 +38,7 @@ export function VideoCard({ title, note, href, thumbnail }: VideoCardProps) {
   const embed = useMemo(() => youtubeEmbedUrl(href), [href]);
 
   return (
-    <article className="group flex flex-col gap-inline bg-card border border-line rounded px-3 pt-3 pb-5 text-inherit transition-ui hover:border-line-strong">
+    <article className="group flex flex-col gap-inline bg-card border border-line rounded p-3 pb-5 text-inherit transition-ui hover:border-line-strong">
       {playing && embed ? (
         <Thumb16x9>
           <iframe
@@ -71,10 +71,12 @@ export function VideoCard({ title, note, href, thumbnail }: VideoCardProps) {
           </Thumb16x9>
         </button>
       )}
-      <div className="flex flex-col gap-[6px] px-1">
-        <h3 className="m-0 text-body font-bold text-strong break-keep transition-ui group-hover:text-link">
-          {title}
-        </h3>
+      <div className="flex flex-col gap-[6px] px-2">
+        {title ? (
+          <h3 className="m-0 text-body font-bold leading-[var(--leading-tight)] tracking-[var(--tracking-heading)] text-strong break-keep transition-ui group-hover:text-link">
+            {title}
+          </h3>
+        ) : null}
         {note ? <span className="text-caption text-muted">{note}</span> : null}
       </div>
     </article>

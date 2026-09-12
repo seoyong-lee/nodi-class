@@ -25,7 +25,7 @@ export function BeforeAfter({
   after,
 }: BeforeAfterProps) {
   return (
-    <div className="grid grid-cols-2 gap-block-tight max-[375px]:grid-cols-1">
+    <div className="grid grid-cols-2 gap-block-tight max-[720px]:grid-cols-1">
       <Pane caption={beforeCaption}>{before}</Pane>
       <Pane caption={afterCaption}>{after}</Pane>
     </div>

@@ -25,17 +25,17 @@ export function ProductCard({
   ctaVariant = 'secondary',
 }: ProductCardProps) {
   return (
-    <article className="flex flex-col gap-block-tight bg-card border-hairline rounded p-card-pad">
+    <article className="flex flex-col gap-block-tight bg-card border-hairline rounded p-card-pad h-full">
       <div className="flex flex-col gap-inline-tight">
         <span className="text-label tracking-label-en text-muted">{label}</span>
         <h3 className="m-0 text-h3 font-bold text-strong break-keep">{title}</h3>
         <p className="m-0 text-body-sm text-body break-keep">{summary}</p>
       </div>
-      <dl className="m-0 flex flex-col border-t border-line">
+      <dl className="m-0 flex flex-col flex-[1_1_auto] border-t border-line">
         {rows.map((row) => (
           <div
             key={row.label}
-            className="grid grid-cols-[84px_1fr] gap-inline py-inline border-b border-line"
+            className="grid grid-cols-[84px_1fr] gap-inline py-3 border-b border-line"
           >
             <dt className="text-caption text-muted">{row.label}</dt>
             <dd className="m-0 text-caption leading-[1.6] text-strong break-keep">

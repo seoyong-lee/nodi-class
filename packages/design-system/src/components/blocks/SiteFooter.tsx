@@ -27,11 +27,11 @@ export function SiteFooter({
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-line pt-6 pb-8">
+    <footer className="border-t border-line pt-block-tight pb-8">
       <div className="max-w-page mx-auto px-gutter flex flex-wrap gap-block justify-between">
         <div className="flex flex-col gap-inline min-w-0">
           <span className="text-body-sm font-bold text-strong">{operator}</span>
-          <ul className="list-none m-0 p-0 flex flex-col gap-1">
+          <ul className="list-none m-0 p-0 flex flex-col gap-2">
             {business.map((line) => (
               <li key={line} className="text-label leading-[1.8] text-muted">
                 {line}
