@@ -45,15 +45,15 @@ export default function CoursePage() {
           <div className="flex flex-col gap-6">
             <span className="text-label text-muted">VOD · 준비 중</span>
             <h1 className="m-0 font-hero text-hero max-[720px]:text-hero-m font-bold text-strong">
-              클로드 디자인 실전
+              클로드 디자인 실전 가이드
             </h1>
             <div className="flex flex-col gap-inline max-w-measure">
               <p className="m-0 text-body text-strong">
                 내 사업에 필요한 디자인, 이제 직접 만들 수 있습니다.
               </p>
               <p className="m-0 text-body">
-                클로드로 결과물을 만드는 방법부터 좋은 디자인을 고르고, 고치고,
-                반복해서 활용하는 기준까지 배웁니다.
+                클로드로 결과물을 만드는 방법부터 좋은 디자인을 고르고, 고치고, 반복해서 활용하는
+                기준을 만드는 방법까지 한 번에 배웁니다.
               </p>
             </div>
           </div>
