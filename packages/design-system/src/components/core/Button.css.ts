@@ -43,9 +43,11 @@ export const primary = style({
   selectors: {
     '&:hover:not(:disabled):not([aria-disabled="true"])': {
       background: vars.accent.hover,
+      color: vars.text.strong,
     },
     '&:active:not(:disabled):not([aria-disabled="true"])': {
       background: vars.accent.press,
+      color: vars.text.strong,
     },
     [`&${disabled}, &:disabled, &[aria-disabled='true']`]: {
       background: vars.surface.field,

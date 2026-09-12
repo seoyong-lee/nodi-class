@@ -15,6 +15,7 @@ export const root = style({
   selectors: {
     '&:hover': {
       borderColor: vars.border.strong,
+      background: vars.surface.raised,
     },
   },
 });

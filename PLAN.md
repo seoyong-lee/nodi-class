@@ -104,7 +104,7 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 | Icon | core | `name` (lucide 이름), `size?` | lucide-react 사용, 색은 `currentColor` |
 | SectionHeading | content | `index: '01'`, `label`, `title`, `align?: 'left'\|'center'` | 라벨 12px 0.08em은 영문에만. 한글 라벨은 자간 0 |
 | BeforeAfter | content | `beforeCaption`, `afterCaption`, `before: ReactNode`, `after: ReactNode` | 375에서 1열 |
-| ProductCard | cards | `label`, `title`, `summary`, `rows: {label,value}[3]`, `ctaLabel`, `ctaHref?`, `ctaVariant?: 'primary'\|'secondary'` | rows는 정확히 3개. `ctaVariant` 기본값은 **secondary**, VOD 카드만 primary |
+| ProductCard | cards | `label`, `title`, `summary`, `rows: {label,value}[3]`, `ctaLabel`, `ctaHref?`, `ctaVariant?: 'primary'\|'secondary'` | rows는 정확히 3개. 홈·클래스 상품 카드 CTA는 모두 **primary** |
 | ResourceCard | cards | `title`, `slug`, `locked: boolean`, `thumbnail?`, `openLabel?`, `fromVideo?`(기본 true) | `fromVideo` 시 Badge `영상에서 소개`. 잠금 시 자물쇠 아이콘, 열림 시 openLabel |
 | Thumb16x9 | cards | `src?`, `alt?` | 이미지 없으면 `--surface-raised` 플레이스홀더 |
 | VideoCard | cards | `title`, `note`, `href`, `thumbnail?` | 조회수 표시 없음. 유튜브 임베드는 클릭 후 로드(iframe 지연) |
@@ -114,7 +114,7 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 ### 2.3 이관하면서 정리할 것 (디자인 파일에 남아 있는 결함)
 - [ ] 4개 페이지 `h1` 인라인 `font-family:'IBM Plex Sans KR'` 와 `letter-spacing:-0.035em` 제거 → 시스템 `--font-sans`, `--tracking-hero`(-0.02em), `--leading-hero`. `<head>`의 Google Fonts 링크 삭제.
 - [ ] 홈 375 `h1`이 긴 버전("코딩·디자인 몰라도, 내 사업에 필요한…")으로 남아 있음 → 1440과 동일한 2줄 카피(§3.1)로 통일. 모바일 36px.
-- [ ] 홈 03 상품 카드 3개 버튼 → VOD만 primary, 워크숍·서비스는 secondary.
+- [x] 홈 03 상품 카드 3개 버튼 → VOD·워크숍·서비스 모두 primary.
 - [ ] `/free` 잠금 상태에서 게이트 아래 Part 01~ 스켈레톤/본문을 `filter: blur(6px)` + 오버레이로 이어서 보여줄 것 (게이트 뒤가 비어 있으면 안 됨).
 - [ ] 홈 04 "만든 사람" 3줄 → 첫 줄만 20px Bold, 나머지 16px Regular `--text-body`.
 - [ ] 목차 `[ ]` 플레이스홀더와 본문 스켈레톤 → `content/resources/*`의 실제 MDX로 대체.
@@ -141,7 +141,7 @@ CI 없이 `pnpm lint`에서 걸리게만 한다.
 | 히어로(중앙) | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` / `이제 AI로 직접 만들 수 있습니다` (2줄, `<br>`, keep-all, 마침표 없음) / 서브 `노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.` + `내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.` / Primary `무료 자료 받기`(→ `#free`) · Secondary `유튜브에서 보기` |
 | 01 / 무료 자료 (`id="free"`) | 제목 `영상에서 쓴 자료, 내 사업에 바로 써보세요` / ResourceCard 4개 (§4 슬러그 순, Badge `영상에서 소개` + 잠금 아이콘). **이 섹션에 EmailGate 없음** |
 | 02 / 이렇게 달라집니다 | BeforeAfter(캡션 `만들기 전` / `기준을 준 뒤`) / 캡션 `같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.` / 이미지는 `public/img/before.png`, `after.png` |
-| 03 / 클래스 | 제목 `직접 만들어봤다면, 이제 기준을 배워보세요` / ProductCard ×3 (§3.5, VOD만 primary) |
+| 03 / 클래스 | 제목 `직접 만들어봤다면, 이제 기준을 배워보세요` / ProductCard ×3 (§3.5, CTA 모두 primary) |
 | 04 / 만든 사람 | 프로필(4:5, `--surface-raised`) + `직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어`(Bold 20px) / `컴퓨터소프트웨어공학 석사` / `비전공자 대상 풀스택 개발 부트캠프 강사` / 소형 `유튜브 노디 AI 운영` |
 | 최종 CTA(중앙) | `무료 자료로 먼저 직접 만들어보세요` + EmailGate(제목 `한 번 등록하면 모든 자료가 열립니다`, 버튼 `받기`, extraField=§5.2) |
 
@@ -181,11 +181,11 @@ export const products = {
   workshop: { label: '워크숍 · 준비 중', title: '라이브 첨삭',
               summary: '직접 만든 결과물을 가져오면 화면을 보며 함께 고칩니다',
               rows: [['누구에게','VOD 수료 후 실제 프로젝트가 있는 분'],['남는 것','고친 결과물 + 기준표'],['가격','추후 안내']],
-              cta: { label: '알림 받기', href: '/course', variant: 'secondary' } },
+              cta: { label: '알림 받기', href: '/course', variant: 'primary' } },
   service:  { label: '서비스', title: 'AI 결과물 마무리',
               summary: 'AI로 만든 초안을, 내놓을 수 있는 결과물로 마무리합니다',
               rows: [['누구에게','직접 해보다 한계를 느낀 분'],['남는 것','내놓을 수 있는 완성본'],['가격','300만원부터']],
-              cta: { label: '프로젝트 검토 요청하기', href: '/service', variant: 'secondary' } },
+              cta: { label: '프로젝트 검토 요청하기', href: '/service', variant: 'primary' } },
 } as const;
 ```
 
