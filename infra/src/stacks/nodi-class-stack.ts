@@ -81,7 +81,7 @@ export class NodiClassStack extends Stack {
     const {
       domain,
       hostedZoneId,
-      enableCustomDomain = false,
+      enableCustomDomain = Boolean(hostedZoneId),
       notifyEmail = 'contact@cascades.studio',
     } = props;
 

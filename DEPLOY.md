@@ -10,18 +10,25 @@ Step 1 code is ready. The items below need a human (AWS / Amplify / YouTube).
 - [ ] Real before/after/profile/thumb images (placeholders are in `apps/web/public/img/`)
 
 ## CDK (single stack `nodi-class`)
+
+Defaults (no flags): `nodiworks.com`, hosted zone `Z0846873QT6Q378OHCHK`, `api.nodiworks.com` custom domain **on**.
+
 ```bash
-pnpm infra:deploy -- -c domain=<NODI_DOMAIN>
-# equivalent:
-NODI_DOMAIN=<NODI_DOMAIN> pnpm infra:deploy
-# skip Route53 lookup:
-pnpm infra:deploy -- -c domain=<NODI_DOMAIN> -c hostedZoneId=<ZONE_ID>
-# custom API domain api.<domain>:
-pnpm infra:deploy -- -c domain=<NODI_DOMAIN> -c hostedZoneId=<ZONE_ID> -c enableCustomDomain=true
+pnpm infra:deploy
+```
+
+Override only when needed:
+
+```bash
+# another domain
+pnpm infra:deploy -- -c domain=example.com -c hostedZoneId=Z123
+
+# temp stack without api.<domain> (not for prod)
+pnpm infra:deploy -- -c enableCustomDomain=false
 ```
 
 Copy stack outputs into Amplify / `.env.local`:
-- `ApiUrl` → `NEXT_PUBLIC_API_URL`
+- `ApiUrl` → `NEXT_PUBLIC_API_URL` (prod default: `https://api.nodiworks.com`)
 - `GATE_SECRET` (same as SSM)
 - `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
 

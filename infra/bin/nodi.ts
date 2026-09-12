@@ -2,8 +2,9 @@
 import * as cdk from 'aws-cdk-lib';
 import {
   NAME_PREFIX,
-  optionalHostedZoneId,
-  requireDomain,
+  resolveDomain,
+  resolveEnableCustomDomain,
+  resolveHostedZoneId,
   STACK_NAME,
 } from '../src/config';
 import { NodiClassStack } from '../src/stacks/nodi-class-stack';
@@ -12,11 +13,9 @@ import { NodiClassStack } from '../src/stacks/nodi-class-stack';
 const AWS_REGION = 'ap-northeast-2';
 
 const app = new cdk.App();
-const domain = requireDomain(app);
-const hostedZoneId = optionalHostedZoneId(app);
-const enableCustomDomain =
-  app.node.tryGetContext('enableCustomDomain') === true ||
-  app.node.tryGetContext('enableCustomDomain') === 'true';
+const domain = resolveDomain(app);
+const hostedZoneId = resolveHostedZoneId(app, domain);
+const enableCustomDomain = resolveEnableCustomDomain(app);
 const notifyEmail =
   (app.node.tryGetContext('notifyEmail') as string | undefined) ??
   process.env.NOTIFY_EMAIL ??
