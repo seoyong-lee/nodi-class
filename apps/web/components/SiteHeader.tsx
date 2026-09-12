@@ -29,7 +29,7 @@ export function SiteHeader({ youtubeUrl }: { youtubeUrl: string }) {
 
   return (
     <header className="sticky top-0 z-20 bg-[var(--header-bg)] border-b border-line">
-      <div className="max-w-page mx-auto px-gutter h-16 flex items-center justify-between gap-6 max-[720px]:h-14 max-[720px]:gap-3">
+      <div className="max-w-page mx-auto px-gutter h-16 flex items-center justify-between gap-6 max-[720px]:h-14 max-[720px]:justify-center max-[720px]:gap-3">
         <Link
           href="/"
           className="flex min-w-0 shrink items-center gap-[10px] no-underline break-keep whitespace-nowrap hover:text-inherit max-[720px]:gap-2"
@@ -39,7 +39,7 @@ export function SiteHeader({ youtubeUrl }: { youtubeUrl: string }) {
             alt=""
             width={28}
             height={28}
-            className="flex-none rounded-[6px] max-[720px]:w-6 max-[720px]:h-6"
+            className="flex-none self-center rounded-[6px] max-[720px]:w-6 max-[720px]:h-6"
             quality={100}
             priority
           />
@@ -75,13 +75,13 @@ export function SiteHeader({ youtubeUrl }: { youtubeUrl: string }) {
           <ThemeToggle />
           <TrackYouTubeButton placement="nav" href={youtubeUrl} size="sm" label="유튜브" />
         </nav>
-        <div className="hidden max-[720px]:flex shrink-0 items-center gap-2">
+        <div className="hidden max-[720px]:flex shrink-0 items-center self-center gap-2">
           <ThemeToggle />
           <TrackYouTubeButton placement="nav" href={youtubeUrl} size="sm" label="유튜브" />
         </div>
       </div>
       <nav
-        className="hidden max-[720px]:flex gap-5 px-gutter pb-[14px]"
+        className="hidden max-[720px]:flex justify-center items-center gap-5 px-gutter pb-[14px]"
         aria-label="주요 모바일"
       >
         {NAV.map((item) => {
