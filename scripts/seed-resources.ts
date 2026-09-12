@@ -60,7 +60,7 @@ async function main(): Promise<void> {
       publishedAt,
       body: content.trim(),
       downloads: fm.downloads,
-      status: 'published',
+      status: fm.status === 'draft' ? 'draft' : 'published',
       access: fm.access ?? 'free',
       courseTitle: fm.courseTitle ? String(fm.courseTitle) : undefined,
       promptCount:

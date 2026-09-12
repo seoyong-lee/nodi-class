@@ -207,11 +207,15 @@ function getLocalResource(slug: string): ResourceDoc {
       freeParts: Number(rawFm.freeParts ?? 1),
       publishedAt,
       downloads: rawFm.downloads as ResourceFrontmatter['downloads'],
-      status: 'published',
+      status: rawFm.status === 'draft' ? 'draft' : 'published',
     },
     parts: splitParts(content),
     raw: content,
   };
+}
+
+function isPublished(doc: ResourceDoc): boolean {
+  return doc.frontmatter.status !== 'draft';
 }
 
 async function fetchJson<T>(pathSuffix: string): Promise<T | null> {
@@ -239,7 +243,8 @@ export async function getResource(slug: string): Promise<ResourceDoc | null> {
 
   const localPath = path.join(CONTENT_ROOT, slug, 'index.mdx');
   if (fs.existsSync(localPath)) {
-    return getLocalResource(slug);
+    const local = getLocalResource(slug);
+    return isPublished(local) ? local : null;
   }
   return null;
 }
@@ -252,9 +257,11 @@ export async function listResourceSlugs(): Promise<string[]> {
   if (data?.ok && data.resources?.length) {
     return data.resources.map((r) => r.slug);
   }
-  return RESOURCE_SLUGS.filter((slug) =>
-    fs.existsSync(path.join(CONTENT_ROOT, slug, 'index.mdx')),
-  );
+  return RESOURCE_SLUGS.filter((slug) => {
+    const filePath = path.join(CONTENT_ROOT, slug, 'index.mdx');
+    if (!fs.existsSync(filePath)) return false;
+    return isPublished(getLocalResource(slug));
+  });
 }
 
 export async function listResources(): Promise<ResourceDoc[]> {
@@ -264,31 +271,33 @@ export async function listResources(): Promise<ResourceDoc[]> {
   }>('/resources');
 
   if (data?.ok && data.resources?.length) {
-    return data.resources.map((meta) => ({
-      frontmatter: {
-        slug: meta.slug,
-        title: meta.title,
-        series: meta.series,
-        summary: meta.summary,
-        included: meta.included,
-        youtube: meta.youtube,
-        freeParts: meta.freeParts,
-        publishedAt: meta.publishedAt,
-        downloads: meta.downloads,
-        status: meta.status,
-        access: parseAccess(meta.access),
-        courseTitle: meta.courseTitle,
-        promptCount: meta.promptCount,
-        mailNote: meta.mailNote,
-        updatedAt: meta.updatedAt,
-      },
-      parts: [],
-      raw: '',
-    }));
+    return data.resources
+      .filter((meta) => meta.status !== 'draft')
+      .map((meta) => ({
+        frontmatter: {
+          slug: meta.slug,
+          title: meta.title,
+          series: meta.series,
+          summary: meta.summary,
+          included: meta.included,
+          youtube: meta.youtube,
+          freeParts: meta.freeParts,
+          publishedAt: meta.publishedAt,
+          downloads: meta.downloads,
+          status: meta.status,
+          access: parseAccess(meta.access),
+          courseTitle: meta.courseTitle,
+          promptCount: meta.promptCount,
+          mailNote: meta.mailNote,
+          updatedAt: meta.updatedAt,
+        },
+        parts: [],
+        raw: '',
+      }));
   }
 
   const slugs = await listResourceSlugs();
-  return slugs.map((slug) => getLocalResource(slug));
+  return slugs.map((slug) => getLocalResource(slug)).filter(isPublished);
 }
 
 export async function getOtherResources(

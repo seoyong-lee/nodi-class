@@ -43,7 +43,7 @@ export function Button({
 }: ButtonProps) {
   const isDisabled = disabled || loading;
   const className = cn(
-    'inline-flex items-center justify-center gap-inline-tight box-border border rounded font-sans font-bold leading-[1.2] no-underline cursor-pointer transition-ui',
+    'inline-flex shrink-0 items-center justify-center gap-inline-tight box-border border rounded font-sans font-bold leading-[1.2] whitespace-nowrap no-underline cursor-pointer transition-ui',
     'disabled:cursor-not-allowed aria-disabled:cursor-not-allowed',
     size === 'md' ? 'px-[22px] py-[14px] text-body-sm' : 'px-4 py-[9px] text-caption',
     variant === 'primary'
