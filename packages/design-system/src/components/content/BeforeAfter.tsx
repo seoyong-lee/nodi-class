@@ -9,23 +9,20 @@ export type BeforeAfterProps = {
 
 function Pane({ caption, children }: { caption: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-inline min-w-0">
+    <div className="flex h-full min-w-0 flex-col gap-inline">
       <span className="text-label tracking-label-en text-muted">{caption}</span>
-      <div className="bg-card border-hairline rounded p-card-pad min-h-[180px] text-body text-body-sm">
-        {children}
+      <div className="flex h-full min-h-[180px] flex-col rounded border-hairline bg-card p-card-pad text-body text-body-sm">
+        <div className="relative aspect-video w-full overflow-hidden rounded [&_img]:absolute [&_img]:inset-0 [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-top">
+          {children}
+        </div>
       </div>
     </div>
   );
 }
 
-export function BeforeAfter({
-  beforeCaption,
-  afterCaption,
-  before,
-  after,
-}: BeforeAfterProps) {
+export function BeforeAfter({ beforeCaption, afterCaption, before, after }: BeforeAfterProps) {
   return (
-    <div className="grid grid-cols-2 gap-block-tight max-[720px]:grid-cols-1">
+    <div className="grid grid-cols-2 items-stretch gap-block-tight max-[720px]:grid-cols-1">
       <Pane caption={beforeCaption}>{before}</Pane>
       <Pane caption={afterCaption}>{after}</Pane>
     </div>
