@@ -58,6 +58,22 @@ function partIdFromHeading(heading: string, index: number): string {
   return `part-${String(index).padStart(2, '0')}`;
 }
 
+/** Part boundaries only — not every `##` (prompt bodies may contain those). */
+function isPartHeadingLine(line: string): {
+  id?: string;
+  heading: string;
+} | null {
+  const h2Jsx = /^<h2\s+id="([^"]+)">([^<]+)<\/h2>\s*$/.exec(line);
+  if (h2Jsx) {
+    return { id: h2Jsx[1]!.trim(), heading: h2Jsx[2]!.trim() };
+  }
+  const h2Md = /^##\s+(Part\s+\d+\..+|부록.+)$/i.exec(line);
+  if (h2Md) {
+    return { heading: h2Md[1]!.trim() };
+  }
+  return null;
+}
+
 export function splitParts(markdown: string): ResourcePart[] {
   const lines = markdown.replace(/\r\n/g, '\n').split('\n');
   const parts: ResourcePart[] = [];
@@ -71,17 +87,12 @@ export function splitParts(markdown: string): ResourcePart[] {
   }
 
   for (const line of lines) {
-    const h2Jsx = /^<h2\s+id="([^"]+)">([^<]+)<\/h2>\s*$/.exec(line);
-    const h2Md = /^##\s+(.+)$/.exec(line);
-    if (h2Jsx || h2Md) {
+    const matched = isPartHeadingLine(line);
+    if (matched) {
       flush();
-      const id = h2Jsx?.[1]?.trim();
-      const headingText = h2Jsx?.[2] ?? h2Md?.[1];
-      if (!headingText) continue;
-      const heading = headingText.trim();
       current = {
-        id: id || partIdFromHeading(heading, parts.length),
-        heading,
+        id: matched.id || partIdFromHeading(matched.heading, parts.length),
+        heading: matched.heading,
         body: '',
       };
       continue;

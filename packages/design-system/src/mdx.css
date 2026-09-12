@@ -1,11 +1,20 @@
 /* Scoped MDX prose styles. Token CSS variables only — no hex. */
 
+.nodi-mdx > :first-child {
+  margin-top: 0;
+}
+
+.nodi-mdx > :last-child {
+  margin-bottom: 0;
+}
+
 .nodi-mdx h3 {
   font-size: 20px;
   font-weight: bold;
   margin-top: 40px;
   margin-bottom: 12px;
   color: var(--text-strong);
+  line-height: var(--leading-heading);
 }
 
 .nodi-mdx p {
@@ -13,22 +22,48 @@
   line-height: 1.7;
   max-width: var(--measure);
   color: var(--text-body);
+  margin: 0 0 16px;
 }
 
 .nodi-mdx ul,
 .nodi-mdx ol {
-  padding-left: 20px;
+  margin: 0 0 16px;
+  padding-left: 1.5em;
+  max-width: var(--measure);
   color: var(--text-body);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.nodi-mdx ul {
+  list-style-type: disc;
+}
+
+.nodi-mdx ol {
+  list-style-type: decimal;
+}
+
+.nodi-mdx li {
+  margin: 0;
+  padding: 0;
+  line-height: 1.7;
 }
 
 .nodi-mdx li + li {
   margin-top: 8px;
 }
 
+.nodi-mdx li > ul,
+.nodi-mdx li > ol {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
 .nodi-mdx table {
   width: 100%;
   border-collapse: collapse;
   border: var(--border-hairline);
+  margin: 0 0 16px;
 }
 
 .nodi-mdx th,
@@ -37,6 +72,7 @@
   padding: 10px 12px;
   text-align: left;
   color: var(--text-body);
+  line-height: 1.6;
 }
 
 .nodi-mdx th {
@@ -48,7 +84,8 @@
   border-left: 1px solid var(--text-body);
   padding-left: 16px;
   color: var(--text-body);
-  margin: 0;
+  margin: 0 0 16px;
+  line-height: 1.7;
 }
 
 .nodi-mdx code:not(pre code) {
@@ -64,17 +101,19 @@
   display: block;
   max-width: 100%;
   height: auto;
+  margin: 0 0 8px;
 }
 
 .nodi-mdx figcaption,
 .nodi-mdx .nodi-mdx-caption {
   font-size: 13px;
   color: var(--text-muted);
-  margin-top: 8px;
+  margin: 0 0 16px;
+  line-height: 1.5;
 }
 
 .nodi-mdx pre {
-  margin: 0;
+  margin: 0 0 16px;
   padding: 16px;
   background: var(--surface-field);
   border: var(--border-hairline);
@@ -91,4 +130,16 @@
   padding: 0;
   border-radius: 0;
   font-size: inherit;
+}
+
+.nodi-mdx hr {
+  margin: 32px 0;
+  border: 0;
+  border-top: var(--border-hairline);
+}
+
+/* MDX custom components sit outside element selectors above */
+.nodi-mdx [id^='prompt-'],
+.nodi-mdx aside {
+  margin: 0 0 20px;
 }
