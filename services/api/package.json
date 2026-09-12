@@ -6,10 +6,17 @@
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint .",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.758.0",
+    "@aws-sdk/client-sesv2": "^3.758.0",
+    "@aws-sdk/lib-dynamodb": "^3.758.0",
+    "@nodi/shared": "workspace:*"
+  },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.147",
     "typescript": "^5.8.2"
   }
 }
