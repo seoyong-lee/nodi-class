@@ -1,5 +1,5 @@
 import { GetCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
-import type { ResourceUpsertInput } from '@nodi/shared';
+import type { ResourceAccess, ResourceUpsertInput } from '@nodi/shared';
 import { getDocClient } from './client.js';
 import { getEnv } from '../lib/env.js';
 
@@ -17,6 +17,10 @@ export type ResourceRecord = {
   body: string;
   downloads?: { label: string; key: string }[];
   status: 'published' | 'draft';
+  access: ResourceAccess;
+  courseTitle?: string;
+  promptCount?: number;
+  mailNote?: string;
   gsi1pk: string;
   gsi1sk: string;
   createdAt: string;
@@ -35,6 +39,10 @@ export type ResourcePublic = {
   body: string;
   downloads?: { label: string; key: string }[];
   status: 'published' | 'draft';
+  access: ResourceAccess;
+  courseTitle?: string;
+  promptCount?: number;
+  mailNote?: string;
   updatedAt: string;
 };
 
@@ -55,6 +63,10 @@ function toPublic(item: ResourceRecord): ResourcePublic {
     body: item.body,
     downloads: item.downloads,
     status: item.status,
+    access: item.access ?? 'free',
+    courseTitle: item.courseTitle,
+    promptCount: item.promptCount,
+    mailNote: item.mailNote,
     updatedAt: item.updatedAt,
   };
 }
@@ -115,6 +127,10 @@ export async function upsertResource(
     body: input.body,
     downloads: input.downloads,
     status: input.status,
+    access: input.access,
+    courseTitle: input.courseTitle,
+    promptCount: input.promptCount,
+    mailNote: input.mailNote,
     gsi1pk: `STATUS#${input.status}`,
     gsi1sk: input.publishedAt,
     createdAt: prevCreated,

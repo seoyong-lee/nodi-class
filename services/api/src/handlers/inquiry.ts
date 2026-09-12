@@ -1,6 +1,5 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { InquiryInput } from '@nodi/shared';
-import { randomBytes } from 'node:crypto';
 import { saveInquiry } from '../db/inquiries.js';
 import { putEvent } from '../db/events.js';
 import { getEnv } from '../lib/env.js';
@@ -103,17 +102,16 @@ export async function handler(
       });
     }
 
-    const ackUnsub = randomBytes(16).toString('hex');
     const footer: FooterContext = {
       siteUrl: env.siteUrl,
-      unsubToken: ackUnsub,
+      biz: env.bizInfo,
     };
 
     await sendMail({
       to: email.trim().toLowerCase(),
       content: inquiryAckMail({ footer }),
-      unsubToken: ackUnsub,
       template: 'inquiry-ack',
+      skipListUnsub: true,
     });
 
     log('info', 'inquiry.ok', { ...emailHashField(email), pk: inquiry.pk });

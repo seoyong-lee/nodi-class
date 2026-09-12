@@ -216,6 +216,7 @@ export class NodiClassStack extends Stack {
     const turnstileSecretParam = ssmPath('TURNSTILE_SECRET');
     const adminApiKeyParam = ssmPath('ADMIN_API_KEY');
     const slackInquiryWebhookParam = ssmPath('SLACK_INQUIRY_WEBHOOK_URL');
+    const bizInfoParam = ssmPath('BIZ_INFO');
 
     const gateSecret = StringParameter.fromSecureStringParameterAttributes(
       this,
@@ -257,6 +258,7 @@ export class NodiClassStack extends Stack {
       NOTIFY_EMAIL: notifyEmail,
       SES_CONFIGURATION_SET: configurationSet.configurationSetName,
       MAIL_REPLY_TO: 'contact@cascades.studio',
+      BIZ_INFO_PARAM: bizInfoParam,
     };
 
     const makeFn = (name: string, file: string): NodejsFunction => {

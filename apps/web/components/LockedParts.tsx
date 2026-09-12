@@ -50,7 +50,7 @@ export function LockedParts({ parts }: { parts: LockedPart[] }) {
           {WIDTHS.map((width, line) => (
             <div
               key={line}
-              className="h-[12px] rounded-badge bg-raised"
+              className="h-[12px] rounded-badge bg-skeleton"
               style={{ width }}
             />
           ))}

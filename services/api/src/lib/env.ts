@@ -1,4 +1,5 @@
 import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm';
+import { parseBizInfo, type BizInfo } from '../mail/footer.js';
 
 export type ApiEnv = {
   subscribersTable: string;
@@ -15,6 +16,8 @@ export type ApiEnv = {
   sesConfigurationSet?: string;
   /** Slack Incoming Webhook for /service 검토 요청. Optional. */
   slackInquiryWebhookUrl?: string;
+  /** Optional business registration lines for mail footers. */
+  bizInfo: BizInfo;
 };
 
 const MAIL_REPLY_TO = 'contact@cascades.studio';
@@ -58,7 +61,14 @@ async function resolveSecret(
   const direct = env[valueKey]?.trim();
   if (direct) return direct;
   const param = env[paramKey]?.trim();
-  if (param) return getSecureParam(param);
+  if (param) {
+    try {
+      return await getSecureParam(param);
+    } catch (err) {
+      if (!required) return '';
+      throw err;
+    }
+  }
   if (!required) return '';
   throw new Error(`Missing env ${valueKey} or ${paramKey}`);
 }
@@ -86,17 +96,19 @@ export async function getEnv(
     }
   }
 
-  const [gateSecret, turnstileSecret, adminApiKey, slack] = await Promise.all([
-    resolveSecret(env, 'GATE_SECRET', 'GATE_SECRET_PARAM', true),
-    resolveSecret(env, 'TURNSTILE_SECRET', 'TURNSTILE_SECRET_PARAM', true),
-    resolveSecret(env, 'ADMIN_API_KEY', 'ADMIN_API_KEY_PARAM', false),
-    resolveSecret(
-      env,
-      'SLACK_INQUIRY_WEBHOOK_URL',
-      'SLACK_INQUIRY_WEBHOOK_URL_PARAM',
-      false,
-    ),
-  ]);
+  const [gateSecret, turnstileSecret, adminApiKey, slack, bizRaw] =
+    await Promise.all([
+      resolveSecret(env, 'GATE_SECRET', 'GATE_SECRET_PARAM', true),
+      resolveSecret(env, 'TURNSTILE_SECRET', 'TURNSTILE_SECRET_PARAM', true),
+      resolveSecret(env, 'ADMIN_API_KEY', 'ADMIN_API_KEY_PARAM', false),
+      resolveSecret(
+        env,
+        'SLACK_INQUIRY_WEBHOOK_URL',
+        'SLACK_INQUIRY_WEBHOOK_URL_PARAM',
+        false,
+      ),
+      resolveSecret(env, 'BIZ_INFO', 'BIZ_INFO_PARAM', false),
+    ]);
 
   const resolved: ApiEnv = {
     subscribersTable: env.SUBSCRIBERS_TABLE!,
@@ -112,6 +124,7 @@ export async function getEnv(
     notifyEmail: env.NOTIFY_EMAIL!,
     sesConfigurationSet: env.SES_CONFIGURATION_SET,
     slackInquiryWebhookUrl: slack || undefined,
+    bizInfo: parseBizInfo(bizRaw),
   };
 
   if (env === process.env) {

@@ -13,11 +13,7 @@ export async function ResourceCardsGrid() {
           title={resource.frontmatter.title}
           slug={resource.frontmatter.slug}
           thumbnail={resource.frontmatter.cover ?? resourceThumbnail(resource.frontmatter.slug)}
-          badges={
-            resource.frontmatter.access === 'paid'
-              ? ['강의 교재']
-              : resourceCardBadges(resource.frontmatter.slug)
-          }
+          badges={resourceCardBadges(resource.frontmatter.slug)}
         />
       ))}
     </div>

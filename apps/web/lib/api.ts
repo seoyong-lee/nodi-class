@@ -1,3 +1,5 @@
+import type { SubscribeResponse as SharedSubscribeResponse } from '@nodi/shared';
+
 export function getApiBaseUrl(): string {
   const base = process.env.NEXT_PUBLIC_API_URL?.trim();
   if (!base) {
@@ -6,13 +8,7 @@ export function getApiBaseUrl(): string {
   return base.replace(/\/$/, '');
 }
 
-export type SubscribeResponse = {
-  ok: true;
-  state: 'pending' | 'active';
-  gateToken: string;
-  /** Present after API deploy with Amplitude identify support. */
-  subscriberHash?: string;
-};
+export type SubscribeResponse = SharedSubscribeResponse;
 
 export type ApiErrorBody = {
   error?: string;
@@ -26,6 +22,7 @@ export async function postSubscribe(
       state: 'pending' | 'active';
       gateToken: string;
       subscriberHash?: string;
+      resent?: boolean;
     }
   | { ok: false; status: number; error?: string }
 > {
@@ -45,6 +42,7 @@ export async function postSubscribe(
       state: data.state,
       gateToken: data.gateToken,
       subscriberHash: data.subscriberHash,
+      resent: data.resent,
     };
   }
 

@@ -143,19 +143,13 @@ export default async function FreeResourcePage({ params }: Props) {
             </p>
             <div className="flex flex-col gap-inline-tight max-[720px]:hidden">
               <div className="flex flex-wrap gap-inline">
-                {access === 'paid' && !unlocked ? (
-                  <Button variant="primary" href="/course">
-                    강의 보기
-                  </Button>
-                ) : (
-                  <Button
-                    variant="primary"
-                    href={unlocked ? undefined : '#gate'}
-                    disabled={unlocked}
-                  >
-                    {unlocked ? RESOURCE_HERO_UNLOCKED_CTA : RESOURCE_HERO_CTA}
-                  </Button>
-                )}
+                <Button
+                  variant="primary"
+                  href={unlocked ? undefined : '#gate'}
+                  disabled={unlocked}
+                >
+                  {unlocked ? RESOURCE_HERO_UNLOCKED_CTA : RESOURCE_HERO_CTA}
+                </Button>
                 {youtube ? (
                   <TrackYouTubeButton
                     placement="resource_video"
@@ -164,7 +158,7 @@ export default async function FreeResourcePage({ params }: Props) {
                   />
                 ) : null}
               </div>
-              {access === 'free' && !unlocked ? (
+              {!unlocked ? (
                 <p className="m-0 text-[13px] text-muted">{RESOURCE_HERO_HELPER}</p>
               ) : null}
             </div>
@@ -297,47 +291,25 @@ export default async function FreeResourcePage({ params }: Props) {
       {showLocked ? (
         <section className={section}>
           <div className={`${bodyCol} flex flex-col gap-block`}>
-            {access === 'paid' ? (
-              <div id="gate" className="scroll-mt-24">
-                <Suspense fallback={null}>
-                  <EmailGateForm
-                    title="이 자료는 「클로드 디자인 실전」 교재가 되었습니다"
-                    description="이전에 등록한 이메일이면 그대로 열립니다. 새로 보시려면 강의에서 볼 수 있습니다."
-                    buttonLabel="등록한 이메일로 열기"
-                    buttonVariant="secondary"
-                    intent="reopen"
-                    slug={slug}
-                    placement="resource"
-                    layout="stack"
-                    footer={
-                      <Button variant="primary" href="/course">
-                        강의 보기
-                      </Button>
-                    }
-                  />
-                </Suspense>
-              </div>
-            ) : (
-              <>
-                <div id="gate" className="scroll-mt-24">
-                  <Suspense fallback={null}>
-                    <EmailGateForm
-                      title={RESOURCE_GATE_TITLE}
-                      description={RESOURCE_GATE_DESCRIPTION}
-                      buttonLabel={RESOURCE_GATE_BUTTON}
-                      helper={RESOURCE_GATE_HELPER}
-                      slug={slug}
-                      placement="resource"
-                      extraField={BUILDING_EXTRA_FIELD}
-                      layout="stack"
-                    />
-                  </Suspense>
-                </div>
-                <p className="m-0 text-[13px] text-muted break-keep">
-                  {RESOURCE_GATE_NOTICE}
-                </p>
-              </>
-            )}
+            <div id="gate" className="scroll-mt-24">
+              <Suspense fallback={null}>
+                <EmailGateForm
+                  title={RESOURCE_GATE_TITLE}
+                  description={RESOURCE_GATE_DESCRIPTION}
+                  buttonLabel={RESOURCE_GATE_BUTTON}
+                  helper={RESOURCE_GATE_HELPER}
+                  slug={slug}
+                  placement="resource"
+                  extraField={BUILDING_EXTRA_FIELD}
+                  layout="stack"
+                />
+              </Suspense>
+            </div>
+            {access === 'free-until-course' ? (
+              <p className="m-0 text-[13px] text-muted break-keep">
+                {RESOURCE_GATE_NOTICE}
+              </p>
+            ) : null}
             <LockedParts
               parts={restParts.map((p) => ({
                 id: p.id,
@@ -428,11 +400,7 @@ export default async function FreeResourcePage({ params }: Props) {
                   thumbnail={
                     resource.frontmatter.cover ?? resourceThumbnail(resource.frontmatter.slug)
                   }
-                  badges={
-                    resource.frontmatter.access === 'paid'
-                      ? ['강의 교재']
-                      : resourceCardBadges(resource.frontmatter.slug)
-                  }
+                  badges={resourceCardBadges(resource.frontmatter.slug)}
                 />
               ))}
             </div>
@@ -440,9 +408,7 @@ export default async function FreeResourcePage({ params }: Props) {
         </section>
       ) : null}
 
-      {showLocked && access === 'free' ? (
-        <StickyUnlockBar label={RESOURCE_HERO_CTA} />
-      ) : null}
+      {showLocked ? <StickyUnlockBar label={RESOURCE_HERO_CTA} /> : null}
     </main>
   );
 }

@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import matter from 'gray-matter';
-import { RESOURCE_SLUGS, ResourceUpsertInput } from '@nodi/shared';
+import { ResourceUpsertInput } from '@nodi/shared';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const contentRoot = path.join(root, 'content/resources');
@@ -19,17 +19,27 @@ function requireEnv(name: string): string {
   return v;
 }
 
+function discoverSlugs(): string[] {
+  if (!fs.existsSync(contentRoot)) return [];
+  return fs
+    .readdirSync(contentRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .filter((slug) => fs.existsSync(path.join(contentRoot, slug, 'index.mdx')))
+    .sort();
+}
+
 async function main(): Promise<void> {
   const apiUrl = requireEnv('API_URL').replace(/\/$/, '');
   const adminKey = requireEnv('ADMIN_API_KEY');
+  const slugs = discoverSlugs();
 
-  for (const slug of RESOURCE_SLUGS) {
+  if (slugs.length === 0) {
+    throw new Error(`No resources found under ${contentRoot}`);
+  }
+
+  for (const slug of slugs) {
     const filePath = path.join(contentRoot, slug, 'index.mdx');
-    if (!fs.existsSync(filePath)) {
-      console.warn(`skip ${slug}: no ${filePath}`);
-      continue;
-    }
-
     const rawFile = fs.readFileSync(filePath, 'utf8');
     const { data, content } = matter(rawFile);
     const fm = data as Record<string, unknown>;
@@ -51,6 +61,11 @@ async function main(): Promise<void> {
       body: content.trim(),
       downloads: fm.downloads,
       status: 'published',
+      access: fm.access ?? 'free',
+      courseTitle: fm.courseTitle ? String(fm.courseTitle) : undefined,
+      promptCount:
+        fm.promptCount != null ? Number(fm.promptCount) : undefined,
+      mailNote: fm.mailNote ? String(fm.mailNote) : undefined,
     });
 
     const res = await fetch(`${apiUrl}/resources/${payload.slug}`, {

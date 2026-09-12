@@ -5,11 +5,14 @@ import {
   createGateToken,
   COURSE_WAITLIST_SLUG,
   hashEmail,
+  products,
 } from '@nodi/shared';
 import {
+  claimMailSlot,
   getSubscriber,
   upsertSubscriber,
 } from '../db/subscribers.js';
+import { getResourceBySlug } from '../db/resources.js';
 import { putEvent } from '../db/events.js';
 import { getEnv, type ApiEnv } from '../lib/env.js';
 import { emailHashField, log } from '../lib/log.js';
@@ -30,17 +33,76 @@ import {
 import { checkTurnstile } from '../lib/turnstile.js';
 import { sendMail } from '../mail/send.js';
 import { resourceMail } from '../mail/templates/resource.js';
-import { type FooterContext } from '../mail/templates/layout.js';
+import { waitlistMail } from '../mail/templates/waitlist.js';
+import {
+  type FooterContext,
+  unsubUrl,
+} from '../mail/templates/layout.js';
 
 function footerFrom(env: ApiEnv, unsubToken: string): FooterContext {
   return {
     siteUrl: env.siteUrl,
-    unsubToken,
+    unsubscribeUrl: unsubUrl(env.siteUrl, unsubToken),
+    biz: env.bizInfo,
   };
 }
 
 function confirmApiBase(siteUrl: string): string {
   return (process.env.API_URL ?? siteUrl).replace(/\/$/, '');
+}
+
+async function sendSubscribeMail(opts: {
+  email: string;
+  slug: string;
+  unsubToken: string;
+  env: ApiEnv;
+}): Promise<boolean> {
+  const shouldSend = await claimMailSlot(opts.email);
+  if (!shouldSend) {
+    log('info', 'mail.skipped_throttle', {
+      ...emailHashField(opts.email),
+      slug: opts.slug,
+    });
+    return false;
+  }
+
+  const footer = footerFrom(opts.env, opts.unsubToken);
+  const confirmUrl = `${confirmApiBase(opts.env.siteUrl)}/confirm?t=${encodeURIComponent(
+    createConfirmToken(opts.email, opts.slug, opts.env.gateSecret),
+  )}`;
+
+  if (opts.slug === COURSE_WAITLIST_SLUG) {
+    await sendMail({
+      to: opts.email,
+      content: waitlistMail({
+        courseTitle: products.vod.title,
+        siteUrl: opts.env.siteUrl,
+        footer,
+      }),
+      unsubToken: opts.unsubToken,
+      template: 'waitlist',
+    });
+    return true;
+  }
+
+  const resource = await getResourceBySlug(opts.slug);
+  const resourceTitle = resource?.title ?? opts.slug;
+  await sendMail({
+    to: opts.email,
+    content: resourceMail({
+      resourceTitle,
+      slug: opts.slug,
+      access: resource?.access ?? 'free',
+      courseTitle: resource?.courseTitle,
+      promptCount: resource?.promptCount,
+      mailNote: resource?.mailNote,
+      confirmUrl,
+      footer,
+    }),
+    unsubToken: opts.unsubToken,
+    template: 'resource',
+  });
+  return true;
 }
 
 export async function handler(
@@ -90,21 +152,17 @@ export async function handler(
       }
 
       const gateToken = createGateToken(email, env.gateSecret);
-      const confirmToken = createConfirmToken(email, slug, env.gateSecret);
-      const confirmUrl = `${confirmApiBase(env.siteUrl)}/confirm?t=${encodeURIComponent(confirmToken)}`;
-      const footer = footerFrom(env, existing.unsubToken);
-
-      await sendMail({
-        to: email,
-        content: resourceMail({ slug, confirmUrl, footer }),
+      const resent = await sendSubscribeMail({
+        email,
+        slug,
         unsubToken: existing.unsubToken,
-        template: 'resource',
+        env,
       });
 
       await putEvent({
         email,
         event: 'gate.opened',
-        meta: { slug, intent: 'reopen' },
+        meta: { slug, intent: 'reopen', resent: String(resent) },
       });
 
       return accepted({
@@ -112,6 +170,7 @@ export async function handler(
         state: existing.status === 'active' ? 'active' : 'pending',
         gateToken,
         subscriberHash: hashEmail(email),
+        resent,
       });
     }
 
@@ -131,21 +190,17 @@ export async function handler(
     });
 
     const gateToken = createGateToken(email, env.gateSecret);
-    const confirmToken = createConfirmToken(email, slug, env.gateSecret);
-    const confirmUrl = `${confirmApiBase(env.siteUrl)}/confirm?t=${encodeURIComponent(confirmToken)}`;
-    const footer = footerFrom(env, result.subscriber.unsubToken);
-
-    await sendMail({
-      to: email,
-      content: resourceMail({ slug, confirmUrl, footer }),
+    const resent = await sendSubscribeMail({
+      email,
+      slug,
       unsubToken: result.subscriber.unsubToken,
-      template: 'resource',
+      env,
     });
 
     await putEvent({
       email,
       event: 'gate.opened',
-      meta: { slug },
+      meta: { slug, resent: String(resent) },
     });
 
     log('info', 'subscribe.ok', {
@@ -153,6 +208,7 @@ export async function handler(
       state: result.state,
       slug,
       waitlist: slug === COURSE_WAITLIST_SLUG,
+      resent,
     });
 
     return accepted({
@@ -160,6 +216,7 @@ export async function handler(
       state: result.state,
       gateToken,
       subscriberHash: hashEmail(email),
+      resent,
     });
   } catch (err) {
     log('error', 'subscribe.error', {

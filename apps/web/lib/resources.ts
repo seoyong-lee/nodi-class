@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
-import { RESOURCE_SLUGS } from '@nodi/shared';
+import { RESOURCE_SLUGS, type ResourceAccess } from '@nodi/shared';
 
 const CONTENT_ROOT = path.join(process.cwd(), '../../content/resources');
 
@@ -14,7 +14,10 @@ export type ResourceFrontmatter = {
   youtube?: string;
   youtubeTitle?: string;
   cover?: string;
-  access?: 'free' | 'paid';
+  access: ResourceAccess;
+  courseTitle?: string;
+  promptCount?: number;
+  mailNote?: string;
   readingMinutes?: number;
   contents?: { count: number; label: string; note: string }[];
   fitFor?: string[];
@@ -50,6 +53,10 @@ type ApiResource = {
   body: string;
   downloads?: { label: string; key: string }[];
   status: 'published' | 'draft';
+  access?: ResourceAccess;
+  courseTitle?: string;
+  promptCount?: number;
+  mailNote?: string;
   updatedAt: string;
 };
 
@@ -112,6 +119,10 @@ function apiBase(): string | undefined {
   return url || undefined;
 }
 
+function parseAccess(value: unknown): ResourceAccess {
+  return value === 'free-until-course' ? 'free-until-course' : 'free';
+}
+
 function fromApiResource(resource: ApiResource): ResourceDoc {
   return {
     frontmatter: {
@@ -125,6 +136,10 @@ function fromApiResource(resource: ApiResource): ResourceDoc {
       publishedAt: resource.publishedAt,
       downloads: resource.downloads,
       status: resource.status,
+      access: parseAccess(resource.access),
+      courseTitle: resource.courseTitle,
+      promptCount: resource.promptCount,
+      mailNote: resource.mailNote,
       updatedAt: resource.updatedAt,
     },
     parts: splitParts(resource.body),
@@ -165,9 +180,6 @@ function getLocalResource(slug: string): ResourceDoc {
     publishedRaw instanceof Date
       ? publishedRaw.toISOString().slice(0, 10)
       : String(publishedRaw ?? '');
-  const accessRaw = rawFm.access;
-  const access =
-    accessRaw === 'paid' || accessRaw === 'free' ? accessRaw : 'free';
   return {
     frontmatter: {
       slug: String(rawFm.slug ?? slug),
@@ -180,7 +192,11 @@ function getLocalResource(slug: string): ResourceDoc {
         ? String(rawFm.youtubeTitle)
         : undefined,
       cover: rawFm.cover ? String(rawFm.cover) : undefined,
-      access,
+      access: parseAccess(rawFm.access),
+      courseTitle: rawFm.courseTitle ? String(rawFm.courseTitle) : undefined,
+      promptCount:
+        rawFm.promptCount != null ? Number(rawFm.promptCount) : undefined,
+      mailNote: rawFm.mailNote ? String(rawFm.mailNote) : undefined,
       readingMinutes:
         rawFm.readingMinutes != null
           ? Number(rawFm.readingMinutes)
@@ -248,18 +264,22 @@ export async function listResources(): Promise<ResourceDoc[]> {
   }>('/resources');
 
   if (data?.ok && data.resources?.length) {
-    // List endpoint omits body; enough for cards / “다른 자료”.
     return data.resources.map((meta) => ({
       frontmatter: {
         slug: meta.slug,
         title: meta.title,
         series: meta.series,
         summary: meta.summary,
+        included: meta.included,
         youtube: meta.youtube,
         freeParts: meta.freeParts,
         publishedAt: meta.publishedAt,
         downloads: meta.downloads,
         status: meta.status,
+        access: parseAccess(meta.access),
+        courseTitle: meta.courseTitle,
+        promptCount: meta.promptCount,
+        mailNote: meta.mailNote,
         updatedAt: meta.updatedAt,
       },
       parts: [],

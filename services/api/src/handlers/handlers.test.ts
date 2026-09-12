@@ -11,6 +11,25 @@ vi.mock('../db/subscribers.js', () => ({
   activateSubscriber: vi.fn(),
   unsubscribeByToken: vi.fn(),
   markUnsubscribed: vi.fn(),
+  getSubscriber: vi.fn(),
+  claimMailSlot: vi.fn().mockResolvedValue(true),
+}));
+
+vi.mock('../db/resources.js', () => ({
+  getResourceBySlug: vi.fn().mockResolvedValue({
+    slug: 'claude-ppt-guidebook',
+    title: '클로드 PPT 실전 가이드북',
+    series: '실전 가이드북 Vol.1',
+    summary: '요약',
+    freeParts: 0,
+    publishedAt: '2026-09-08',
+    body: '',
+    status: 'published',
+    access: 'free-until-course',
+    courseTitle: '클로드 디자인 실전',
+    promptCount: 7,
+    updatedAt: new Date().toISOString(),
+  }),
 }));
 
 vi.mock('../db/inquiries.js', () => ({
@@ -31,7 +50,12 @@ vi.mock('../lib/slack.js', () => ({
   notifyInquirySlack: vi.fn().mockResolvedValue(undefined),
 }));
 
-import { upsertSubscriber, activateSubscriber, unsubscribeByToken } from '../db/subscribers.js';
+import {
+  upsertSubscriber,
+  activateSubscriber,
+  unsubscribeByToken,
+  claimMailSlot,
+} from '../db/subscribers.js';
 import { saveInquiry } from '../db/inquiries.js';
 import { sendMail } from '../mail/send.js';
 import { notifyInquirySlack } from '../lib/slack.js';
@@ -152,8 +176,9 @@ describe('subscribe', () => {
       state: string;
       gateToken: string;
       subscriberHash: string;
+      resent: boolean;
     };
-    expect(body).toMatchObject({ ok: true, state: 'pending' });
+    expect(body).toMatchObject({ ok: true, state: 'pending', resent: true });
     expect(typeof body.gateToken).toBe('string');
     expect(body.gateToken.length).toBeGreaterThan(10);
     expect(typeof body.subscriberHash).toBe('string');
@@ -194,13 +219,85 @@ describe('subscribe', () => {
       state: string;
       gateToken: string;
       subscriberHash: string;
+      resent: boolean;
     };
-    expect(body).toMatchObject({ ok: true, state: 'active' });
+    expect(body).toMatchObject({ ok: true, state: 'active', resent: true });
     expect(typeof body.gateToken).toBe('string');
     expect(typeof body.subscriberHash).toBe('string');
     expect(body.subscriberHash).toHaveLength(64);
     expect(sendMail).toHaveBeenCalledWith(
       expect.objectContaining({ template: 'resource' }),
+    );
+  });
+
+  it('skips mail within 10 minutes but still unlocks', async () => {
+    vi.mocked(claimMailSlot).mockResolvedValueOnce(false);
+    vi.mocked(upsertSubscriber).mockResolvedValue({
+      created: false,
+      state: 'active',
+      subscriber: {
+        pk: 'EMAIL#user@example.com',
+        sk: 'PROFILE',
+        email: 'user@example.com',
+        status: 'active',
+        source: 'claude-ppt-guidebook',
+        tags: ['resource:claude-ppt-guidebook'],
+        consentAt: new Date().toISOString(),
+        confirmedAt: new Date().toISOString(),
+        consentVersion: '2026-09-12',
+        unsubToken: 'b'.repeat(32),
+        lastMailAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        gsi1pk: 'STATUS#active',
+        gsi1sk: new Date().toISOString(),
+      },
+    });
+
+    const res = await subscribe(
+      httpEvent({ body: JSON.stringify(baseSubscribe) }),
+    );
+    expect(res).toMatchObject({ statusCode: 202 });
+    const body = JSON.parse((res as { body: string }).body) as {
+      ok: boolean;
+      resent: boolean;
+      gateToken: string;
+    };
+    expect(body.ok).toBe(true);
+    expect(body.resent).toBe(false);
+    expect(body.gateToken.length).toBeGreaterThan(10);
+    expect(sendMail).not.toHaveBeenCalled();
+  });
+
+  it('sends waitlist mail for course-waitlist slug', async () => {
+    vi.mocked(upsertSubscriber).mockResolvedValue({
+      created: true,
+      state: 'pending',
+      subscriber: {
+        pk: 'EMAIL#user@example.com',
+        sk: 'PROFILE',
+        email: 'user@example.com',
+        status: 'pending',
+        source: 'course-waitlist',
+        tags: ['course-waitlist'],
+        consentAt: new Date().toISOString(),
+        consentVersion: '2026-09-12',
+        unsubToken: 'c'.repeat(32),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        gsi1pk: 'STATUS#pending',
+        gsi1sk: new Date().toISOString(),
+      },
+    });
+
+    const res = await subscribe(
+      httpEvent({
+        body: JSON.stringify({ ...baseSubscribe, slug: 'course-waitlist' }),
+      }),
+    );
+    expect(res).toMatchObject({ statusCode: 202 });
+    expect(sendMail).toHaveBeenCalledWith(
+      expect.objectContaining({ template: 'waitlist' }),
     );
   });
 
@@ -327,6 +424,9 @@ describe('inquiry', () => {
       'inquiry-ack',
       'inquiry-notify',
     ]);
+    expect(vi.mocked(sendMail).mock.calls.find((c) => c[0]?.template === 'inquiry-ack')?.[0]).toMatchObject({
+      skipListUnsub: true,
+    });
     expect(notifyInquirySlack).toHaveBeenCalledWith(
       undefined,
       expect.objectContaining({

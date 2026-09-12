@@ -14,6 +14,9 @@ export const INQUIRY_CONSENT_LABEL = '개인정보 수집·이용에 동의합�
 /** Shown briefly if unlock navigation is delayed. */
 export const GATE_SUBMITTED_LABEL = '열렸습니다. 메일로도 보냈습니다.';
 
+/** When subscribe succeeds but mail was throttled within 10 minutes. */
+export const GATE_MAIL_THROTTLED_LABEL = '이미 보낸 메일을 확인해 주세요';
+
 /** Unlocked cookie state under the gate slot. */
 export const GATE_ACTIVE_LABEL = '메일로도 보냈습니다';
 

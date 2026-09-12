@@ -59,6 +59,7 @@
 --scrollbar-thumb-hover:var(--nd-300);
 --media-control-bg:color-mix(in srgb,var(--mint-ink) 72%,transparent);
 --media-control-ink:var(--nd-050);
+--surface-skeleton:var(--surface-field);
 --color-scheme:dark;
 }
 
@@ -98,5 +99,6 @@
 --scrollbar-thumb-hover:#6B7873;
 --media-control-bg:rgba(6,18,14,0.72);
 --media-control-ink:#E9F1EE;
+--surface-skeleton:#D3DCD8;
 --color-scheme:light;
 }

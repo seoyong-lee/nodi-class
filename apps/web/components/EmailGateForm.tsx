@@ -9,6 +9,7 @@ import { identifySubscriber, track } from '../lib/analytics/track';
 import {
   FORM_ERROR_LABEL,
   GATE_ACTIVE_RESUBSCRIBE_LABEL,
+  GATE_MAIL_THROTTLED_LABEL,
   GATE_NOT_REGISTERED_LABEL,
   GATE_SUBMITTED_LABEL,
   SUBSCRIBE_CONSENT_LABEL,
@@ -144,7 +145,9 @@ export function EmailGateForm({
         },
       });
 
-      if (result.state === 'active' && intent === 'subscribe') {
+      if (result.resent === false) {
+        setSubmittedLabel(GATE_MAIL_THROTTLED_LABEL);
+      } else if (result.state === 'active' && intent === 'subscribe') {
         setSubmittedLabel(GATE_ACTIVE_RESUBSCRIBE_LABEL);
       } else {
         setSubmittedLabel(GATE_SUBMITTED_LABEL);

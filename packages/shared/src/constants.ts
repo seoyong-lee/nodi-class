@@ -9,7 +9,7 @@ export const CONSENT_VERSION = '2026-09-12';
 export const RESOURCE_SLUGS = [
   'claude-ppt-guidebook',
   'claude-prompt-set',
-  // 'claude-design-landing-checklist',
+  'claude-design-landing-checklist',
   'ai-design-5-principles',
 ] as const;
 
@@ -28,6 +28,7 @@ export const RESOURCE_CARD_BADGES: Record<
     { label: 'PPT', tone: 'ppt' },
   ],
   'claude-prompt-set': [{ label: '클로드', tone: 'claude' }],
+  'claude-design-landing-checklist': [{ label: '클로드 디자인', tone: 'design' }],
   'ai-design-5-principles': [{ label: '클로드 디자인', tone: 'design' }],
 };
 

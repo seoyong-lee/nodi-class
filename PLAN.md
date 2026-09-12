@@ -168,8 +168,8 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 - Hero: `series` + Badge · h1=`title` · `summary` · Primary `무료 자료 바로 열기`(데스크톱만, 모바일은 하단 스티키) · 소형 `이메일 등록 후 바로 열립니다 · 무료` · 우측 책 커버. youtube 있으면 Secondary `영상으로 보기`.
 - 소개(전 자료 공통, `apps/web/lib/copy.ts`): 도입 4문단 · `이 자료에는`+`included`(3~6) · 이어지는 2문단 · `이런 분이라면 특히 유용합니다`+고정 4항 · 가치 설명 · 제작 배경. **공통 UI에 PPT·클로드·디자인·프롬프트·직업·개수 등 자료 종속 표현 금지.**
 - 본문 게이트: frontmatter `freeParts`만큼 공개, 이후 잠금.
-  - 잠금(쿠키 없음·free): **EmailGate**(제목 `지금 무료로 공개합니다`, 설명 `아래에서 이메일을 등록하면 전체 자료를 바로 확인할 수 있습니다.` + `한 번 등록하면 다른 무료 자료도 별도 입력 없이 계속 확인할 수 있습니다.`, 버튼 `무료 자료 바로 열기`, 버튼 아래 `등록 즉시 열립니다 · 비용이 발생하지 않습니다`, **동의=§3.7**) + 소형 `무료 공개 종료 일정은 강의 출시 전에 이 페이지와 이메일로 미리 안내드립니다.` → blur 잠금.
-  - 잠금·paid: reopen 게이트(기존 등록자) + 강의 CTA.
+  - 잠금(쿠키 없음·`free`): **EmailGate**(§3.2 카피) → blur 잠금.
+  - 잠금(쿠키 없음·`free-until-course`): 동일 EmailGate + 배지 `기간 한정 무료` + 소형 `무료 공개 종료 일정은 강의 출시 전에 이 페이지와 이메일로 미리 안내드립니다.` → blur 잠금.
   - 열림: 체크 + `메일로도 보냈습니다` → 본문 전체.
 - `03 / 만든 사람`(공통): 프로필 + `노디` / `5년차 프로덕트 엔지니어로 일하며 직접 제품을 만들고 운영해왔습니다.` / 소형 `유튜브 노디 AI 운영`.
 - 하단: `다른 무료 자료도 둘러보세요` ResourceCard 2개.
@@ -327,6 +327,7 @@ downloads: # 선택
 | `confirmedAt`            | S    | 메일 링크 클릭 시각                                                               |
 | `unsubscribedAt`         | S    |                                                                                   |
 | `unsubToken`             | S    | 랜덤 32자, 수신거부 링크용 (교체 없음)                                            |
+| `lastMailAt`             | S    | 자료/대기 메일 마지막 발송 시각(10분 재발송 스로틀)                               |
 | `ip`, `ua`               | S    | 동의 증빙용 (90일 후 삭제 TODO)                                                   |
 | `createdAt`, `updatedAt` | S    |                                                                                   |
 | `gsi1pk`                 | S    | `STATUS#<status>`                                                                 |
@@ -359,6 +360,10 @@ GSI `gsi1` (`gsi1pk`, `gsi1sk`) — 발송 대상 조회용.
 | `pk`                                                                                               | S    | `RESOURCE#<slug>`      |
 | `sk`                                                                                               | S    | `META`                 |
 | `slug`, `title`, `series`, `summary`, `included?`, `youtube?`, `freeParts`, `publishedAt`, `body`, `downloads?` |      |                        |
+| `access`                                                                                           | S    | `free` \| `free-until-course` (기본 `free`) |
+| `courseTitle?`                                                                                     | S    | `free-until-course`일 때 필수 |
+| `promptCount?`                                                                                     | N    | 메일 제목·부록 안내용 |
+| `mailNote?`                                                                                        | S    | 자료별 한 줄 추가 안내 |
 | `status`                                                                                           | S    | `published` \| `draft` |
 | `gsi1pk`                                                                                           | S    | `STATUS#<status>`      |
 | `gsi1sk`                                                                                           | S    | `publishedAt`          |
@@ -394,22 +399,28 @@ export const InquiryInput = z.object({
   website: z.string().max(0).optional(),
   turnstile: z.string().min(10),
 });
-export const ResourceUpsertInput = z.object({
-  slug: z.string().regex(/^[a-z0-9-]{3,64}$/),
-  title: z.string().min(1).max(200),
-  series: z.string().min(1).max(120),
-  summary: z.string().min(1).max(1000),
-  included: z.array(z.string().min(1).max(200)).min(3).max(6).optional(),
-  youtube: z.string().url().max(2048).optional(),
-  freeParts: z.number().int().min(0).max(50).default(1),
-  publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  body: z.string().max(200_000),
-  downloads: z
-    .array(z.object({ label: z.string(), key: z.string() }))
-    .max(20)
-    .optional(),
-  status: z.enum(['published', 'draft']).default('published'),
-});
+export const ResourceUpsertInput = z
+  .object({
+    slug: z.string().regex(/^[a-z0-9-]{3,64}$/),
+    title: z.string().min(1).max(200),
+    series: z.string().min(1).max(120),
+    summary: z.string().min(1).max(1000),
+    included: z.array(z.string().min(1).max(200)).min(3).max(6).optional(),
+    youtube: z.string().url().max(2048).optional(),
+    freeParts: z.number().int().min(0).max(50).default(1),
+    publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    body: z.string().max(200_000),
+    downloads: z
+      .array(z.object({ label: z.string(), key: z.string() }))
+      .max(20)
+      .optional(),
+    status: z.enum(['published', 'draft']).default('published'),
+    access: z.enum(['free', 'free-until-course']).default('free'),
+    courseTitle: z.string().min(1).max(120).optional(),
+    promptCount: z.number().int().min(1).max(100).optional(),
+    mailNote: z.string().min(1).max(500).optional(),
+  })
+  .superRefine(/* free-until-course → courseTitle 필수 */);
 ```
 
 ---
@@ -418,13 +429,13 @@ export const ResourceUpsertInput = z.object({
 
 ### 6.1 흐름
 
-1. 폼 제출 → `POST /subscribe` → Turnstile·허니팟·형식 검사 → `subscribers` upsert(`active`면 유지, 아니면 `pending`) → `tags`에 `resource:<slug>` 누적 → **자료 메일 1통** 발송(링크는 `/confirm?t=`) → `202 { ok, state, gateToken }` + `gate.opened(slug)` 이벤트
-2. 프론트는 `gateToken`으로 즉시 `/unlock?t=&next=/free/<slug>`(또는 `/course`) → 쿠키 발급 → **그 자리에서 열림**. 메일을 기다리지 않는다.
+1. 폼 제출 → `POST /subscribe` → Turnstile·허니팟·형식 검사 → `subscribers` upsert(`active`면 유지, 아니면 `pending`) → `tags`에 `resource:<slug>` 누적 → **자료/대기 메일 1통**(10분 스로틀, `lastMailAt`) → `202 { ok, state, gateToken, resent }` + `gate.opened(slug)` 이벤트
+2. 프론트는 `gateToken`으로 즉시 `/unlock?t=&next=/free/<slug>`(또는 `/course`) → 쿠키 발급 → **그 자리에서 열림**. `resent === false`면 "이미 보낸 메일을 확인해 주세요"를 표시한 뒤 해금은 그대로 진행한다.
 3. 메일의 링크 → `GET /confirm?t=` → `status=active`, `confirmedAt` → `302` → `/free/<slug>`(또는 `/course`). **해금이 아니라 리스트 품질용 active 전환.** 쿠키가 없는 기기에서는 잠금 UI가 남을 수 있고, 그때는 폼을 다시 내면 쿠키가 발급된다.
 4. 이후 다른 자료는 쿠키(90일)로 폼 없이 바로 열림. 어떤 자료를 열었는지는 `gate.opened(slug)`(이메일 해시)로 집계.
 5. **캠페인·새 자료 안내·VOD 알림은 `active`만.** `pending`에는 보내지 않는다(바운스·평판).
 
-즉시 해금(전환)과 메일 클릭 active(리스트 품질)를 분리한다. 확인 메일과 자료 메일은 한 통(`resource`)으로 합친다.
+즉시 해금(전환)과 메일 클릭 active(리스트 품질)를 분리한다. 자료 메일은 DynamoDB resource 메타(`access`/`promptCount`/`courseTitle`/`mailNote`)로 공통 템플릿을 렌더한다. `course-waitlist`는 waitlist 템플릿을 쓴다.
 
 ### 6.2 토큰 (`packages/shared/src/token.ts`, HMAC-SHA256)
 
@@ -437,7 +448,7 @@ export const ResourceUpsertInput = z.object({
 
 ### 6.3 수신거부
 
-메일 푸터 링크 `https://<site>/unsubscribe?t=<unsubToken>` → 페이지가 `POST /unsubscribe {t}` → `status=unsubscribed`. 모든 메일에 `List-Unsubscribe: <https://<site>/unsubscribe?t=…>` 와 `List-Unsubscribe-Post: List-Unsubscribe=One-Click` 헤더.
+메일 푸터 링크 `https://<site>/unsubscribe?t=<unsubToken>` → 페이지가 `POST /unsubscribe {t}` → `status=unsubscribed`. 구독 메일(`resource`/`waitlist`)에 `List-Unsubscribe`·`List-Unsubscribe-Post` 헤더. `inquiry-ack`은 거래성이라 수신거부 줄·헤더를 넣지 않는다.
 
 ---
 
@@ -447,11 +458,12 @@ export const ResourceUpsertInput = z.object({
 
 | 키                        | 제목                                      | 본문 골자                                                                                                                                                                                      |
 | ------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `resource`                | `[노디 AI 클래스] <자료 제목>`            | **(광고) 없음**. 안내 + 버튼(민트). 링크는 `/confirm?t=`(active 전환 후 `/free/<slug>`로 리다이렉트). 있으면 다운로드 presigned URL(1시간) + 푸터. (`confirm` 템플릿은 폐기·이 한 통으로 합침) |
-| `inquiry-notify` (나에게) | `[검토 요청] <이름> · <결과물 도메인>`    | 폼 내용 전부 + DynamoDB 키. 같은 내용을 Slack Incoming Webhook(`/nodi-class/SLACK_INQUIRY_WEBHOOK_URL`)에도 전송(실패해도 메일·202은 유지)                                                     |
-| `inquiry-ack` (신청자)    | `[노디 AI 클래스] 검토 요청을 받았습니다` | `2영업일 내 회신드립니다` + 푸터                                                                                                                                                               |
+| `resource`                | `<자료 제목> — 링크` 또는 `… 프롬프트 N종` | **(광고) 없음**. frontmatter 기반 공통 템플릿. `/confirm?t=` 버튼 + `access`/`promptCount`/`mailNote` 조건부 문단 + 푸터. |
+| `waitlist`                | `「<강의 제목>」 출시 알림을 등록했습니다` | 출시·얼리버드 안내 + 무료 자료 보기 버튼 + 푸터 |
+| `inquiry-notify` (나에게) | `[검토 요청] <이름> · <결과물 도메인>`    | 폼 내용 전문 + DynamoDB 키. 같은 내용을 Slack Incoming Webhook(`/nodi-class/SLACK_INQUIRY_WEBHOOK_URL`)에도 전송(실패해도 메일·202은 유지)                                                     |
+| `inquiry-ack` (신청자)    | `검토 요청을 받았습니다` | 2영업일 회신 안내 + 사업자 푸터(수신거부 줄·헤더 없음, 거래성) |
 
-푸터 공통: `노디 AI 클래스 · 운영 Cascades · 상호/대표/사업자번호/주소 · 문의 · [수신거부]`. 이모지·느낌표 없음. HTML은 테이블 레이아웃, 다크 아님(메일 클라이언트 호환) — 민트 버튼 하나만.
+푸터 공통: `노디 AI 클래스 · 운영 {{BIZ_NAME}}` · 대표/사업자번호/주소(SSM `/nodi-class/BIZ_INFO`, 비면 생략) · 문의 · `[수신거부]`(구독 메일만). 이모지·느낌표 없음. HTML은 테이블 레이아웃, 다크 아님 — 민트 버튼 `#39CD9B`.
 
 발송 제목 규칙:
 
@@ -655,6 +667,8 @@ NEXT_PUBLIC_AMPLITUDE_SR_SAMPLE_RATE=
 - [ ] **홈 Before 호버 burn**: 폐기. BeforeAfter는 filter/border 차이 리빌로 구현됨.
 - [ ] **운영**: 메일 발송 실패 재시도(SQS DLQ), `ip/ua` 90일 후 삭제 배치, Amplify 호스팅 CDK 이관, CDK 출력 → web env 자동화.
 - [ ] **환불 정책·이용약관** 유료 조항 채우기.
+- [ ] **hello@mail.nodiworks.com Google Workspace 계정 + 프로필 사진** (Gmail 발신자 아바타, 답장 수신함).
+- [ ] **BIMI**: DMARC quarantine + VMC 필요, 발송량 커진 뒤 검토.
 
 ## 14. TODO — Step 3 (조건부)
 

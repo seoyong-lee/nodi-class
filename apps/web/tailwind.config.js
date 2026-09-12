@@ -13,6 +13,7 @@ module.exports = {
         card: 'var(--surface-card)',
         raised: 'var(--surface-raised)',
         field: 'var(--surface-field)',
+        skeleton: 'var(--surface-skeleton)',
         strong: 'var(--text-strong)',
         body: 'var(--text-body)',
         muted: 'var(--text-muted)',

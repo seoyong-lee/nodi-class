@@ -37,21 +37,47 @@ export const ResourceDownload = z.object({
   key: z.string().min(1).max(512),
 });
 
-export const ResourceUpsertInput = z.object({
-  slug: z.string().regex(/^[a-z0-9-]{3,64}$/),
-  title: z.string().min(1).max(200),
-  series: z.string().min(1).max(120),
-  summary: z.string().min(1).max(1000),
-  included: z.array(z.string().min(1).max(200)).min(3).max(6).optional(),
-  youtube: z.string().url().max(2048).optional(),
-  freeParts: z.number().int().min(0).max(50).default(1),
-  publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  body: z.string().max(200_000),
-  downloads: z.array(ResourceDownload).max(20).optional(),
-  status: z.enum(['published', 'draft']).default('published'),
+export const ResourceAccess = z.enum(['free', 'free-until-course']);
+
+export const ResourceUpsertInput = z
+  .object({
+    slug: z.string().regex(/^[a-z0-9-]{3,64}$/),
+    title: z.string().min(1).max(200),
+    series: z.string().min(1).max(120),
+    summary: z.string().min(1).max(1000),
+    included: z.array(z.string().min(1).max(200)).min(3).max(6).optional(),
+    youtube: z.string().url().max(2048).optional(),
+    freeParts: z.number().int().min(0).max(50).default(1),
+    publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    body: z.string().max(200_000),
+    downloads: z.array(ResourceDownload).max(20).optional(),
+    status: z.enum(['published', 'draft']).default('published'),
+    access: ResourceAccess.default('free'),
+    courseTitle: z.string().min(1).max(120).optional(),
+    promptCount: z.number().int().min(1).max(100).optional(),
+    mailNote: z.string().min(1).max(500).optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.access === 'free-until-course' && !data.courseTitle) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['courseTitle'],
+        message: 'required',
+      });
+    }
+  });
+
+export const SubscribeResponse = z.object({
+  ok: z.literal(true),
+  state: z.enum(['pending', 'active']),
+  gateToken: z.string().min(10),
+  subscriberHash: z.string().length(64).optional(),
+  resent: z.boolean().optional(),
 });
 
 export type SubscribeInput = z.infer<typeof SubscribeInput>;
 export type InquiryInput = z.infer<typeof InquiryInput>;
 export type ResourceUpsertInput = z.infer<typeof ResourceUpsertInput>;
 export type ResourceDownload = z.infer<typeof ResourceDownload>;
+export type ResourceAccess = z.infer<typeof ResourceAccess>;
+export type SubscribeResponse = z.infer<typeof SubscribeResponse>;

@@ -20,6 +20,8 @@ export type Subscriber = {
   unsubscribedAt?: string;
   bounceAt?: string;
   unsubToken: string;
+  /** ISO timestamp of last transactional resource/waitlist mail. */
+  lastMailAt?: string;
   ip?: string;
   ua?: string;
   createdAt: string;
@@ -254,6 +256,38 @@ export async function markUnsubscribed(
 
 export async function findByEmailForSes(email: string): Promise<Subscriber | null> {
   return getSubscriber(email);
+}
+
+const MAIL_THROTTLE_MS = 10 * 60 * 1000;
+
+/**
+ * Atomically claim a mail-send slot if none was claimed in the last 10 minutes.
+ * Returns true when this caller should send mail (and lastMailAt was updated).
+ */
+export async function claimMailSlot(email: string): Promise<boolean> {
+  const { subscribersTable } = await getEnv();
+  const now = new Date();
+  const nowIso = now.toISOString();
+  const cutoffIso = new Date(now.getTime() - MAIL_THROTTLE_MS).toISOString();
+
+  try {
+    await getDocClient().send(
+      new UpdateCommand({
+        TableName: subscribersTable,
+        Key: { pk: emailPk(email), sk: 'PROFILE' },
+        UpdateExpression: 'SET lastMailAt = :now, updatedAt = :now',
+        ConditionExpression:
+          'attribute_exists(pk) AND (attribute_not_exists(lastMailAt) OR lastMailAt < :cutoff)',
+        ExpressionAttributeValues: {
+          ':now': nowIso,
+          ':cutoff': cutoffIso,
+        },
+      }),
+    );
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /** Unused but available for STATUS scans. */
