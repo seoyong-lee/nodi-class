@@ -37,3 +37,5 @@ export type {
   SiteFooterLink,
   SiteFooterSocialLink,
 } from './components/blocks/SiteFooter';
+
+export { vars } from './styles/vars';

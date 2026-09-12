@@ -10,7 +10,11 @@
     "moduleResolution": "Bundler",
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@nodi/design-system": ["../../packages/design-system/src/index.ts"],
+      "@nodi/design-system/styles/vars": [
+        "../../packages/design-system/src/styles/vars.ts"
+      ]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
