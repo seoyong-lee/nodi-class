@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import { COURSE_WAITLIST_SLUG } from '@nodi/shared';
 import { ProductCard } from '@nodi/design-system';
 import { EmailGateForm } from '../../components/EmailGateForm';
 import { productCardProps } from '../../lib/products';
@@ -32,11 +34,14 @@ export default function CoursePage() {
             과정입니다. 프롬프트가 아니라 고르는 기준을 배웁니다.
           </p>
           <div className={styles.gateBlock}>
-            <EmailGateForm
-              title="출시 알림 받기"
-              description="알림 신청자에게만 얼리버드 가격을 먼저 안내합니다"
-              buttonLabel="알림 받기"
-            />
+            <Suspense fallback={null}>
+              <EmailGateForm
+                title="출시 알림 받기"
+                description="알림 신청자에게만 얼리버드 가격을 먼저 안내합니다"
+                buttonLabel="알림 받기"
+                slug={COURSE_WAITLIST_SLUG}
+              />
+            </Suspense>
           </div>
         </div>
       </section>

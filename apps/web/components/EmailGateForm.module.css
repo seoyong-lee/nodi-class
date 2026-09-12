@@ -1,0 +1,11 @@
+.root {
+  position: relative;
+  min-width: 0;
+}
+
+.error {
+  margin: var(--space-2) 0 0;
+  font-size: var(--size-label);
+  color: var(--text-strong);
+  word-break: keep-all;
+}

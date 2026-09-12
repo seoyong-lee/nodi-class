@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { Suspense } from 'react';
 import {
   BeforeAfter,
   Button,
@@ -6,6 +7,7 @@ import {
   ResourceCard,
   SectionHeading,
 } from '@nodi/design-system';
+import { RESOURCE_SLUGS } from '@nodi/shared';
 import { EmailGateForm } from '../components/EmailGateForm';
 import { BUILDING_EXTRA_FIELD } from '../lib/building';
 import { getYoutubeUrl } from '../lib/business';
@@ -13,6 +15,10 @@ import { productCardProps } from '../lib/products';
 import { listResources } from '../lib/resources';
 import { hasValidAccessCookie } from '../lib/access';
 import styles from '../styles/page.module.css';
+
+export const dynamic = 'force-dynamic';
+
+const HOME_GATE_SLUG = RESOURCE_SLUGS[0]!;
 
 export default async function HomePage() {
   const youtube = getYoutubeUrl();
@@ -56,11 +62,14 @@ export default async function HomePage() {
           title="영상에서 쓴 자료, 그대로 드립니다"
         />
         <div className={styles.gateBlock}>
-          <EmailGateForm
-            title="한 번 등록하면 모든 자료가 열립니다"
-            buttonLabel="받기"
-            extraField={BUILDING_EXTRA_FIELD}
-          />
+          <Suspense fallback={null}>
+            <EmailGateForm
+              title="한 번 등록하면 모든 자료가 열립니다"
+              buttonLabel="받기"
+              slug={HOME_GATE_SLUG}
+              extraField={BUILDING_EXTRA_FIELD}
+            />
+          </Suspense>
         </div>
         <div className={styles.grid4}>
           {resources.map((resource) => (
@@ -148,11 +157,14 @@ export default async function HomePage() {
         <div className={styles.finalCta}>
           <h2 className={styles.finalTitle}>무료 자료부터 받아보세요</h2>
           <div className={styles.gateCenter}>
-            <EmailGateForm
-              title="한 번 등록하면 모든 자료가 열립니다"
-              buttonLabel="받기"
-              extraField={BUILDING_EXTRA_FIELD}
-            />
+            <Suspense fallback={null}>
+              <EmailGateForm
+                title="한 번 등록하면 모든 자료가 열립니다"
+                buttonLabel="받기"
+                slug={HOME_GATE_SLUG}
+                extraField={BUILDING_EXTRA_FIELD}
+              />
+            </Suspense>
           </div>
         </div>
       </section>

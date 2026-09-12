@@ -1,34 +1,75 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { Button, Input } from '@nodi/design-system';
-import { CONSENT_LABEL } from '../lib/copy';
+import { postInquiry } from '../lib/api';
+import { CONSENT_LABEL, FORM_ERROR_LABEL, INQUIRY_DONE_LABEL } from '../lib/copy';
+import { getTurnstileToken } from '../lib/turnstile';
+import hp from './honeypot.module.css';
 import styles from './InquiryForm.module.css';
 
 export function InquiryForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [resultUrl, setResultUrl] = useState('');
   const [blocked, setBlocked] = useState('');
   const [consent, setConsent] = useState(false);
+  const [website, setWebsite] = useState('');
+  const turnstileRef = useRef<HTMLDivElement>(null);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!consent) return;
-    setSubmitted(true);
+    if (!consent || submitting) return;
+    setError(null);
+    setSubmitting(true);
+    try {
+      const container = turnstileRef.current;
+      if (!container) {
+        setError(FORM_ERROR_LABEL);
+        return;
+      }
+      const turnstile = await getTurnstileToken(container);
+      const result = await postInquiry({
+        name,
+        email,
+        resultUrl,
+        blocked,
+        consent: true,
+        website,
+        turnstile,
+      });
+      if (!result.ok) {
+        setError(FORM_ERROR_LABEL);
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setError(FORM_ERROR_LABEL);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (submitted) {
-    return (
-      <p className={styles.done}>
-        검토 요청을 받았습니다. 2영업일 내 회신드립니다.
-      </p>
-    );
+    return <p className={styles.done}>{INQUIRY_DONE_LABEL}</p>;
   }
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
+      <input
+        className={hp.honeypot}
+        type="text"
+        name="website"
+        autoComplete="off"
+        tabIndex={-1}
+        aria-hidden="true"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+      />
+      <div ref={turnstileRef} />
       <div className={styles.row}>
         <Input
           label="이름"
@@ -71,8 +112,13 @@ export function InquiryForm() {
         />
         {CONSENT_LABEL}
       </label>
+      {error ? (
+        <p className={styles.error} role="alert">
+          {error}
+        </p>
+      ) : null}
       <div className={styles.submit}>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" disabled={submitting} loading={submitting}>
           프로젝트 검토 요청하기
         </Button>
       </div>

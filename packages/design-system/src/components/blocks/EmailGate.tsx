@@ -18,8 +18,10 @@ export type EmailGateProps = {
   consent: string;
   submittedLabel: string;
   submitted: boolean;
-  onSubmit: (email: string, extra?: string) => void;
+  onSubmit: (email: string, extra?: string) => void | Promise<void>;
   extraField?: EmailGateExtraField;
+  /** Disables the submit button while a request is in flight. */
+  submitting?: boolean;
 };
 
 export function EmailGate({
@@ -31,14 +33,16 @@ export function EmailGate({
   submitted,
   onSubmit,
   extraField,
+  submitting = false,
 }: EmailGateProps) {
   const [email, setEmail] = useState('');
   const [extra, setExtra] = useState(extraField?.options[0]?.value ?? '');
   const selectId = useId();
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    onSubmit(email, extraField ? extra : undefined);
+    if (submitting) return;
+    await onSubmit(email, extraField ? extra : undefined);
   }
 
   return (
@@ -83,7 +87,7 @@ export function EmailGate({
             </div>
           ) : null}
           <div className={styles.submit}>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" disabled={submitting} loading={submitting}>
               {buttonLabel}
             </Button>
           </div>

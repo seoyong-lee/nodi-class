@@ -47,6 +47,13 @@
   word-break: keep-all;
 }
 
+.error {
+  margin: 0;
+  font-size: var(--size-label);
+  color: var(--text-strong);
+  word-break: keep-all;
+}
+
 @media (max-width: 720px) {
   .row {
     grid-template-columns: 1fr;

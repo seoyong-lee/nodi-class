@@ -103,15 +103,23 @@ export function createGateToken(
   );
 }
 
+export function createAccessTokenFromHash(
+  emailHash: string,
+  secret: string,
+  nowSec = Math.floor(Date.now() / 1000),
+): string {
+  return signToken(
+    { t: 'k', h: emailHash, x: nowSec + ACCESS_TTL_SEC },
+    secret,
+  );
+}
+
 export function createAccessToken(
   email: string,
   secret: string,
   nowSec = Math.floor(Date.now() / 1000),
 ): string {
-  return signToken(
-    { t: 'k', h: hashEmail(email), x: nowSec + ACCESS_TTL_SEC },
-    secret,
-  );
+  return createAccessTokenFromHash(hashEmail(email), secret, nowSec);
 }
 
 export function verifyConfirmToken(

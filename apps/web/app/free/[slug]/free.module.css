@@ -61,6 +61,13 @@
   word-break: keep-all;
 }
 
+.downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-inline);
+  margin: var(--space-4) 0 var(--space-5);
+}
+
 .others {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

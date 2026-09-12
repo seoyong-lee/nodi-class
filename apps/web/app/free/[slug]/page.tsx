@@ -1,4 +1,5 @@
-import { Icon, ResourceCard, VideoCard } from '@nodi/design-system';
+import { Suspense } from 'react';
+import { Button, Icon, ResourceCard, VideoCard } from '@nodi/design-system';
 import { notFound } from 'next/navigation';
 import { EmailGateForm } from '../../../components/EmailGateForm';
 import { LockedSkeleton } from '../../../components/LockedSkeleton';
@@ -11,6 +12,8 @@ import {
 } from '../../../lib/resources';
 import styles from './free.module.css';
 import pageStyles from '../../../styles/page.module.css';
+
+export const dynamic = 'force-dynamic';
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -30,9 +33,10 @@ export default async function FreeResourcePage({ params }: Props) {
   const doc = getResource(slug);
   const unlocked = await hasValidAccessCookie();
   const freeCount = doc.frontmatter.freeParts;
-  const openParts = unlocked ? doc.parts : doc.parts.slice(0, freeCount);
-  const lockedParts = unlocked ? [] : doc.parts.slice(freeCount);
+  const openParts = doc.parts.slice(0, freeCount);
+  const lockedParts = doc.parts.slice(freeCount);
   const others = getOtherResources(slug, 2);
+  const downloads = doc.frontmatter.downloads;
   const isPlaceholder =
     doc.parts.length === 0 ||
     (doc.parts.length === 1 && doc.raw.trim() === '준비 중') ||
@@ -88,11 +92,14 @@ export default async function FreeResourcePage({ params }: Props) {
       {!unlocked ? (
         <section className={pageStyles.section}>
           <div className={styles.gate}>
-            <EmailGateForm
-              title="이메일을 남기면 지금 바로 열립니다"
-              description="같은 주소로 다음 자료도 보내드립니다"
-              buttonLabel="열기"
-            />
+            <Suspense fallback={null}>
+              <EmailGateForm
+                title="이메일을 남기면 지금 바로 열립니다"
+                description="같은 주소로 다음 자료도 보내드립니다"
+                buttonLabel="열기"
+                slug={slug}
+              />
+            </Suspense>
           </div>
           {lockedParts.length > 0 ? (
             <div className={styles.locked}>
@@ -111,6 +118,22 @@ export default async function FreeResourcePage({ params }: Props) {
             <Icon name="check" size={18} />
             <span>메일로도 보냈습니다</span>
           </div>
+          {downloads && downloads.length > 0 ? (
+            <div className={styles.downloads}>
+              {downloads.map((d) => (
+                <Button key={d.key} variant="secondary" href="#">
+                  {d.label}
+                </Button>
+              ))}
+            </div>
+          ) : null}
+          {!isPlaceholder
+            ? lockedParts.map((part) => (
+                <article key={part.id} className={styles.part} id={part.id}>
+                  <MdxContent source={`## ${part.heading}\n\n${part.body}`} />
+                </article>
+              ))
+            : null}
         </section>
       )}
 
