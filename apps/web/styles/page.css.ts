@@ -174,7 +174,7 @@ export const operator = style({
 export const profileFrame = style({
   flex: 'none',
   width: 280,
-  aspectRatio: '4 / 5',
+  aspectRatio: '1 / 1',
   borderRadius: vars.radius.base,
   overflow: 'hidden',
   background: vars.surface.raised,
@@ -189,8 +189,7 @@ export const profileFrame = style({
 
 export const profileImage = style({
   objectFit: 'cover',
-  objectPosition: 'center top',
-  filter: 'grayscale(1)',
+  objectPosition: 'center',
 });
 
 export const operatorCopy = style({
