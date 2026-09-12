@@ -57,6 +57,7 @@ export async function handler(
     }
 
     await putEvent({ email, event: 'subscribe.confirmed', meta: { slug } });
+    await putEvent({ email, event: 'gate.opened', meta: { slug } });
 
     const footer: FooterContext = {
       siteUrl: env.siteUrl,

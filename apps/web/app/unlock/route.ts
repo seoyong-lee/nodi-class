@@ -6,12 +6,10 @@ import {
   verifyGateToken,
 } from '@nodi/shared';
 
-function isSafeFreePath(next: string): boolean {
-  if (!next.startsWith('/free/')) return false;
-  if (next.includes('//') || next.includes('\\')) return false;
-  if (next.includes('://')) return false;
-  // path only — reject query/hash injection via next param abuse
+function isSafeNextPath(next: string): boolean {
+  if (next.includes('//') || next.includes('\\') || next.includes('://')) return false;
   if (next.includes('?') || next.includes('#')) return false;
+  if (next === '/course' || next === '/course/') return true;
   return /^\/free\/[a-z0-9-]+\/?$/.test(next);
 }
 
@@ -41,7 +39,7 @@ export async function GET(req: NextRequest) {
 
   // Gate payload has email hash only — mint access cookie from that hash.
   const access = createAccessTokenFromHash(gate.h, secret);
-  const destination = isSafeFreePath(nextRaw) ? nextRaw : '/';
+  const destination = isSafeNextPath(nextRaw) ? nextRaw : '/';
 
   const res = NextResponse.redirect(new URL(destination, req.url));
   res.cookies.set(COOKIE_NAME, access, {

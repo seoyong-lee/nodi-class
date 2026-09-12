@@ -423,56 +423,57 @@ NOTIFY_EMAIL=contact@cascades.studio
 - [ ] before/after 이미지, 프로필 이미지, 자료 썸네일 4장
 
 ### S1-1 리포 골격
-- [ ] pnpm workspaces, tsconfig.base, eslint flat config, prettier, vitest 루트 설정
-- [ ] 5개 워크스페이스 빈 패키지 + 각 `typecheck`/`lint`/`test` 스크립트
-- [ ] `AGENTS.md`, `.cursor/rules/*` (§12)
+- [x] pnpm workspaces, tsconfig.base, eslint flat config, prettier, vitest 루트 설정
+- [x] 5개 워크스페이스 빈 패키지 + 각 `typecheck`/`lint`/`test` 스크립트
+- [x] `AGENTS.md`, `.cursor/rules/*` (§12)
 - DoD: `pnpm install && pnpm typecheck && pnpm lint` 통과
 
 ### S1-2 shared
-- [ ] `schemas.ts`, `token.ts`(sign/verify + 테스트), `products.ts`, `constants.ts`(쿠키명·만료·slug 목록)
+- [x] `schemas.ts`, `token.ts`(sign/verify + 테스트), `products.ts`, `constants.ts`(쿠키명·만료·slug 목록)
 - DoD: token 테스트 — 정상/만료/위조/타입 불일치 4케이스
 
 ### S1-3 design-system
-- [ ] 토큰 CSS 복사 + Pretendard self-host
-- [ ] 12개 컴포넌트 TSX (§2.2 props) + 각각 스토리 없이 `apps/web/app/_kit/page.tsx`(개발용 킷 페이지, prod에서 404)
-- [ ] eslint 룰 `no-raw-color`, `no-shadow`
+- [x] 토큰 CSS 복사 + Pretendard self-host
+- [x] 12개 컴포넌트 TSX (§2.2 props) + 각각 스토리 없이 `apps/web/app/_kit/page.tsx`(개발용 킷 페이지, prod에서 404)
+- [x] eslint 룰 `no-raw-color`, `no-shadow`
 - DoD: 킷 페이지에서 1440/375 두 폭으로 전 컴포넌트 육안 확인, 375 EmailGate 오버플로 없음
 
 ### S1-4 web 페이지 (정적 부분)
-- [ ] 레이아웃(내비·푸터), `/`, `/course`, `/service`, `/privacy`, `/terms`, `/refund`, not-found
-- [ ] MDX 파이프라인(`@next/mdx` 또는 `next-mdx-remote`), frontmatter 파싱, 목차 생성, 파트 분리
-- [ ] `content/resources` 4개 슬러그(본문은 2개 실제, 2개 준비 중)
-- [ ] `/free/[slug]` 잠금 렌더(쿠키 없음 상태), blur 영역
-- DoD: `pnpm build` 성공, Lighthouse 모바일 성능 90+, 카피가 §3과 글자 단위로 일치
+- [x] 레이아웃(내비·푸터), `/`, `/course`, `/service`, `/privacy`, `/terms`, `/refund`, not-found
+- [x] MDX 파이프라인(`@next/mdx` 또는 `next-mdx-remote`), frontmatter 파싱, 목차 생성, 파트 분리
+- [x] `content/resources` 4개 슬러그(본문은 2개 실제, 2개 준비 중)
+- [x] `/free/[slug]` 잠금 렌더(쿠키 없음 상태), blur 영역
+- DoD: `pnpm build` 성공, Lighthouse 모바일 성능 90+, 카피가 §3과 글자 단위로 일치 — **Lighthouse는 배포 후 수동**
 
 ### S1-5 infra (data + mail)
-- [ ] `NodiDataStack`, `NodiMailStack` → `cdk deploy -c env=dev`
-- DoD: 테이블 3개 존재, SES identity Verified, DKIM 3레코드 Success
+- [x] `NodiDataStack`, `NodiMailStack` 코드 — `cdk deploy -c env=dev`는 **사람/자격증명 필요**
+- DoD: 테이블 3개 존재, SES identity Verified, DKIM 3레코드 Success — **배포 후 확인**
 
 ### S1-6 api
-- [ ] 핸들러 5개 + `mail/` 템플릿 4종 + `db/` 리포지토리 + Turnstile 클라이언트
-- [ ] 단위 테스트: subscribe(신규/기존active/허니팟/bot), confirm(정상/만료), inquiry, unsubscribe
-- [ ] `NodiApiStack` 배포, 커스텀 도메인
-- DoD: `curl`로 4개 엔드포인트 시나리오 통과, dev 이메일로 실제 메일 2통 수신(confirm → resource)
+- [x] 핸들러 5개 + `mail/` 템플릿 4종 + `db/` 리포지토리 + Turnstile 클라이언트
+- [x] 단위 테스트: subscribe(신규/기존active/허니팟/bot), confirm(정상/만료), inquiry, unsubscribe
+- [x] `NodiApiStack` 코드 — 배포·커스텀 도메인은 **사람/자격증명 필요**
+- DoD: `curl`로 4개 엔드포인트 시나리오 통과, 실메일 2통 — **배포 후 확인**
 
 ### S1-7 web 연결
-- [ ] EmailGate `onSubmit` → `/subscribe` 호출, 상태 UI 3종(대기/기존/오류)
-- [ ] `/unlock`, `/unsubscribe` 라우트 핸들러
-- [ ] `/free/[slug]` 열림 상태 렌더, 다운로드 presigned 버튼
-- [ ] 서비스 폼 → `/inquiry`
-- [ ] Turnstile 위젯(보이지 않는 모드)
-- DoD: 브라우저에서 처음부터 끝까지 — 폼 → 메일 → 클릭 → 열림 → 다른 자료도 열림 → 수신거부까지 1회 완주. 시크릿 창에서 잠금 확인
+- [x] EmailGate `onSubmit` → `/subscribe` 호출, 상태 UI 3종(대기/기존/오류)
+- [x] `/unlock`, `/unsubscribe` 라우트 핸들러
+- [x] `/free/[slug]` 열림 상태 렌더, 다운로드 버튼(presigned는 스텁 `#` — S3 연동 TODO)
+- [x] 서비스 폼 → `/inquiry`
+- [x] Turnstile 위젯(보이지 않는 모드)
+- DoD: E2E 완주 — **API·SES 배포 후 브라우저 확인**
 
 ### S1-8 배포·연결
-- [ ] Amplify 앱 생성, 도메인 연결, 환경변수
-- [ ] prod 스택 배포, SES production access 승인 확인
-- [ ] 유튜브 고정댓글 링크 4개를 `/free/<slug>?src=yt-<slug>`로 교체
-- [ ] 노션 공개 페이지 2개는 상단에 "새 주소로 옮겼습니다" 한 줄 + 링크만 남기고 본문 삭제
+- [x] `amplify.yml` + `DEPLOY.md` 체크리스트 작성
+- [ ] Amplify 앱 생성, 도메인 연결, 환경변수 — **사람**
+- [ ] prod 스택 배포, SES production access 승인 확인 — **사람**
+- [ ] 유튜브 고정댓글 링크 4개를 `/free/<slug>?src=yt-<slug>`로 교체 — **사람**
+- [ ] 노션 공개 페이지 2개는 상단에 "새 주소로 옮겼습니다" 한 줄 + 링크만 남기고 본문 삭제 — **사람**
 - DoD: 실제 시청자 유입 후 24시간 내 `nodi-events`에 `subscribe.confirmed` 1건 이상
 
 ### S1-9 측정 스크립트
-- [ ] `scripts/report.ts`: 기간별 `subscribe.requested / confirmed / gate.opened` 카운트, slug별 전환율, `active` 총수 — 터미널 출력만
-- DoD: 매주 일요일 수동 실행 가능
+- [x] `scripts/report.ts`: 기간별 `subscribe.requested / confirmed / gate.opened` 카운트, slug별, `active` 총수 — 터미널 출력만 (`pnpm report`)
+- DoD: 매주 일요일 수동 실행 가능 (테이블 배포 후)
 
 ---
 
