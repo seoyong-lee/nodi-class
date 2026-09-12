@@ -16,6 +16,7 @@ import Image from 'next/image';
 import { EmailGateForm } from '../../../components/EmailGateForm';
 import { LockedParts } from '../../../components/LockedParts';
 import { MdxContent } from '../../../components/MdxContent';
+import { StickyUnlockBar } from '../../../components/StickyUnlockBar';
 import { hasValidAccessCookie } from '../../../lib/access';
 import { BUILDING_EXTRA_FIELD } from '../../../lib/building';
 import { GATE_ACTIVE_LABEL } from '../../../lib/copy';
@@ -110,7 +111,7 @@ export default async function FreeResourcePage({ params }: Props) {
                 {metaParts.join(' · ')}
               </p>
             ) : null}
-            <div className="flex flex-wrap gap-inline">
+            <div className="flex flex-wrap gap-inline max-[720px]:flex-col max-[720px]:[&_a]:w-full max-[720px]:[&_button]:w-full">
               {unlocked ? (
                 <Button variant="primary" href="#part-00">
                   본문으로
@@ -362,6 +363,8 @@ export default async function FreeResourcePage({ params }: Props) {
           </div>
         </section>
       ) : null}
+
+      {showLocked && access === 'free' ? <StickyUnlockBar /> : null}
     </main>
   );
 }
