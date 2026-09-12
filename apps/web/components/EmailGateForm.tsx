@@ -19,6 +19,7 @@ type Props = {
   /** Resource slug or `course-waitlist`. */
   slug: string;
   extraField?: EmailGateExtraField;
+  layout?: 'inline' | 'stack';
 };
 
 type GateOutcome = 'pending' | 'active';
@@ -32,6 +33,7 @@ export function EmailGateForm({
   buttonLabel,
   slug,
   extraField,
+  layout,
 }: Props) {
   const searchParams = useSearchParams();
   const [submitted, setSubmitted] = useState(false);
@@ -112,6 +114,7 @@ export function EmailGateForm({
         submitting={submitting}
         onSubmit={handleSubmit}
         extraField={extraField}
+        layout={layout}
       />
       {error && !submitted ? (
         <p className="mt-2 mb-0 text-label text-strong break-keep" role="alert">

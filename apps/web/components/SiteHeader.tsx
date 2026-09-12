@@ -7,9 +7,9 @@ import { Button } from '@nodi/design-system';
 
 const NAV = [
   {
-    href: '/#free',
+    href: '/free',
     label: '무료 자료',
-    match: (p: string) => p === '/' || p.startsWith('/free'),
+    match: (p: string) => p === '/free' || p.startsWith('/free/'),
   },
   {
     href: '/course',

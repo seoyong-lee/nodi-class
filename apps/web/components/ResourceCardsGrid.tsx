@@ -1,8 +1,9 @@
 import { ResourceCard } from '@nodi/design-system';
+import { resourceBadge } from '@nodi/shared';
 import { hasValidAccessCookie } from '../lib/access';
 import { listResources } from '../lib/resources';
 
-export async function HomeResourceCards() {
+export async function ResourceCardsGrid() {
   const [unlocked, resources] = await Promise.all([
     hasValidAccessCookie(),
     listResources(),
@@ -16,6 +17,7 @@ export async function HomeResourceCards() {
           title={resource.frontmatter.title}
           slug={resource.frontmatter.slug}
           locked={!unlocked}
+          badge={resourceBadge(resource.frontmatter.slug)}
         />
       ))}
     </div>

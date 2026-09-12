@@ -1,6 +1,7 @@
 'use client';
 
 import { useId, useState, type FormEvent } from 'react';
+import { cn } from '../../lib/cn';
 import { Button } from '../core/Button';
 import { Input } from '../core/Input';
 
@@ -21,6 +22,8 @@ export type EmailGateProps = {
   extraField?: EmailGateExtraField;
   /** Disables the submit button while a request is in flight. */
   submitting?: boolean;
+  /** `stack` = full-width fields (home CTA card). Default keeps email+button row. */
+  layout?: 'inline' | 'stack';
 };
 
 export function EmailGate({
@@ -33,10 +36,12 @@ export function EmailGate({
   onSubmit,
   extraField,
   submitting = false,
+  layout = 'inline',
 }: EmailGateProps) {
   const [email, setEmail] = useState('');
   const [extra, setExtra] = useState(extraField?.options[0]?.value ?? '');
   const selectId = useId();
+  const stacked = layout === 'stack';
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -45,21 +50,38 @@ export function EmailGate({
   }
 
   return (
-    <section className="bg-raised border-hairline rounded p-10 max-[720px]:p-6 flex flex-col gap-block-tight min-w-0 box-border overflow-hidden">
+    <section
+      className={cn(
+        'bg-raised border-hairline rounded flex flex-col gap-block-tight min-w-0 box-border overflow-hidden',
+        stacked ? 'p-12 max-[768px]:p-6' : 'p-10 max-[720px]:p-6',
+      )}
+    >
       <div className="flex flex-col gap-inline">
         <h3 className="m-0 text-h3 font-bold text-strong break-keep">{title}</h3>
         {description ? (
-          <p className="m-0 max-w-measure text-body-sm text-body break-keep">{description}</p>
+          <p className="m-0 max-w-measure text-body-sm text-body break-keep">
+            {description}
+          </p>
         ) : null}
       </div>
       {submitted ? (
         <p className="m-0 text-body-sm text-accent">{submittedLabel}</p>
       ) : (
         <form
-          className="flex flex-wrap gap-inline items-end min-w-0 w-full"
+          className={
+            stacked
+              ? 'flex flex-col gap-6 min-w-0 w-full'
+              : 'flex flex-wrap gap-inline items-end min-w-0 w-full'
+          }
           onSubmit={handleSubmit}
         >
-          <div className="flex-[1_1_240px] min-w-0 w-full max-[480px]:flex-[1_1_100%]">
+          <div
+            className={
+              stacked
+                ? 'w-full min-w-0'
+                : 'flex-[1_1_240px] min-w-0 w-full max-[480px]:flex-[1_1_100%]'
+            }
+          >
             <Input
               label="이메일"
               type="email"
@@ -71,7 +93,13 @@ export function EmailGate({
             />
           </div>
           {extraField ? (
-            <div className="flex flex-col gap-inline-tight flex-[1_1_100%] min-w-0 max-[480px]:w-full">
+            <div
+              className={
+                stacked
+                  ? 'flex flex-col gap-inline-tight w-full min-w-0'
+                  : 'flex flex-col gap-inline-tight flex-[1_1_100%] min-w-0 max-[480px]:w-full'
+              }
+            >
               <label className="text-caption text-muted" htmlFor={selectId}>
                 {extraField.label}
               </label>
@@ -90,14 +118,27 @@ export function EmailGate({
               </select>
             </div>
           ) : null}
-          <div className="flex-none max-[480px]:flex-[1_1_100%] max-[480px]:w-full max-[480px]:[&_button]:w-full max-[480px]:[&_a]:w-full">
-            <Button variant="primary" type="submit" disabled={submitting} loading={submitting}>
+          <div
+            className={
+              stacked
+                ? 'w-full [&_button]:w-full [&_button]:min-w-[12rem]'
+                : 'flex-none max-[480px]:flex-[1_1_100%] max-[480px]:w-full max-[480px]:[&_button]:w-full max-[480px]:[&_a]:w-full'
+            }
+          >
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={submitting}
+              loading={submitting}
+            >
               {buttonLabel}
             </Button>
           </div>
         </form>
       )}
-      <p className="m-0 text-label leading-[1.7] text-muted max-w-measure break-keep">{consent}</p>
+      <p className="m-0 text-label leading-[1.7] text-muted max-w-measure break-keep">
+        {consent}
+      </p>
     </section>
   );
 }

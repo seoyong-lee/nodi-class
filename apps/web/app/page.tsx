@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { BeforeAfter, Button, ProductCard, SectionHeading } from '@nodi/design-system';
 import { RESOURCE_SLUGS } from '@nodi/shared';
 import { EmailGateForm } from '../components/EmailGateForm';
-import { HomeResourceCards } from '../components/HomeResourceCards';
+import { ResourceCardsGrid } from '../components/ResourceCardsGrid';
 import { BUILDING_EXTRA_FIELD } from '../lib/building';
 import { getYoutubeUrl } from '../lib/business';
 import { productCardProps } from '../lib/products';
@@ -12,7 +12,6 @@ const HOME_GATE_SLUG = RESOURCE_SLUGS[0]!;
 
 const section = 'max-w-page mx-auto pt-section px-gutter break-keep';
 const hero = 'max-w-page mx-auto pt-section max-[720px]:pt-20 px-gutter break-keep';
-const sectionLast = `${section} pb-section`;
 
 export default function HomePage() {
   const youtube = getYoutubeUrl();
@@ -36,7 +35,7 @@ export default function HomePage() {
             }
           </p>
           <div className="flex gap-inline justify-center mt-inline-tight flex-wrap max-[720px]:flex-col max-[720px]:w-full max-[720px]:[&_a]:w-full max-[720px]:[&_button]:w-full">
-            <Button variant="primary" href="#free">
+            <Button variant="primary" href="/free">
               무료 자료 받기
             </Button>
             <Button variant="secondary" href={youtube}>
@@ -50,10 +49,10 @@ export default function HomePage() {
         <SectionHeading
           index="01"
           label="무료 자료"
-          title="영상에서 쓴 자료, 내 사업에 바로 써보세요"
+          title="AI로 만들 때 필요한 기준과 방법을 모았습니다"
         />
         <Suspense fallback={<div className="mt-block min-h-[280px] max-[720px]:mt-block-tight" />}>
-          <HomeResourceCards />
+          <ResourceCardsGrid />
         </Suspense>
       </section>
 
@@ -63,8 +62,8 @@ export default function HomePage() {
         </span>
         <div className="h-block-tight" />
         <BeforeAfter
-          beforeCaption="만들기 전"
-          afterCaption="기준을 준 뒤"
+          beforeCaption="Before"
+          afterCaption="After"
           before={
             <Image
               className="rounded"
@@ -134,18 +133,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={sectionLast}>
-        <div className="flex flex-col items-center gap-block max-[720px]:gap-6">
-          <h2 className="m-0 text-h2 font-bold text-strong text-center max-[720px]:text-[26px]">
-            무료 자료로 먼저 직접 만들어보세요
-          </h2>
-          <div className="w-full max-w-[640px]">
+      <section className="max-w-page mx-auto pt-32 pb-24 px-gutter break-keep max-[768px]:pt-12 max-[768px]:pb-12">
+        <div className="grid grid-cols-2 gap-20 items-start max-[768px]:grid-cols-1 max-[768px]:gap-8">
+          <div className="flex flex-col gap-6 min-w-0">
+            <span className="text-label text-muted">무료 자료</span>
+            <h2 className="m-0 text-h2 font-bold text-strong max-w-[14em] max-[768px]:text-[26px] max-[768px]:max-w-[18em]">
+              내 사업에 바로 써볼 자료를 무료로 받아보세요.
+            </h2>
+            <p className="m-0 max-w-measure text-body">
+              노디 AI에서 소개한 프롬프트·가이드·체크리스트를 한곳에 정리했습니다.
+            </p>
+          </div>
+          <div className="w-full max-w-[520px] justify-self-end max-[768px]:max-w-none max-[768px]:justify-self-stretch">
             <Suspense fallback={null}>
               <EmailGateForm
-                title="한 번 등록하면 모든 자료가 열립니다"
-                buttonLabel="받기"
+                title="무료 자료 받아보기"
+                description="이메일을 한 번 등록하면 모든 자료를 확인할 수 있습니다."
+                buttonLabel="무료 자료 받기"
                 slug={HOME_GATE_SLUG}
-                extraField={BUILDING_EXTRA_FIELD}
+                layout="stack"
+                extraField={{
+                  ...BUILDING_EXTRA_FIELD,
+                  label: '지금 만들고 있는 것은 무엇인가요?',
+                }}
               />
             </Suspense>
           </div>

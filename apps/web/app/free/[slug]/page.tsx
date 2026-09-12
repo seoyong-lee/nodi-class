@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Button, Icon, ResourceCard, VideoCard } from '@nodi/design-system';
+import { resourceBadge } from '@nodi/shared';
 import { notFound } from 'next/navigation';
 import { EmailGateForm } from '../../../components/EmailGateForm';
 import { LockedSkeleton } from '../../../components/LockedSkeleton';
@@ -161,6 +162,7 @@ export default async function FreeResourcePage({ params }: Props) {
                 title={resource.frontmatter.title}
                 slug={resource.frontmatter.slug}
                 locked={!unlocked}
+                badge={resourceBadge(resource.frontmatter.slug)}
               />
             ))}
           </div>
