@@ -1,5 +1,8 @@
 /**
- * Cloudflare Turnstile (invisible / managed).
+ * Cloudflare Turnstile (execute-on-submit).
+ *
+ * Widget mode (Managed / Invisible) is set in the Cloudflare dashboard.
+ * `size: 'invisible'` was removed from the client API — use execution mode instead.
  *
  * When NEXT_PUBLIC_TURNSTILE_SITE_KEY is unset (local), skip the widget and
  * send `dev-turnstile-token` so forms work without keys — NODE_ENV=development only.
@@ -16,7 +19,9 @@ type TurnstileApi = {
     container: HTMLElement,
     options: {
       sitekey: string;
-      size?: 'normal' | 'compact' | 'flexible' | 'invisible';
+      size?: 'normal' | 'compact' | 'flexible';
+      execution?: 'render' | 'execute';
+      appearance?: 'always' | 'execute' | 'interaction-only';
       callback?: (token: string) => void;
       'error-callback'?: () => void;
       'expired-callback'?: () => void;
@@ -90,7 +95,9 @@ export async function getTurnstileToken(
 
     const widgetId = api.render(container, {
       sitekey: siteKey,
-      size: 'invisible',
+      size: 'normal',
+      execution: 'execute',
+      appearance: 'interaction-only',
       callback: (token) => {
         finish(() => {
           api.remove(widgetId);

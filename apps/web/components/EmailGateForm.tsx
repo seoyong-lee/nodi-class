@@ -128,10 +128,12 @@ export function EmailGateForm({
         return;
       }
 
-      identifySubscriber(result.subscriberHash, {
-        building,
-        subscriber_status: result.state === 'active' ? 'active' : 'pending',
-      });
+      if (result.subscriberHash) {
+        identifySubscriber(result.subscriberHash, {
+          building,
+          subscriber_status: result.state === 'active' ? 'active' : 'pending',
+        });
+      }
       track({
         name: 'Submitted Email Gate',
         props: {

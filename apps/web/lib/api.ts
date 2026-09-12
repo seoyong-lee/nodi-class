@@ -10,7 +10,8 @@ export type SubscribeResponse = {
   ok: true;
   state: 'pending' | 'active';
   gateToken: string;
-  subscriberHash: string;
+  /** Present after API deploy with Amplitude identify support. */
+  subscriberHash?: string;
 };
 
 export type ApiErrorBody = {
@@ -24,7 +25,7 @@ export async function postSubscribe(
       ok: true;
       state: 'pending' | 'active';
       gateToken: string;
-      subscriberHash: string;
+      subscriberHash?: string;
     }
   | { ok: false; status: number; error?: string }
 > {
@@ -38,9 +39,6 @@ export async function postSubscribe(
     const data = (await res.json()) as SubscribeResponse;
     if (!data.gateToken) {
       return { ok: false, status: 502, error: 'missing_gate' };
-    }
-    if (!data.subscriberHash) {
-      return { ok: false, status: 502, error: 'missing_hash' };
     }
     return {
       ok: true,
