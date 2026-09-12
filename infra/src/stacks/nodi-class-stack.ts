@@ -214,6 +214,7 @@ export class NodiClassStack extends Stack {
     const gateSecretParam = ssmPath('GATE_SECRET');
     const turnstileSecretParam = ssmPath('TURNSTILE_SECRET');
     const adminApiKeyParam = ssmPath('ADMIN_API_KEY');
+    const slackInquiryWebhookParam = ssmPath('SLACK_INQUIRY_WEBHOOK_URL');
 
     const gateSecret = StringParameter.fromSecureStringParameterAttributes(
       this,
@@ -229,6 +230,11 @@ export class NodiClassStack extends Stack {
       this,
       'AdminApiKey',
       { parameterName: adminApiKeyParam, version: 1 },
+    );
+    const slackInquiryWebhook = StringParameter.fromSecureStringParameterAttributes(
+      this,
+      'SlackInquiryWebhook',
+      { parameterName: slackInquiryWebhookParam, version: 1 },
     );
 
     const repoRoot = findRepoRoot();
@@ -312,6 +318,15 @@ export class NodiClassStack extends Stack {
     const subscribeFn = makeFn('SubscribeFn', 'subscribe.ts');
     const confirmFn = makeFn('ConfirmFn', 'confirm.ts');
     const inquiryFn = makeFn('InquiryFn', 'inquiry.ts');
+    inquiryFn.addEnvironment(
+      'SLACK_INQUIRY_WEBHOOK_URL',
+      StringParameter.valueForSecureStringParameter(
+        this,
+        slackInquiryWebhookParam,
+        1,
+      ),
+    );
+    slackInquiryWebhook.grantRead(inquiryFn);
     const unsubscribeFn = makeFn('UnsubscribeFn', 'unsubscribe.ts');
     const sesEventsFn = makeFn('SesEventsFn', 'ses-events.ts');
     const resourcesListFn = makeFn('ResourcesListFn', 'resources-list.ts');

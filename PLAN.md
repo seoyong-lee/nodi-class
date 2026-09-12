@@ -375,7 +375,7 @@ export const ResourceUpsertInput = z.object({
 | 키 | 제목 | 본문 골자 |
 |---|---|---|
 | `resource` | `[노디 AI 클래스] <자료 제목>` | **(광고) 없음**. 안내 + 버튼(민트). 링크는 `/confirm?t=`(active 전환 후 `/free/<slug>`로 리다이렉트). 있으면 다운로드 presigned URL(1시간) + 푸터. (`confirm` 템플릿은 폐기·이 한 통으로 합침) |
-| `inquiry-notify` (나에게) | `[검토 요청] <이름> · <결과물 도메인>` | 폼 내용 전부 + DynamoDB 키 |
+| `inquiry-notify` (나에게) | `[검토 요청] <이름> · <결과물 도메인>` | 폼 내용 전부 + DynamoDB 키. 같은 내용을 Slack Incoming Webhook(`/nodi-class/SLACK_INQUIRY_WEBHOOK_URL`)에도 전송(실패해도 메일·202은 유지) |
 | `inquiry-ack` (신청자) | `[노디 AI 클래스] 검토 요청을 받았습니다` | `2영업일 내 회신드립니다` + 푸터 |
 
 푸터 공통: `노디 AI 클래스 · 운영 Cascades · 상호/대표/사업자번호/주소 · 문의 · [수신거부]`. 이모지·느낌표 없음. HTML은 테이블 레이아웃, 다크 아님(메일 클라이언트 호환) — 민트 버튼 하나만.
@@ -427,7 +427,7 @@ NodiClassStack (nodi-class) @ ap-northeast-2
 - AWS 리소스 이름 prefix: `nodi-class-` (테이블·Lambda·API·SNS 등).
 - **스택 env.region은 항상 `ap-northeast-2`** (`infra/bin/nodi.ts`). SES·데이터가 서울에 머문다.
 - Route53 호스티드 존은 **CDK 밖에서 이미 존재**한다고 가정 (`fromLookup` 또는 `-c hostedZoneId=`).
-- 비밀: `/nodi-class/GATE_SECRET`, `/nodi-class/TURNSTILE_SECRET`, `/nodi-class/ADMIN_API_KEY` — SSM SecureString, 콘솔에서 수동 생성. CDK는 참조만.
+- 비밀: `/nodi-class/GATE_SECRET`, `/nodi-class/TURNSTILE_SECRET`, `/nodi-class/ADMIN_API_KEY`, `/nodi-class/SLACK_INQUIRY_WEBHOOK_URL` — SSM SecureString, 콘솔에서 수동 생성. CDK는 참조만. Slack 웹훅은 Inquiry Lambda에만 주입.
 - 출력: `ApiUrl`, 테이블 이름 → Amplify / `.env.local`에 손으로 옮긴다.
 - 웹 호스팅은 Amplify(스택에 웹 리소스 없음).
 - GA4·카카오 로그인 없음(Step 1).
@@ -461,7 +461,7 @@ GATE_SECRET=
 - [ ] SES: `mail.<domain>` identity 생성 → **Production access 신청** (오늘)
 - [ ] Route53 호스티드 존 존재 확인
 - [ ] Cloudflare Turnstile 사이트 생성 → 키 2개
-- [ ] SSM에 `/nodi-class/GATE_SECRET`(openssl rand -base64 48), `/nodi-class/TURNSTILE_SECRET`, `/nodi-class/ADMIN_API_KEY` 저장
+- [ ] SSM에 `/nodi-class/GATE_SECRET`(openssl rand -base64 48), `/nodi-class/TURNSTILE_SECRET`, `/nodi-class/ADMIN_API_KEY`, `/nodi-class/SLACK_INQUIRY_WEBHOOK_URL`(Incoming Webhook) 저장
 - [ ] Pretendard Regular/Bold woff2 확보
 - [ ] before/after 이미지, 프로필 이미지, 자료 썸네일 4장
 

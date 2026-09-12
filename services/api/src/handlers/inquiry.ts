@@ -20,6 +20,7 @@ import {
   tooManyRequests,
 } from '../lib/response.js';
 import { checkTurnstile } from '../lib/turnstile.js';
+import { notifyInquirySlack } from '../lib/slack.js';
 import { sendMail } from '../mail/send.js';
 import { inquiryNotifyMail } from '../mail/templates/inquiry-notify.js';
 import { inquiryAckMail } from '../mail/templates/inquiry-ack.js';
@@ -86,6 +87,21 @@ export async function handler(
       template: 'inquiry-notify',
       skipListUnsub: true,
     });
+
+    try {
+      await notifyInquirySlack(env.slackInquiryWebhookUrl, {
+        name,
+        email,
+        resultUrl,
+        blocked,
+        inquiryPk: inquiry.pk,
+      });
+    } catch (err) {
+      log('warn', 'inquiry.slack_fail', {
+        err: err instanceof Error ? err.message : 'unknown',
+        pk: inquiry.pk,
+      });
+    }
 
     const ackUnsub = randomBytes(16).toString('hex');
     const footer: FooterContext = {

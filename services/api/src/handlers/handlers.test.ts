@@ -27,9 +27,14 @@ vi.mock('../mail/send.js', () => ({
   sendMail: vi.fn().mockResolvedValue(true),
 }));
 
+vi.mock('../lib/slack.js', () => ({
+  notifyInquirySlack: vi.fn().mockResolvedValue(undefined),
+}));
+
 import { upsertSubscriber, activateSubscriber, unsubscribeByToken } from '../db/subscribers.js';
 import { saveInquiry } from '../db/inquiries.js';
 import { sendMail } from '../mail/send.js';
+import { notifyInquirySlack } from '../lib/slack.js';
 import { setTurnstileVerify, resetTurnstileVerify } from '../lib/turnstile.js';
 import {
   setRateLimitCheck,
@@ -314,6 +319,47 @@ describe('inquiry', () => {
       'inquiry-ack',
       'inquiry-notify',
     ]);
+    expect(notifyInquirySlack).toHaveBeenCalledWith(
+      undefined,
+      expect.objectContaining({
+        name: '홍길동',
+        email: 'a@b.com',
+        resultUrl: 'https://result.example/page',
+        inquiryPk: 'INQ#abc',
+      }),
+    );
+  });
+
+  it('still returns 202 when Slack notify fails', async () => {
+    vi.mocked(saveInquiry).mockResolvedValue({
+      pk: 'INQ#abc',
+      sk: 'META',
+      name: '홍길동',
+      email: 'a@b.com',
+      resultUrl: 'https://result.example/page',
+      blocked: '디자인이 깨져서 고치기 어렵습니다',
+      status: 'new',
+      createdAt: new Date().toISOString(),
+      gsi1pk: 'STATUS#new',
+      gsi1sk: new Date().toISOString(),
+    });
+    vi.mocked(notifyInquirySlack).mockRejectedValueOnce(new Error('slack down'));
+
+    const res = await inquiry(
+      httpEvent({
+        body: JSON.stringify({
+          name: '홍길동',
+          email: 'a@b.com',
+          resultUrl: 'https://result.example/page',
+          blocked: '디자인이 깨져서 고치기 어렵습니다',
+          consent: true,
+          turnstile: 'turnstile-token-ok',
+        }),
+      }),
+    );
+
+    expect(res).toMatchObject({ statusCode: 202 });
+    expect(sendMail).toHaveBeenCalledTimes(2);
   });
 });
 

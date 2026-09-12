@@ -11,6 +11,8 @@ export type ApiEnv = {
   mailReplyTo: string;
   notifyEmail: string;
   sesConfigurationSet?: string;
+  /** Slack Incoming Webhook for /service 검토 요청. Optional. */
+  slackInquiryWebhookUrl?: string;
 };
 
 const MAIL_REPLY_TO = 'contact@cascades.studio';
@@ -34,6 +36,8 @@ export function getEnv(env: NodeJS.ProcessEnv = process.env): ApiEnv {
     }
   }
 
+  const slack = env.SLACK_INQUIRY_WEBHOOK_URL?.trim();
+
   return {
     subscribersTable: env.SUBSCRIBERS_TABLE!,
     inquiriesTable: env.INQUIRIES_TABLE!,
@@ -47,5 +51,6 @@ export function getEnv(env: NodeJS.ProcessEnv = process.env): ApiEnv {
     mailReplyTo: env.MAIL_REPLY_TO ?? MAIL_REPLY_TO,
     notifyEmail: env.NOTIFY_EMAIL!,
     sesConfigurationSet: env.SES_CONFIGURATION_SET,
+    slackInquiryWebhookUrl: slack || undefined,
   };
 }
