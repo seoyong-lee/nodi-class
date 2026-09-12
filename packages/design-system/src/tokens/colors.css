@@ -1,0 +1,48 @@
+:root{
+/* --- Base neutrals -------------------------------------------------------
+   Not pure grey. Every neutral carries ~4% mint (hue ~165) so the dark
+   surfaces read as the same family as the accent. */
+--nd-950:#0D1210; /* page */
+--nd-900:#131917; /* card */
+--nd-850:#1A211E; /* emphasis block */
+--nd-800:#212A27; /* input field / inert fill */
+--nd-700:#2B3532; /* strong border */
+--nd-600:#3A4642; /* disabled ink */
+--nd-300:#7E8C87;
+--nd-200:#A3B0AB;
+--nd-050:#E9F1EE;
+
+/* --- Accent: mint. One colour, used sparingly. --------------------------
+   #39CD9B is the channel mint (avatar + banner lockup). Everything else
+   here is derived from it; do not introduce a second accent. */
+--mint-500:#39CD9B;
+--mint-400:#55DCAF; /* hover */
+--mint-600:#26AE81; /* press */
+--mint-ink:#06120E;  /* text on a mint fill */
+--mint-quiet:#102B23; /* current-state wash only, never decoration */
+
+/* --- Semantic aliases ---------------------------------------------------- */
+--surface-page:var(--nd-950);
+--surface-card:var(--nd-900);
+--surface-raised:var(--nd-850);
+--surface-field:var(--nd-800);
+
+--border-subtle:#222B28;
+--border-strong:var(--nd-700);
+
+--text-strong:var(--nd-050);
+--text-body:var(--nd-200);
+--text-muted:var(--nd-300);
+--text-disabled:var(--nd-600);
+--text-on-accent:var(--mint-ink);
+
+--accent:var(--mint-500);
+--accent-hover:var(--mint-400);
+--accent-press:var(--mint-600);
+--accent-quiet:var(--mint-quiet);
+
+--link:var(--mint-500);
+--link-hover:var(--mint-400);
+
+--focus-ring:var(--mint-500);
+}

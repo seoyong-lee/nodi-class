@@ -1,0 +1,6 @@
+:root{
+--dur-fast:120ms; /* @kind other */
+--dur:200ms; /* @kind other */
+--ease:cubic-bezier(0.2,0,0,1); /* @kind other */
+--transition-ui:background-color var(--dur) var(--ease),border-color var(--dur) var(--ease),color var(--dur) var(--ease),opacity var(--dur) var(--ease);
+}

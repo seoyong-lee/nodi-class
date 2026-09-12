@@ -4,7 +4,15 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./tokens/fonts.css": "./src/tokens/fonts.css",
+    "./tokens/colors.css": "./src/tokens/colors.css",
+    "./tokens/typography.css": "./src/tokens/typography.css",
+    "./tokens/spacing.css": "./src/tokens/spacing.css",
+    "./tokens/shape.css": "./src/tokens/shape.css",
+    "./tokens/motion.css": "./src/tokens/motion.css",
+    "./tokens/base.css": "./src/tokens/base.css",
+    "./tokens/styles.css": "./src/tokens/styles.css"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",
@@ -12,7 +20,18 @@
     "test": "vitest run --passWithNoTests",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "lucide-react": "^0.475.0"
+  },
   "devDependencies": {
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "typescript": "^5.8.2"
   }
 }

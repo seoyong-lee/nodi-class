@@ -1,0 +1,4 @@
+/* Pretendard — OFL 1.1, Kil Hyung-jin. Self-hosted from apps/web/public/fonts.
+   Only Regular(400) and Bold(700) are declared: the brand uses two weights, never three. */
+@font-face{font-family:"Pretendard";font-style:normal;font-weight:400;font-display:swap;src:local("Pretendard Regular"),url("/fonts/Pretendard-Regular.woff2") format("woff2")}
+@font-face{font-family:"Pretendard";font-style:normal;font-weight:700;font-display:swap;src:local("Pretendard Bold"),url("/fonts/Pretendard-Bold.woff2") format("woff2")}
