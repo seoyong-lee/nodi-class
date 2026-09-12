@@ -1,9 +1,10 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { Suspense } from 'react';
 import {
   AccessBadge,
   Button,
   ContentsList,
-  FitList,
   Icon,
   ResourceCard,
   SectionHeading,
@@ -47,6 +48,13 @@ function SectionLabel({ children }: { children: string }) {
   );
 }
 
+function resolveCoverSrc(slug: string, cover?: string): string {
+  const fallback = resourceThumbnail(slug);
+  if (!cover) return fallback;
+  const publicPath = path.join(process.cwd(), 'public', cover.replace(/^\//, ''));
+  return fs.existsSync(publicPath) ? cover : fallback;
+}
+
 export async function generateStaticParams() {
   const slugs = await listResourceSlugs();
   return slugs.map((slug) => ({ slug }));
@@ -71,7 +79,7 @@ export default async function FreeResourcePage({ params }: Props) {
     doc.raw.trim() === '준비 중';
 
   const access = doc.frontmatter.access ?? 'free';
-  const cover = doc.frontmatter.cover ?? resourceThumbnail(slug);
+  const cover = resolveCoverSrc(slug, doc.frontmatter.cover);
   const readingMinutes = doc.frontmatter.readingMinutes;
   const publishedLabel = formatPublishedAt(doc.frontmatter.publishedAt);
   const accessMeta = access === 'paid' ? '유료' : '무료';
@@ -84,8 +92,6 @@ export default async function FreeResourcePage({ params }: Props) {
   const youtube = doc.frontmatter.youtube;
   const youtubeTitle = doc.frontmatter.youtubeTitle;
   const contents = doc.frontmatter.contents ?? [];
-  const fitFor = doc.frontmatter.fitFor ?? [];
-  const notFor = doc.frontmatter.notFor ?? [];
   const showLocked = !unlocked && !isPlaceholder && restParts.length > 0;
 
   return (
@@ -101,11 +107,13 @@ export default async function FreeResourcePage({ params }: Props) {
               {doc.frontmatter.title}
             </h1>
             <p className="m-0 max-w-[30em] text-body">{doc.frontmatter.summary}</p>
-            <p className="m-0 max-w-measure text-body break-keep">
-              이 가이드북은 VOD 「클로드 디자인 실전」 교재로 들어갈 예정입니다.
-              강의가 나오면 무료 공개를 끝내고, 지금 이메일을 남긴 분은 그 뒤에도
-              계속 볼 수 있습니다.
-            </p>
+            {slug === 'claude-ppt-guidebook' ? (
+              <p className="m-0 max-w-measure text-body break-keep">
+                이 가이드북은 VOD 「클로드 디자인 실전」 교재로 들어갈 예정입니다.
+                강의가 나오면 무료 공개를 끝내고, 지금 이메일을 남긴 분은 그 뒤에도
+                계속 볼 수 있습니다.
+              </p>
+            ) : null}
             {metaParts.length > 0 ? (
               <p className="m-0 text-[13px] text-muted">
                 {metaParts.join(' · ')}
@@ -138,10 +146,16 @@ export default async function FreeResourcePage({ params }: Props) {
             </div>
           </div>
           <div className="min-w-0 max-[720px]:order-1">
-            <img
+            <Image
               className="w-full h-auto rounded border-hairline"
               src={cover}
               alt=""
+              width={1813}
+              height={1086}
+              quality={100}
+              priority
+              unoptimized
+              sizes="(max-width: 720px) 100vw, 40vw"
             />
           </div>
         </div>
@@ -160,40 +174,43 @@ export default async function FreeResourcePage({ params }: Props) {
         </section>
       ) : null}
 
-      {fitFor.length > 0 || notFor.length > 0 ? (
-        <section className={section}>
-          <div className={`${bodyCol} flex flex-col gap-block`}>
-            <SectionLabel>02 / 누구에게</SectionLabel>
-            <FitList fit={fitFor} notFor={notFor} />
-          </div>
-        </section>
-      ) : null}
-
       <section className={section}>
-        <div className={`${bodyCol} flex flex-col gap-block`}>
-          <SectionLabel>03 / 만든 사람</SectionLabel>
-          <div className="flex gap-6 items-start max-[720px]:flex-col">
-            <div className="relative flex-none w-[120px] h-[120px] rounded overflow-hidden bg-raised border-hairline">
-              <Image
-                className="object-cover object-center"
-                src="/img/profile.png"
-                alt=""
-                fill
-                sizes="120px"
-                quality={100}
-              />
-            </div>
-            <div className="flex flex-col gap-inline text-body break-keep">
-              <p className="m-0 font-bold text-strong">
-                직접 서비스를 만드는 5년차 개발자
-              </p>
-              <p className="m-0">
-                영상 「클로드 PPT 3단계」를 실무용으로 확장한 자료입니다
-              </p>
-              <p className="m-0">
-                프롬프트 7개는 실제 보고서 제작에 쓴 것을 그대로 옮겼습니다
-              </p>
-            </div>
+        <span className="text-label tracking-[var(--tracking-label)] text-muted">
+          02 / 만든 사람
+        </span>
+        <div className="h-block-tight" />
+        <div className="flex gap-10 items-start max-[960px]:flex-col max-[960px]:gap-6">
+          <div className="flex-none w-[240px] aspect-[1/1] rounded-full overflow-hidden bg-raised border-hairline relative isolate max-[960px]:w-full max-[960px]:max-w-[240px]">
+            <Image
+              className="object-cover object-center rounded"
+              src="/img/profile.png"
+              alt="nodi"
+              fill
+              sizes="240px"
+              quality={100}
+            />
+          </div>
+          <div className="flex flex-col gap-6 pt-inline-tight">
+            <ul className="list-none m-0 p-0 flex flex-col gap-y-0">
+              <li className="text-h2 font-bold text-strong max-[720px]:text-[20px]">
+                노디
+              </li>
+              <li className="text-body max-[720px]:text-body-sm pt-2">
+                직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어입니다.
+              </li>
+              <li className="text-body max-[720px]:text-body-sm">
+                시각디자인 학사, 컴퓨터소프트웨어공학 석사
+              </li>
+              <li className="text-body max-[720px]:text-body-sm">
+                비전공자 대상 풀스택 개발 부트캠프 강사
+              </li>
+            </ul>
+            <a
+              href="https://www.youtube.com/@nodiworks"
+              className="text-label text-muted"
+            >
+              유튜브 노디 AI
+            </a>
           </div>
         </div>
       </section>
@@ -201,7 +218,7 @@ export default async function FreeResourcePage({ params }: Props) {
       {doc.parts.length > 0 ? (
         <section className={section}>
           <div className={`${bodyCol} flex flex-col gap-block`}>
-            <SectionLabel>04 / 목차</SectionLabel>
+            <SectionLabel>03 / 목차</SectionLabel>
             <Toc
               parts={doc.parts.map((p) => ({ id: p.id, heading: p.heading }))}
               freeParts={freeCount}
