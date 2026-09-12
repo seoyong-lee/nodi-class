@@ -180,6 +180,8 @@ export const profileFrame = style({
   background: vars.surface.raised,
   border: vars.border.hairline,
   position: 'relative',
+  // Clip the next/image fill layer to the rounded frame.
+  isolation: 'isolate',
   '@media': {
     '(max-width: 960px)': {
       width: 'min(280px, 100%)',
@@ -190,6 +192,7 @@ export const profileFrame = style({
 export const profileImage = style({
   objectFit: 'cover',
   objectPosition: 'center',
+  borderRadius: vars.radius.base,
 });
 
 export const operatorCopy = style({
