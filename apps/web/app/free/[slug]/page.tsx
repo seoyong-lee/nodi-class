@@ -9,13 +9,16 @@ import {
   SectionHeading,
   Toc,
 } from '@nodi/design-system';
-import { resourceThumbnail } from '@nodi/shared';
+import { resourceCardBadges, resourceThumbnail } from '@nodi/shared';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { EmailGateForm } from '../../../components/EmailGateForm';
 import { LockedParts } from '../../../components/LockedParts';
 import { MdxContent } from '../../../components/MdxContent';
 import { StickyUnlockBar } from '../../../components/StickyUnlockBar';
+import { TrackPageView } from '../../../components/TrackPageView';
+import { TrackUnlockedResource } from '../../../components/TrackUnlockedResource';
+import { TrackYouTubeButton } from '../../../components/TrackYouTubeButton';
 import { hasValidAccessCookie } from '../../../lib/access';
 import { BUILDING_EXTRA_FIELD } from '../../../lib/building';
 import {
@@ -93,6 +96,16 @@ export default async function FreeResourcePage({ params }: Props) {
 
   return (
     <main>
+      <TrackPageView
+        event={{
+          name: 'Viewed Resource Page',
+          props: {
+            resource_slug: slug,
+            access_state: unlocked ? 'unlocked' : 'locked',
+          },
+        }}
+      />
+      {unlocked ? <TrackUnlockedResource slug={slug} unlocked /> : null}
       <section className={hero}>
         <div className="grid grid-cols-[7fr_5fr] gap-16 items-start break-keep max-[720px]:grid-cols-1 max-[720px]:gap-6">
           <div className="flex flex-col gap-6 min-w-0 max-[720px]:order-2">
@@ -118,14 +131,11 @@ export default async function FreeResourcePage({ params }: Props) {
                   </Button>
                 )}
                 {youtube ? (
-                  <Button
-                    variant="secondary"
+                  <TrackYouTubeButton
+                    placement="resource_video"
                     href={youtube}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    영상으로 보기
-                  </Button>
+                    label="영상으로 보기"
+                  />
                 ) : null}
               </div>
               {access === 'free' && !unlocked ? (
@@ -243,7 +253,7 @@ export default async function FreeResourcePage({ params }: Props) {
                 >
                   {part.heading}
                 </h2>
-                <MdxContent source={part.body} />
+                <MdxContent source={part.body} resourceSlug={slug} />
               </article>
             ))}
           </div>
@@ -271,6 +281,7 @@ export default async function FreeResourcePage({ params }: Props) {
                     buttonVariant="secondary"
                     intent="reopen"
                     slug={slug}
+                    placement="resource"
                     layout="stack"
                     footer={
                       <Button variant="primary" href="/course">
@@ -290,6 +301,7 @@ export default async function FreeResourcePage({ params }: Props) {
                       buttonLabel={RESOURCE_GATE_BUTTON}
                       helper={RESOURCE_GATE_HELPER}
                       slug={slug}
+                      placement="resource"
                       extraField={BUILDING_EXTRA_FIELD}
                       layout="stack"
                     />
@@ -325,7 +337,7 @@ export default async function FreeResourcePage({ params }: Props) {
                 >
                   {part.heading}
                 </h2>
-                <MdxContent source={part.body} />
+                <MdxContent source={part.body} resourceSlug={slug} />
               </article>
             ))}
             {downloads?.length ? (
@@ -390,7 +402,11 @@ export default async function FreeResourcePage({ params }: Props) {
                   thumbnail={
                     resource.frontmatter.cover ?? resourceThumbnail(resource.frontmatter.slug)
                   }
-                  badges={resource.frontmatter.access === 'paid' ? ['강의 교재'] : ['무료 자료']}
+                  badges={
+                    resource.frontmatter.access === 'paid'
+                      ? ['강의 교재']
+                      : resourceCardBadges(resource.frontmatter.slug)
+                  }
                 />
               ))}
             </div>

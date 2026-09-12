@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { COURSE_WAITLIST_SLUG } from '@nodi/shared/constants';
 import { EmailGate, type EmailGateExtraField } from '@nodi/design-system';
 import { postSubscribe } from '../lib/api';
+import { identifySubscriber, track } from '../lib/analytics/track';
 import {
   FORM_ERROR_LABEL,
   GATE_ACTIVE_RESUBSCRIBE_LABEL,
@@ -14,6 +15,9 @@ import {
 } from '../lib/copy';
 import { getTurnstileToken } from '../lib/turnstile';
 import { SubscribeConsentDetail } from './SubscribeConsentDetail';
+import { markUnlockPending } from './TrackUnlockedResource';
+
+type GatePlacement = 'home_top' | 'home_bottom' | 'resource' | 'course';
 
 type Props = {
   title: string;
@@ -21,6 +25,7 @@ type Props = {
   buttonLabel: string;
   /** Resource slug or `course-waitlist`. */
   slug: string;
+  placement: GatePlacement;
   extraField?: EmailGateExtraField;
   layout?: 'inline' | 'stack';
   /** Paid textbook reopen — no consent, existing subscribers only. */
@@ -40,11 +45,20 @@ function unlockNextPath(slug: string): string {
   return `/free/${slug}`;
 }
 
+function subscribeSource(searchParams: URLSearchParams): string {
+  const campaign = searchParams.get('utm_campaign')?.trim();
+  if (campaign && /^[a-z0-9-]{1,64}$/.test(campaign)) return campaign;
+  const src = searchParams.get('src')?.trim();
+  if (src && /^[a-z0-9-]{1,64}$/.test(src)) return src;
+  return 'direct';
+}
+
 export function EmailGateForm({
   title,
   description,
   buttonLabel,
   slug,
+  placement,
   extraField,
   layout,
   intent = 'subscribe',
@@ -64,24 +78,31 @@ export function EmailGateForm({
   async function handleSubmit(email: string, extra?: string) {
     setError(null);
     setSubmitting(true);
+    const building =
+      extraField && extra
+        ? (extra as 'landing' | 'brand' | 'ppt' | 'app' | 'none')
+        : undefined;
     try {
       const container = turnstileRef.current;
       if (!container) {
         setError(FORM_ERROR_LABEL);
+        track({
+          name: 'Submitted Email Gate',
+          props: {
+            placement,
+            resource_slug: placement === 'resource' ? slug : undefined,
+            building,
+            result: 'error',
+          },
+        });
         return;
       }
       const turnstile = await getTurnstileToken(container);
 
-      const building =
-        extraField && extra ? (extra as 'landing' | 'brand' | 'ppt' | 'app' | 'none') : undefined;
-
-      const sourceRaw = searchParams.get('src')?.trim();
-      const source = sourceRaw && /^[a-z0-9-]{0,64}$/.test(sourceRaw) ? sourceRaw : undefined;
-
       const result = await postSubscribe({
         email,
         slug,
-        source,
+        source: subscribeSource(searchParams),
         building,
         consent: intent === 'subscribe' ? true : undefined,
         intent,
@@ -90,6 +111,15 @@ export function EmailGateForm({
       });
 
       if (!result.ok) {
+        track({
+          name: 'Submitted Email Gate',
+          props: {
+            placement,
+            resource_slug: placement === 'resource' ? slug : undefined,
+            building,
+            result: 'error',
+          },
+        });
         if (result.error === 'not_registered') {
           setError(GATE_NOT_REGISTERED_LABEL);
         } else {
@@ -97,6 +127,20 @@ export function EmailGateForm({
         }
         return;
       }
+
+      identifySubscriber(result.subscriberHash, {
+        building,
+        subscriber_status: result.state === 'active' ? 'active' : 'pending',
+      });
+      track({
+        name: 'Submitted Email Gate',
+        props: {
+          placement,
+          resource_slug: placement === 'resource' ? slug : undefined,
+          building,
+          result: result.state === 'active' ? 'existing' : 'new',
+        },
+      });
 
       if (result.state === 'active' && intent === 'subscribe') {
         setSubmittedLabel(GATE_ACTIVE_RESUBSCRIBE_LABEL);
@@ -107,8 +151,18 @@ export function EmailGateForm({
       const next = unlockNextPath(slug);
       const unlock = `/unlock?t=${encodeURIComponent(result.gateToken)}&next=${encodeURIComponent(next)}`;
       setSubmitted(true);
+      markUnlockPending(slug);
       window.location.assign(unlock);
     } catch {
+      track({
+        name: 'Submitted Email Gate',
+        props: {
+          placement,
+          resource_slug: placement === 'resource' ? slug : undefined,
+          building,
+          result: 'error',
+        },
+      });
       setError(FORM_ERROR_LABEL);
     } finally {
       setSubmitting(false);

@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { postUnsubscribe } from '../../lib/api';
+import { track } from '../../lib/analytics/track';
 
 type Props = {
   token?: string;
@@ -22,6 +23,7 @@ export function UnsubscribeClient({ token, doneLabel }: Props) {
       } catch {
         /* cookie clear best-effort */
       }
+      track({ name: 'Clicked Unsubscribe' });
     })();
   }, [token]);
 

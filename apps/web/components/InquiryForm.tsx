@@ -3,6 +3,7 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { Button, Input } from '@nodi/design-system';
 import { postInquiry } from '../lib/api';
+import { track } from '../lib/analytics/track';
 import { FORM_ERROR_LABEL, INQUIRY_CONSENT_LABEL, INQUIRY_DONE_LABEL } from '../lib/copy';
 import { getTurnstileToken } from '../lib/turnstile';
 
@@ -46,6 +47,10 @@ export function InquiryForm() {
         setError(FORM_ERROR_LABEL);
         return;
       }
+      track({
+        name: 'Submitted Inquiry',
+        props: { has_result_url: Boolean(resultUrl.trim()) },
+      });
       setSubmitted(true);
     } catch {
       setError(FORM_ERROR_LABEL);
@@ -81,6 +86,7 @@ export function InquiryForm() {
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
+          className="amp-mask"
         />
         <Input
           label="이메일"
@@ -89,6 +95,7 @@ export function InquiryForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="amp-mask"
         />
       </div>
       <Input
@@ -98,6 +105,7 @@ export function InquiryForm() {
         required
         value={resultUrl}
         onChange={(e) => setResultUrl(e.target.value)}
+        className="amp-mask"
       />
       <Input
         label="어떤 부분에서 어려움을 겪고 계신가요?"
@@ -108,6 +116,7 @@ export function InquiryForm() {
         required
         value={blocked}
         onChange={(e) => setBlocked(e.target.value)}
+        className="amp-mask"
       />
       <label className="flex items-center gap-[10px] text-label text-muted [color-scheme:dark] [&_input]:w-4 [&_input]:h-4 [&_input]:accent-accent">
         <input

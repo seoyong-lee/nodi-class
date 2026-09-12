@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button } from '@nodi/design-system';
+import { TrackYouTubeButton } from './TrackYouTubeButton';
 
 const NAV = [
   {
@@ -71,24 +71,10 @@ export function SiteHeader({ youtubeUrl }: { youtubeUrl: string }) {
               </Link>
             );
           })}
-          <Button
-            variant="secondary"
-            size="sm"
-            icon="arrow-up-right"
-            href={youtubeUrl}
-          >
-            유튜브
-          </Button>
+          <TrackYouTubeButton placement="nav" href={youtubeUrl} size="sm" label="유튜브" />
         </nav>
         <div className="hidden max-[720px]:block">
-          <Button
-            variant="secondary"
-            size="sm"
-            icon="arrow-up-right"
-            href={youtubeUrl}
-          >
-            유튜브
-          </Button>
+          <TrackYouTubeButton placement="nav" href={youtubeUrl} size="sm" label="유튜브" />
         </div>
       </div>
       <nav

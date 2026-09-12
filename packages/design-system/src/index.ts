@@ -1,5 +1,5 @@
 export { Badge } from './components/core/Badge';
-export type { BadgeProps } from './components/core/Badge';
+export type { BadgeProps, BadgeTone } from './components/core/Badge';
 
 export { Button } from './components/core/Button';
 export type { ButtonProps } from './components/core/Button';
@@ -44,7 +44,7 @@ export { ProductCard } from './components/cards/ProductCard';
 export type { ProductCardProps, ProductCardRow } from './components/cards/ProductCard';
 
 export { ResourceCard } from './components/cards/ResourceCard';
-export type { ResourceCardProps } from './components/cards/ResourceCard';
+export type { ResourceCardProps, ResourceCardBadge } from './components/cards/ResourceCard';
 
 export { Thumb16x9 } from './components/cards/Thumb16x9';
 export type { Thumb16x9Props } from './components/cards/Thumb16x9';

@@ -470,7 +470,7 @@ export const ResourceUpsertInput = z.object({
 
 ## 8. API (API Gateway HTTP API + Lambda)
 
-Base: `https://api.<NODI_DOMAIN>` (커스텀 도메인, ACM 인증서 us-east-1 아님 — HTTP API는 리전 인증서). CORS: `https://<NODI_DOMAIN>`만.
+Base: `https://api.<NODI_DOMAIN>` (커스텀 도메인, ACM 인증서 us-east-1 아님 — HTTP API는 리전 인증서). CORS: `https://<NODI_DOMAIN>` + `https://www.<NODI_DOMAIN>`.
 
 | 메서드 | 경로                   | 핸들러           | 입력                  | 응답                                                                                   |
 | ------ | ---------------------- | ---------------- | --------------------- | -------------------------------------------------------------------------------------- |
@@ -528,10 +528,13 @@ DynamoDB 온디맨드, Lambda arm64, CloudWatch 로그 보존 90일. 예산 알�
 NEXT_PUBLIC_API_URL=
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=
 GATE_SECRET=
+NEXT_PUBLIC_AMPLITUDE_API_KEY=
+NEXT_PUBLIC_AMPLITUDE_SR_SAMPLE_RATE=
 ```
 
 사이트 URL·유튜브·Threads·푸터(상호 Cascades·문의 contact@cascades.studio)는 코드에 하드코딩.
 인프라 도메인·NOTIFY_EMAIL은 CDK `-c domain=` / `-c notifyEmail=` (기본 contact@cascades.studio).
+`NEXT_PUBLIC_AMPLITUDE_SR_SAMPLE_RATE` 기본은 `1`(검증). 런칭 후 `0.2`로 낮출 수 있다.
 
 ---
 
@@ -648,7 +651,7 @@ GATE_SECRET=
 - [ ] **블로그**: `content/posts/*.mdx`, `draft` 프론트매터가 공개 설정, `next-sitemap`, OG 이미지 자동 생성, JSON-LD. CMS 없음.
 - [ ] **캠페인 발송**: `scripts/send.ts` — `active` 대상 SES v2 일괄 발송, 템플릿은 MDX, 발송 로그 `nodi-events`. UI 없음. **영리 광고 메일은 제목 `(광고)` 필수**.
 - [ ] **2년 재동의 확인 배치**: 동의 후 2년 경과 구독자에게 "계속 받으시겠습니까" 1통 자동 발송(정보통신망법 50조).
-- [ ] **GA4 도입 여부**: Step 1은 `nodi-events`+`source`로 전환율 집계. GA4는 Google 국외 처리 고지가 늘므로 필요해질 때만.
+- [x] **Amplitude 도입 완료(2026-09-12)**: 브라우저 퍼널은 Amplitude, 동의·전환 원본은 `nodi-events` 유지. 택소노미·UTM·마스킹은 `docs/analytics.md`.
 - [ ] **홈 Before 호버 burn**: 폐기. BeforeAfter는 filter/border 차이 리빌로 구현됨.
 - [ ] **운영**: 메일 발송 실패 재시도(SQS DLQ), `ip/ua` 90일 후 삭제 배치, Amplify 호스팅 CDK 이관, CDK 출력 → web env 자동화.
 - [ ] **환불 정책·이용약관** 유료 조항 채우기.

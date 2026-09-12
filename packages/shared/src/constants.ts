@@ -13,19 +13,29 @@ export const RESOURCE_SLUGS = [
   'ai-design-5-principles',
 ] as const;
 
-/** Card type chip for ResourceCard (not YouTube-gated). */
-export const RESOURCE_BADGE: Record<(typeof RESOURCE_SLUGS)[number], string> = {
-  'claude-ppt-guidebook': '가이드북',
-  'claude-prompt-set': '프롬프트',
-  // 'claude-design-landing-checklist': '체크리스트',
-  'ai-design-5-principles': '요약본',
+/** Category chips on ResourceCard — label + Badge tone. */
+export type ResourceCardBadgeDef = {
+  label: string;
+  tone: 'claude' | 'ppt' | 'design';
 };
 
-export function resourceBadge(slug: string): string {
+export const RESOURCE_CARD_BADGES: Record<
+  (typeof RESOURCE_SLUGS)[number],
+  ResourceCardBadgeDef[]
+> = {
+  'claude-ppt-guidebook': [
+    { label: '클로드', tone: 'claude' },
+    { label: 'PPT', tone: 'ppt' },
+  ],
+  'claude-prompt-set': [{ label: '클로드', tone: 'claude' }],
+  'ai-design-5-principles': [{ label: '클로드 디자인', tone: 'design' }],
+};
+
+export function resourceCardBadges(slug: string): ResourceCardBadgeDef[] {
   if ((RESOURCE_SLUGS as readonly string[]).includes(slug)) {
-    return RESOURCE_BADGE[slug as (typeof RESOURCE_SLUGS)[number]];
+    return RESOURCE_CARD_BADGES[slug as (typeof RESOURCE_SLUGS)[number]];
   }
-  return '무료 자료';
+  return [];
 }
 
 const PPT_THUMB = '/img/book-ppt.png';

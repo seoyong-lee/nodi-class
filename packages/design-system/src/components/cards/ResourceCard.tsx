@@ -1,13 +1,22 @@
-import { Badge } from '../core/Badge';
+import { Badge, type BadgeTone } from '../core/Badge';
 import { ThumbBook } from './ThumbBook';
+
+export type ResourceCardBadge = {
+  label: string;
+  tone?: BadgeTone;
+};
 
 export type ResourceCardProps = {
   title: string;
   slug: string;
   thumbnail?: string;
-  /** Up to 2 badges, e.g. 영상에서 소개 + 무료 공개 중 */
-  badges?: string[];
+  /** Up to 2 badges, e.g. 클로드 + PPT */
+  badges?: Array<string | ResourceCardBadge>;
 };
+
+function normalizeBadge(badge: string | ResourceCardBadge): ResourceCardBadge {
+  return typeof badge === 'string' ? { label: badge } : badge;
+}
 
 export function ResourceCard({
   title,
@@ -16,7 +25,7 @@ export function ResourceCard({
   badges = [],
 }: ResourceCardProps) {
   const href = `/free/${slug}`;
-  const shown = badges.slice(0, 2);
+  const shown = badges.map(normalizeBadge).slice(0, 2);
 
   return (
     <a
@@ -30,8 +39,10 @@ export function ResourceCard({
         </h3>
         {shown.length > 0 ? (
           <div className="flex items-center gap-inline-tight flex-wrap">
-            {shown.map((label) => (
-              <Badge key={label}>{label}</Badge>
+            {shown.map((badge) => (
+              <Badge key={badge.label} tone={badge.tone}>
+                {badge.label}
+              </Badge>
             ))}
           </div>
         ) : null}

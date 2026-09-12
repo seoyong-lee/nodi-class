@@ -4,6 +4,7 @@ import {
   createConfirmToken,
   createGateToken,
   COURSE_WAITLIST_SLUG,
+  hashEmail,
 } from '@nodi/shared';
 import {
   getSubscriber,
@@ -110,6 +111,7 @@ export async function handler(
         ok: true,
         state: existing.status === 'active' ? 'active' : 'pending',
         gateToken,
+        subscriberHash: hashEmail(email),
       });
     }
 
@@ -157,6 +159,7 @@ export async function handler(
       ok: true,
       state: result.state,
       gateToken,
+      subscriberHash: hashEmail(email),
     });
   } catch (err) {
     log('error', 'subscribe.error', {

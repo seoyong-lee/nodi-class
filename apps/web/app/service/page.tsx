@@ -1,5 +1,7 @@
 import { Icon } from '@nodi/design-system';
 import { InquiryForm } from '../../components/InquiryForm';
+import { ServiceHeroCta } from '../../components/ServiceHeroCta';
+import { TrackPageView } from '../../components/TrackPageView';
 
 const FIT = [
   '클로드·러버블로 만들긴 했는데 어딘가 부족해 보입니다',
@@ -27,6 +29,7 @@ const sectionLast = `${section} pt-12 pb-section`;
 export default function ServicePage() {
   return (
     <main>
+      <TrackPageView event={{ name: 'Viewed Service Page' }} />
       <section className={hero}>
         <div className="flex flex-col gap-6">
           <span className="text-label text-muted">AI 결과물 마무리</span>
@@ -38,6 +41,9 @@ export default function ServicePage() {
           <p className="m-0 max-w-measure text-body">
             처음부터 새로 만드는 제작보다는, 기존 결과물을 다듬고 완성하는 데 집중합니다.
           </p>
+          <div className="self-start max-[720px]:self-stretch max-[720px]:[&_a]:w-full">
+            <ServiceHeroCta />
+          </div>
         </div>
       </section>
 
@@ -103,7 +109,7 @@ export default function ServicePage() {
         </p>
       </section>
 
-      <section className={sectionLast}>
+      <section id="inquiry" className={`${sectionLast} scroll-mt-24`}>
         <InquiryForm />
       </section>
     </main>

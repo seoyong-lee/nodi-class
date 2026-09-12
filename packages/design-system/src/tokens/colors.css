@@ -45,4 +45,12 @@
 --link-hover:var(--mint-400);
 
 --focus-ring:var(--mint-500);
+
+/* --- ResourceCard category tags (not brand accent) --------------------- */
+--tag-claude:#E8913A;
+--tag-claude-quiet:#2A1F12;
+--tag-ppt:#E85D5D;
+--tag-ppt-quiet:#2A1616;
+--tag-design:var(--mint-500);
+--tag-design-quiet:var(--mint-quiet);
 }

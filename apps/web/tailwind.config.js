@@ -32,6 +32,18 @@ module.exports = {
           DEFAULT: 'var(--border-subtle)',
           strong: 'var(--border-strong)',
         },
+        'tag-claude': {
+          DEFAULT: 'var(--tag-claude)',
+          quiet: 'var(--tag-claude-quiet)',
+        },
+        'tag-ppt': {
+          DEFAULT: 'var(--tag-ppt)',
+          quiet: 'var(--tag-ppt-quiet)',
+        },
+        'tag-design': {
+          DEFAULT: 'var(--tag-design)',
+          quiet: 'var(--tag-design-quiet)',
+        },
       },
       fontFamily: {
         sans: 'var(--font-sans)',

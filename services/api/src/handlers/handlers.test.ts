@@ -151,10 +151,13 @@ describe('subscribe', () => {
       ok: boolean;
       state: string;
       gateToken: string;
+      subscriberHash: string;
     };
     expect(body).toMatchObject({ ok: true, state: 'pending' });
     expect(typeof body.gateToken).toBe('string');
     expect(body.gateToken.length).toBeGreaterThan(10);
+    expect(typeof body.subscriberHash).toBe('string');
+    expect(body.subscriberHash).toHaveLength(64);
     expect(sendMail).toHaveBeenCalledWith(
       expect.objectContaining({ template: 'resource' }),
     );
@@ -190,9 +193,12 @@ describe('subscribe', () => {
       ok: boolean;
       state: string;
       gateToken: string;
+      subscriberHash: string;
     };
     expect(body).toMatchObject({ ok: true, state: 'active' });
     expect(typeof body.gateToken).toBe('string');
+    expect(typeof body.subscriberHash).toBe('string');
+    expect(body.subscriberHash).toHaveLength(64);
     expect(sendMail).toHaveBeenCalledWith(
       expect.objectContaining({ template: 'resource' }),
     );

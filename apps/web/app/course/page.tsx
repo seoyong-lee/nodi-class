@@ -1,7 +1,8 @@
 import { Suspense } from 'react';
 import { COURSE_WAITLIST_SLUG } from '@nodi/shared';
-import { ProductCard } from '@nodi/design-system';
 import { EmailGateForm } from '../../components/EmailGateForm';
+import { TrackPageView } from '../../components/TrackPageView';
+import { TrackedProductCard } from '../../components/TrackedProductCard';
 import { productCardProps } from '../../lib/products';
 
 const CURRICULUM = [
@@ -40,6 +41,7 @@ export default function CoursePage() {
 
   return (
     <main>
+      <TrackPageView event={{ name: 'Viewed Course Page' }} />
       <section className={hero}>
         <div className="flex flex-col gap-block">
           <div className="flex flex-col gap-6">
@@ -64,6 +66,7 @@ export default function CoursePage() {
                 description="클래스가 오픈되면 이메일로 가장 먼저 안내드립니다."
                 buttonLabel="출시 알림 신청하기"
                 slug={COURSE_WAITLIST_SLUG}
+                placement="course"
               />
             </Suspense>
           </div>
@@ -119,8 +122,11 @@ export default function CoursePage() {
 
       <section className={sectionLast}>
         <div className="grid grid-cols-2 gap-6 max-w-[720px] max-[720px]:grid-cols-1 items-stretch">
-          <ProductCard {...workshop} />
-          <ProductCard {...service} />
+          <TrackedProductCard {...workshop} />
+          <TrackedProductCard
+            {...service}
+            analytics={{ kind: 'inquiry', placement: 'course_card' }}
+          />
         </div>
       </section>
     </main>

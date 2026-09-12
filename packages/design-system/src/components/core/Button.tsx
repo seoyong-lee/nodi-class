@@ -1,4 +1,8 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  ReactNode,
+} from 'react';
 import { cn } from '../../lib/cn';
 import { Icon } from './Icon';
 
@@ -12,7 +16,9 @@ export type ButtonProps = {
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
   disabled?: boolean;
   loading?: boolean;
-  onClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
+  onClick?:
+    | ButtonHTMLAttributes<HTMLButtonElement>['onClick']
+    | AnchorHTMLAttributes<HTMLAnchorElement>['onClick'];
   children?: ReactNode;
 };
 
@@ -49,7 +55,13 @@ export function Button({
 
   if (href && !isDisabled) {
     return (
-      <a className={className} href={href} target={target} rel={rel}>
+      <a
+        className={className}
+        href={href}
+        target={target}
+        rel={rel}
+        onClick={onClick as AnchorHTMLAttributes<HTMLAnchorElement>['onClick']}
+      >
         {content}
       </a>
     );
@@ -62,7 +74,7 @@ export function Button({
       disabled={isDisabled}
       aria-disabled={isDisabled || undefined}
       aria-busy={loading || undefined}
-      onClick={onClick}
+      onClick={onClick as ButtonHTMLAttributes<HTMLButtonElement>['onClick']}
     >
       {content}
     </button>

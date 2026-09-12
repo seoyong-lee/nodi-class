@@ -12,6 +12,7 @@ import '@nodi/design-system/tokens/styles.css';
 import '@nodi/design-system/mdx.css';
 import './globals.css';
 import { SiteHeader } from '../components/SiteHeader';
+import { AnalyticsProvider } from '../components/AnalyticsProvider';
 import {
   OPERATOR,
   SITE_URL,
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko">
       <body>
+        <AnalyticsProvider />
         <div className="min-h-dvh flex flex-col">
           <SiteHeader youtubeUrl={youtubeUrl} />
           <div className="flex-1">{children}</div>

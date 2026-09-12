@@ -13,6 +13,7 @@ export type ProductCardProps = {
   ctaLabel: string;
   ctaHref?: string;
   ctaVariant?: 'primary' | 'secondary';
+  onCtaClick?: () => void;
 };
 
 export function ProductCard({
@@ -23,6 +24,7 @@ export function ProductCard({
   ctaLabel,
   ctaHref,
   ctaVariant = 'secondary',
+  onCtaClick,
 }: ProductCardProps) {
   return (
     <article className="flex flex-col gap-block-tight bg-card border-hairline rounded p-card-pad h-full">
@@ -43,7 +45,7 @@ export function ProductCard({
         ))}
       </dl>
       <div className="w-full [&>*]:w-full">
-        <Button variant={ctaVariant} href={ctaHref}>
+        <Button variant={ctaVariant} href={ctaHref} onClick={onCtaClick}>
           {ctaLabel}
         </Button>
       </div>

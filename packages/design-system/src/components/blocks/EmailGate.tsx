@@ -109,6 +109,7 @@ export function EmailGate({
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="amp-mask"
             />
           </div>
           {extraField ? (

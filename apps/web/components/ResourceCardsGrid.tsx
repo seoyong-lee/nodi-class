@@ -1,13 +1,6 @@
 import { ResourceCard } from '@nodi/design-system';
-import { resourceThumbnail } from '@nodi/shared';
+import { resourceCardBadges, resourceThumbnail } from '@nodi/shared';
 import { listResources } from '../lib/resources';
-
-function cardBadges(access: 'free' | 'paid' | undefined): string[] {
-  if (access === 'paid') {
-    return ['강의 교재'];
-  }
-  return ['무료 자료'];
-}
 
 export async function ResourceCardsGrid() {
   const resources = await listResources();
@@ -20,7 +13,11 @@ export async function ResourceCardsGrid() {
           title={resource.frontmatter.title}
           slug={resource.frontmatter.slug}
           thumbnail={resource.frontmatter.cover ?? resourceThumbnail(resource.frontmatter.slug)}
-          badges={cardBadges(resource.frontmatter.access)}
+          badges={
+            resource.frontmatter.access === 'paid'
+              ? ['강의 교재']
+              : resourceCardBadges(resource.frontmatter.slug)
+          }
         />
       ))}
     </div>

@@ -1,12 +1,15 @@
 import Image from 'next/image';
 import { Suspense } from 'react';
-import { BeforeAfter, Button, ProductCard, SectionHeading } from '@nodi/design-system';
+import { BeforeAfter, Button, SectionHeading } from '@nodi/design-system';
 import { RESOURCE_SLUGS } from '@nodi/shared';
 import { EmailGateForm } from '../components/EmailGateForm';
 import { ResourceCardsGrid } from '../components/ResourceCardsGrid';
+import { TrackPageView } from '../components/TrackPageView';
+import { TrackedProductCard } from '../components/TrackedProductCard';
 import { BUILDING_EXTRA_FIELD } from '../lib/building';
 import { getYoutubeUrl } from '../lib/business';
 import { productCardProps } from '../lib/products';
+import { TrackYouTubeButton } from '../components/TrackYouTubeButton';
 
 const HOME_GATE_SLUG = RESOURCE_SLUGS[0]!;
 
@@ -21,6 +24,7 @@ export default function HomePage() {
 
   return (
     <main>
+      <TrackPageView event={{ name: 'Viewed Home Page' }} />
       <section className={hero}>
         <div className="flex flex-col items-center gap-6 text-center">
           <span className="text-label text-muted">노디 AI 클래스</span>
@@ -38,9 +42,7 @@ export default function HomePage() {
             <Button variant="primary" href="/free">
               무료 자료 받기
             </Button>
-            <Button variant="secondary" href={youtube}>
-              유튜브에서 보기
-            </Button>
+            <TrackYouTubeButton placement="hero" href={youtube} />
           </div>
         </div>
       </section>
@@ -99,9 +101,12 @@ export default function HomePage() {
           title="직접 만들어봤다면, 이제 기준을 배워보세요"
         />
         <div className="grid grid-cols-3 gap-6 mt-block max-[960px]:grid-cols-1 max-[720px]:mt-block-tight items-stretch">
-          <ProductCard {...vod} />
-          <ProductCard {...workshop} />
-          <ProductCard {...service} />
+          <TrackedProductCard {...vod} analytics={{ kind: 'vod', placement: 'home_card' }} />
+          <TrackedProductCard {...workshop} />
+          <TrackedProductCard
+            {...service}
+            analytics={{ kind: 'inquiry', placement: 'home_card' }}
+          />
         </div>
       </section>
 
@@ -155,6 +160,7 @@ export default function HomePage() {
                 description="이메일을 한 번 등록하면 모든 자료를 확인할 수 있습니다."
                 buttonLabel="무료 자료 받기"
                 slug={HOME_GATE_SLUG}
+                placement="home_bottom"
                 layout="stack"
                 extraField={{
                   ...BUILDING_EXTRA_FIELD,

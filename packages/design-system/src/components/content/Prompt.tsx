@@ -18,6 +18,7 @@ export type PromptProps = {
   /** Prefer over children — JSX `{expr}` children are dropped by RSC MDX. */
   body?: string;
   children?: ReactNode;
+  onCopy?: (promptId: string) => void;
 };
 
 function extractText(node: ReactNode): string {
@@ -47,6 +48,7 @@ export function Prompt({
   kind,
   body,
   children,
+  onCopy,
 }: PromptProps) {
   const text = (body ?? childrenToText(children)).replace(/^\n+|\n+$/g, '');
   const preRef = useRef<HTMLPreElement>(null);
@@ -74,6 +76,7 @@ export function Prompt({
     try {
       await navigator.clipboard.writeText(text.trim());
       setCopied(true);
+      onCopy?.(id);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       /* ignore */
