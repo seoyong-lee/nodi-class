@@ -121,7 +121,7 @@ export function EmailGateForm({
         layout={layout}
       />
       {error && !submitted ? (
-        <p className="mt-2 mb-0 text-label text-strong break-keep" role="alert">
+        <p className="mt-2 mb-0 text-label text-body break-keep" role="alert">
           {error}
         </p>
       ) : null}

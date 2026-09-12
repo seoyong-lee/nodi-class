@@ -9,6 +9,7 @@ import '@nodi/design-system/tokens/shape.css';
 import '@nodi/design-system/tokens/motion.css';
 import '@nodi/design-system/tokens/base.css';
 import '@nodi/design-system/tokens/styles.css';
+import '@nodi/design-system/mdx.css';
 import './globals.css';
 import { SiteHeader } from '../components/SiteHeader';
 import {

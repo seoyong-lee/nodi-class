@@ -3,6 +3,7 @@
 import { useId, useState, type FormEvent, type ReactNode } from 'react';
 import { cn } from '../../lib/cn';
 import { Button } from '../core/Button';
+import { Icon } from '../core/Icon';
 import { Input } from '../core/Input';
 
 export type EmailGateExtraField = {
@@ -71,7 +72,10 @@ export function EmailGate({
         ) : null}
       </div>
       {submitted ? (
-        <p className="m-0 text-body-sm text-accent">{submittedLabel}</p>
+        <p className="m-0 flex items-center gap-inline-tight text-body-sm text-accent">
+          <Icon name="check" size={18} />
+          <span>{submittedLabel}</span>
+        </p>
       ) : (
         <form
           className={
@@ -163,7 +167,7 @@ export function EmailGate({
               disabled={submitting}
               loading={submitting}
             >
-              {buttonLabel}
+              {submitting ? '보내는 중' : buttonLabel}
             </Button>
           </div>
         </form>

@@ -11,12 +11,13 @@ export const PRIVACY_LINK_LABEL = '개인정보 처리방침';
 /** Inquiry form — project review, not mail subscription. */
 export const INQUIRY_CONSENT_LABEL = '개인정보 수집·이용에 동의합니다.';
 
-/** Shown briefly if unlock navigation is delayed; unlocked page uses 메일로도 보냈습니다. */
-export const GATE_SUBMITTED_LABEL = '메일로도 보냈습니다';
+/** Shown briefly if unlock navigation is delayed. */
+export const GATE_SUBMITTED_LABEL = '열렸습니다. 메일로도 보냈습니다.';
 
+/** Unlocked cookie state under the gate slot. */
 export const GATE_ACTIVE_LABEL = '메일로도 보냈습니다';
 
-export const FORM_ERROR_LABEL = '요청을 처리하지 못했습니다.';
+export const FORM_ERROR_LABEL = '잠시 후 다시 시도해 주세요.';
 
 export const INQUIRY_DONE_LABEL =
   '검토 요청을 받았습니다. 2영업일 내 회신드립니다.';

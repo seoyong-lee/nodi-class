@@ -11,6 +11,13 @@ export type ResourceFrontmatter = {
   series: string;
   summary: string;
   youtube?: string;
+  youtubeTitle?: string;
+  cover?: string;
+  access?: 'free' | 'paid';
+  readingMinutes?: number;
+  contents?: { count: number; label: string; note: string }[];
+  fitFor?: string[];
+  notFor?: string[];
   freeParts: number;
   publishedAt: string;
   downloads?: { label: string; key: string }[];
@@ -69,7 +76,9 @@ export function splitParts(markdown: string): ResourcePart[] {
     if (h2Jsx || h2Md) {
       flush();
       const id = h2Jsx?.[1]?.trim();
-      const heading = (h2Jsx?.[2] ?? h2Md?.[1]!).trim();
+      const headingText = h2Jsx?.[2] ?? h2Md?.[1];
+      if (!headingText) continue;
+      const heading = headingText.trim();
       current = {
         id: id || partIdFromHeading(heading, parts.length),
         heading,
@@ -114,6 +123,25 @@ function readLocalFile(slug: string): string {
   return fs.readFileSync(filePath, 'utf8');
 }
 
+function parseStringList(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  return value.map((item) => String(item));
+}
+
+function parseContents(
+  value: unknown,
+): ResourceFrontmatter['contents'] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  return value.map((item) => {
+    const row = item as Record<string, unknown>;
+    return {
+      count: Number(row.count ?? 0),
+      label: String(row.label ?? ''),
+      note: String(row.note ?? ''),
+    };
+  });
+}
+
 function getLocalResource(slug: string): ResourceDoc {
   const rawFile = readLocalFile(slug);
   const { data, content } = matter(rawFile);
@@ -123,6 +151,9 @@ function getLocalResource(slug: string): ResourceDoc {
     publishedRaw instanceof Date
       ? publishedRaw.toISOString().slice(0, 10)
       : String(publishedRaw ?? '');
+  const accessRaw = rawFm.access;
+  const access =
+    accessRaw === 'paid' || accessRaw === 'free' ? accessRaw : 'free';
   return {
     frontmatter: {
       slug: String(rawFm.slug ?? slug),
@@ -130,6 +161,18 @@ function getLocalResource(slug: string): ResourceDoc {
       series: String(rawFm.series ?? ''),
       summary: String(rawFm.summary ?? ''),
       youtube: rawFm.youtube ? String(rawFm.youtube) : undefined,
+      youtubeTitle: rawFm.youtubeTitle
+        ? String(rawFm.youtubeTitle)
+        : undefined,
+      cover: rawFm.cover ? String(rawFm.cover) : undefined,
+      access,
+      readingMinutes:
+        rawFm.readingMinutes != null
+          ? Number(rawFm.readingMinutes)
+          : undefined,
+      contents: parseContents(rawFm.contents),
+      fitFor: parseStringList(rawFm.fitFor),
+      notFor: parseStringList(rawFm.notFor),
       freeParts: Number(rawFm.freeParts ?? 1),
       publishedAt,
       downloads: rawFm.downloads as ResourceFrontmatter['downloads'],

@@ -7,6 +7,8 @@ export type ButtonProps = {
   size?: 'md' | 'sm';
   icon?: string;
   href?: string;
+  target?: string;
+  rel?: string;
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type'];
   disabled?: boolean;
   loading?: boolean;
@@ -19,6 +21,8 @@ export function Button({
   size = 'md',
   icon,
   href,
+  target,
+  rel,
   type = 'button',
   disabled = false,
   loading = false,
@@ -45,7 +49,7 @@ export function Button({
 
   if (href && !isDisabled) {
     return (
-      <a className={className} href={href}>
+      <a className={className} href={href} target={target} rel={rel}>
         {content}
       </a>
     );
