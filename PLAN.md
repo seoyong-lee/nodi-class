@@ -63,7 +63,7 @@ nodi-class/
 - AWS CDK v2 최신, `aws-cdk-lib` + `constructs`, Lambda 런타임 Node 22, 번들은 `NodejsFunction`(esbuild)
 - AWS SDK v3 (`@aws-sdk/client-dynamodb`, `@aws-sdk/lib-dynamodb`, `@aws-sdk/client-sesv2`)
 - zod, vitest, eslint(flat config), prettier
-- **Tailwind 쓰지 않는다.** 디자인 시스템이 CSS 변수 기반이라 충돌한다. CSS Modules + 토큰 변수만 쓴다.
+- **Tailwind 쓰지 않는다.** 디자인 시스템이 CSS 변수 기반이라 충돌한다. **vanilla-extract** + 토큰 CSS 변수만 쓴다 (`*.css.ts`). CSS Modules·인라인 hex는 쓰지 않는다.
 
 ### 1.2 워크스페이스 이름
 - `@nodi/web`, `@nodi/design-system`, `@nodi/shared`, `@nodi/api`, `@nodi/infra`
@@ -105,7 +105,7 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 | SectionHeading | content | `index: '01'`, `label`, `title`, `align?: 'left'\|'center'` | 라벨 12px 0.08em은 영문에만. 한글 라벨은 자간 0 |
 | BeforeAfter | content | `beforeCaption`, `afterCaption`, `before: ReactNode`, `after: ReactNode` | 375에서 1열 |
 | ProductCard | cards | `label`, `title`, `summary`, `rows: {label,value}[3]`, `ctaLabel`, `ctaHref?`, `ctaVariant?: 'primary'\|'secondary'` | rows는 정확히 3개. `ctaVariant` 기본값은 **secondary**, VOD 카드만 primary |
-| ResourceCard | cards | `title`, `slug`, `locked: boolean`, `thumbnail?`, `openLabel?` | 잠금 시 자물쇠 아이콘, 열림 시 "받기" |
+| ResourceCard | cards | `title`, `slug`, `locked: boolean`, `thumbnail?`, `openLabel?`, `fromVideo?`(기본 true) | `fromVideo` 시 Badge `영상에서 소개`. 잠금 시 자물쇠 아이콘, 열림 시 openLabel |
 | Thumb16x9 | cards | `src?`, `alt?` | 이미지 없으면 `--surface-raised` 플레이스홀더 |
 | VideoCard | cards | `title`, `note`, `href`, `thumbnail?` | 조회수 표시 없음. 유튜브 임베드는 클릭 후 로드(iframe 지연) |
 | EmailGate | blocks | `title`, `description?`, `buttonLabel`, `consent`, `submittedLabel`, `submitted: boolean`, `onSubmit(email, extra)`, `extraField?`(select 1개) | 375에서 입력 100% + 버튼 다음 줄 full width. **입력창이 카드 밖으로 넘치지 않게** |
@@ -113,10 +113,10 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 
 ### 2.3 이관하면서 정리할 것 (디자인 파일에 남아 있는 결함)
 - [ ] 4개 페이지 `h1` 인라인 `font-family:'IBM Plex Sans KR'` 와 `letter-spacing:-0.035em` 제거 → 시스템 `--font-sans`, `--tracking-hero`(-0.02em), `--leading-hero`. `<head>`의 Google Fonts 링크 삭제.
-- [ ] 홈 375 `h1`이 긴 버전("코딩·디자인 몰라도, 내 사업에 필요한…")으로 남아 있음 → 1440과 동일한 확정 카피(§3.1)로 통일. 모바일 36px.
+- [ ] 홈 375 `h1`이 긴 버전("코딩·디자인 몰라도, 내 사업에 필요한…")으로 남아 있음 → 1440과 동일한 2줄 카피(§3.1)로 통일. 모바일 36px.
 - [ ] 홈 03 상품 카드 3개 버튼 → VOD만 primary, 워크숍·서비스는 secondary.
 - [ ] `/free` 잠금 상태에서 게이트 아래 Part 01~ 스켈레톤/본문을 `filter: blur(6px)` + 오버레이로 이어서 보여줄 것 (게이트 뒤가 비어 있으면 안 됨).
-- [ ] 홈 04 "운영하는 사람" 3줄 → 첫 줄만 20px Bold, 나머지 16px Regular `--text-body`.
+- [ ] 홈 04 "만든 사람" 3줄 → 첫 줄만 20px Bold, 나머지 16px Regular `--text-body`.
 - [ ] 목차 `[ ]` 플레이스홀더와 본문 스켈레톤 → `content/resources/*`의 실제 MDX로 대체.
 
 ### 2.4 디자인 준수 자동 검사
@@ -131,17 +131,19 @@ CI 없이 `pnpm lint`에서 걸리게만 한다.
 
 라우트는 App Router. 모든 페이지는 서버 컴포넌트 기본, 폼만 클라이언트 컴포넌트.
 
-공통 레이아웃: 상단 내비 `[노디 AI 클래스 워드마크] · 무료 자료(/#free) · 클래스(/course) · 서비스(/service) · [유튜브 ↗](secondary sm)`. 현재 페이지 항목만 `--accent` 색. 푸터는 `SiteFooter`.
+공통 레이아웃: 상단 내비 `[노디 AI`(Bold) + `클래스`(Regular) 워드마크] · 무료 자료(/#free) · 클래스(/course) · 서비스(/service) · [유튜브 ↗](secondary sm)`. 현재 페이지 항목만 `--accent` 색. 푸터는 `SiteFooter`.
 
 ### 3.1 `/` 홈
+> 홈 레이아웃·카피는 `design/Home.dc.html` 1440 확정안을 따른다. (구 PLAN 3줄 h1·중간 EmailGate는 폐기.)
+
 | 블록 | 내용 |
 |---|---|
-| 히어로(중앙) | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` `이제 AI로 직접` `만들 수 있습니다.` (3줄 고정, `<br>`, keep-all) / 서브 `랜딩페이지·브랜드·PPT. 유튜브 노디 AI에서 쓴 프롬프트와 가이드를 그대로 드립니다. 이메일 한 번이면 전부 열립니다.` / Primary `무료 자료 받기`(→ `#free`) · Secondary `유튜브에서 보기` |
-| 01 / 무료 자료 (`id="free"`) | 제목 `영상에서 쓴 자료, 그대로 드립니다` / **EmailGate**(제목 `한 번 등록하면 모든 자료가 열립니다`, 버튼 `받기`, extraField=§5.2 select) / ResourceCard 4개 (§4 슬러그 순) |
-| 02 / 이렇게 달라집니다 | BeforeAfter(캡션 `만들기 전` / `기준을 준 뒤`) / 캡션 `레퍼런스와 기준을 먼저 주면 같은 클로드에서 이 차이가 납니다.` / 이미지는 `public/img/before.png`, `after.png` (6.2천 영상 화면) |
-| 03 / 클래스 | 제목 `무료 자료 다음은 클래스입니다` / ProductCard ×3 (§3.5 카드 데이터) |
-| 04 / 운영하는 사람 | 프로필 이미지(4:5, 민트 배경 흑백 일러스트) + `직접 서비스를 만드는 5년차 개발자`(Bold) / `컴퓨터소프트웨어공학 석사` / `비전공자 대상 풀스택 개발 부트캠프 강사` / 소형 `유튜브 노디 AI 운영` |
-| 최종 CTA(중앙) | `무료 자료부터 받아보세요` + EmailGate |
+| 히어로(중앙) | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` / `이제 AI로 직접 만들 수 있습니다` (2줄, `<br>`, keep-all, 마침표 없음) / 서브 `노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.` + `내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.` / Primary `무료 자료 받기`(→ `#free`) · Secondary `유튜브에서 보기` |
+| 01 / 무료 자료 (`id="free"`) | 제목 `영상에서 쓴 자료, 내 사업에 바로 써보세요` / ResourceCard 4개 (§4 슬러그 순, Badge `영상에서 소개` + 잠금 아이콘). **이 섹션에 EmailGate 없음** |
+| 02 / 이렇게 달라집니다 | BeforeAfter(캡션 `만들기 전` / `기준을 준 뒤`) / 캡션 `같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.` / 이미지는 `public/img/before.png`, `after.png` |
+| 03 / 클래스 | 제목 `직접 만들어봤다면, 이제 기준을 배워보세요` / ProductCard ×3 (§3.5, VOD만 primary) |
+| 04 / 만든 사람 | 프로필(4:5, `--surface-raised`) + `직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어`(Bold 20px) / `컴퓨터소프트웨어공학 석사` / `비전공자 대상 풀스택 개발 부트캠프 강사` / 소형 `유튜브 노디 AI 운영` |
+| 최종 CTA(중앙) | `무료 자료로 먼저 직접 만들어보세요` + EmailGate(제목 `한 번 등록하면 모든 자료가 열립니다`, 버튼 `받기`, extraField=§5.2) |
 
 ### 3.2 `/free/[slug]` 자료 상세
 - 정적 경로: `generateStaticParams`로 `content/resources/*` 슬러그 전부.
@@ -483,7 +485,7 @@ NOTIFY_EMAIL=contact@cascades.studio
 ```
 - PLAN.md가 기준이다. 범위 밖 기능은 만들지 말고 PLAN.md §13 TODO에 한 줄 추가한다.
 - 카피는 PLAN.md §3의 문장을 글자 단위로 쓴다. 문구를 '개선'하지 않는다.
-- 색·그림자·폰트: 토큰 변수만. hex 리터럴·box-shadow·Tailwind 금지.
+- 색·그림자·폰트: 토큰 변수만. hex 리터럴·box-shadow·Tailwind 금지. 스타일은 vanilla-extract(`*.css.ts`).
 - 이메일 원문을 로그·URL·쿠키에 넣지 않는다.
 - Next(apps/web)는 AWS SDK를 import하지 않는다. 데이터 접근은 전부 services/api.
 - 새 npm 의존성은 추가 전에 이유를 커밋 메시지에 쓴다.
@@ -491,10 +493,10 @@ NOTIFY_EMAIL=contact@cascades.studio
 ```
 
 `.cursor/rules/`:
-- `web.mdc` (glob `apps/web/**`): 서버 컴포넌트 기본, 클라이언트는 폼·Turnstile만. CSS Modules. 이미지는 `next/image`. 한글 `word-break: keep-all`.
+- `web.mdc` (glob `apps/web/**`): 서버 컴포넌트 기본, 클라이언트는 폼·Turnstile만. vanilla-extract. 이미지는 `next/image`. 한글 `word-break: keep-all`.
 - `api.mdc` (glob `services/api/**`): 핸들러 = parse → service → response. 응답 스키마는 shared에서. 콘솔 로그 대신 구조화 로그(JSON). 테스트 필수.
 - `infra.mdc` (glob `infra/**`): 스택 4개 이름 고정. `RemovalPolicy.RETAIN`은 prod 테이블만. 시크릿은 코드에 절대 없음.
-- `design.mdc` (glob `packages/design-system/**`): props는 §2.2 표와 일치. 새 variant 추가 금지.
+- `design.mdc` (glob `packages/design-system/**`): props는 §2.2 표와 일치. 새 variant 추가 금지. vanilla-extract.
 
 ---
 
