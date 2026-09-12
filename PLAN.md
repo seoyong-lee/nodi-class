@@ -17,7 +17,7 @@
 ### 0.3 사다리 (사이트가 파는 것의 순서)
 | 단계 | 상품 | 사이트 위치 | Step |
 |---|---|---|---|
-| 무료 | 영상별 자료 (가이드북·프롬프트·체크리스트) ↔ 이메일 | `/`, `/free/[slug]` | **1** |
+| 무료 | 영상별 자료 (가이드북·프롬프트·체크리스트) ↔ 이메일 | `/`, `/free`, `/free/[slug]` | **1** |
 | 할인→정가 | VOD "클로드 디자인 실전" 10~20만 | `/course` (지금은 대기 등록만) | 2 |
 | 프리미엄 | 워크숍(라이브 첨삭) / "AI 결과물 마무리" 300~500만 | `/service` (문의 폼만) | 1(폼) / 2 |
 
@@ -105,10 +105,10 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 | SectionHeading | content | `index: '01'`, `label`, `title`, `align?: 'left'\|'center'` | 라벨 12px 0.08em은 영문에만. 한글 라벨은 자간 0 |
 | BeforeAfter | content | `beforeCaption`, `afterCaption`, `before: ReactNode`, `after: ReactNode` | 375에서 1열 |
 | ProductCard | cards | `label`, `title`, `summary`, `rows: {label,value}[3]`, `ctaLabel`, `ctaHref?`, `ctaVariant?: 'primary'\|'secondary'` | rows는 정확히 3개. VOD CTA=primary, 워크숍·서비스 CTA=secondary |
-| ResourceCard | cards | `title`, `slug`, `locked: boolean`, `thumbnail?`, `openLabel?`, `fromVideo?`(기본 true) | `fromVideo` 시 Badge `영상에서 소개`. 잠금 시 자물쇠 아이콘, 열림 시 openLabel |
+| ResourceCard | cards | `title`, `slug`, `locked: boolean`, `thumbnail?`, `openLabel?`, `badge?` | badge=유형 칩(`가이드북`/`프롬프트`/`체크리스트`/`요약본`). 잠금 시 자물쇠, 열림 시 openLabel |
 | Thumb16x9 | cards | `src?`, `alt?` | 이미지 없으면 `--surface-raised` 플레이스홀더 |
 | VideoCard | cards | `title`, `note`, `href`, `thumbnail?` | 조회수 표시 없음. 유튜브 임베드는 클릭 후 로드(iframe 지연) |
-| EmailGate | blocks | `title`, `description?`, `buttonLabel`, `consent`, `submittedLabel`, `submitted: boolean`, `onSubmit(email, extra)`, `extraField?`(select 1개) | 375에서 입력 100% + 버튼 다음 줄 full width. **입력창이 카드 밖으로 넘치지 않게** |
+| EmailGate | blocks | `title`, `description?`, `buttonLabel`, `consent`, `submittedLabel`, `submitted: boolean`, `onSubmit(email, extra)`, `extraField?`(select 1개), `layout?: 'inline'\|'stack'` | stack=필드·버튼 전폭(홈 CTA). 375에서 입력 100% + 버튼 full width. **입력창이 카드 밖으로 넘치지 않게** |
 | SiteFooter | blocks | `operator`, `business: string[]`, `links: {label,href}[]`, `socialLinks: {label,href,icon}[]` | 사업자 정보 값은 env에서 |
 
 ### 2.3 이관하면서 정리할 것 (디자인 파일에 남아 있는 결함)
@@ -131,22 +131,23 @@ CI 없이 `pnpm lint`에서 걸리게만 한다.
 
 라우트는 App Router. 모든 페이지는 서버 컴포넌트 기본, 폼만 클라이언트 컴포넌트.
 
-공통 레이아웃: 상단 내비 [로고 마크 + `노디 AI`(Bold) + `클래스`(Regular) 워드마크] · 무료 자료(/#free) · 클래스(/course) · 서비스(/service) · [유튜브 ↗](secondary sm)`. 현재 페이지 항목만 `--accent` 색. favicon·OG는 `public/brand/*`. 푸터는 `SiteFooter`.
+공통 레이아웃: 상단 내비 [로고 마크 + `노디 AI`(Bold) + `클래스`(Regular) 워드마크](→`/`) · 무료 자료(`/free`) · 클래스(`/course`) · 서비스(`/service`) · [유튜브 ↗](secondary sm)`. 현재 페이지 항목만 `--accent` 색. favicon·OG는 `public/brand/*`. 푸터는 `SiteFooter`.
 
 ### 3.1 `/` 홈
 > 홈 레이아웃·카피는 `design/Home.dc.html` 1440 확정안을 따른다. (구 PLAN 3줄 h1·중간 EmailGate는 폐기.)
 
 | 블록 | 내용 |
 |---|---|
-| 히어로(중앙) | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` / `이제 AI로 직접 만들 수 있습니다` (2줄, `<br>`, keep-all, 마침표 없음) / 서브 `노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.` + `내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.` / Primary `무료 자료 받기`(→ `#free`) · Secondary `유튜브에서 보기` |
-| 01 / 무료 자료 (`id="free"`) | 제목 `영상에서 쓴 자료, 내 사업에 바로 써보세요` / ResourceCard 4개 (§4 슬러그 순, Badge `영상에서 소개` + 잠금 아이콘). **이 섹션에 EmailGate 없음** |
+| 히어로(중앙) | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` / `이제 AI로 직접 만들 수 있습니다` (2줄, `<br>`, keep-all, 마침표 없음) / 서브 `노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.` + `내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.` / Primary `무료 자료 받기`(→ `/free`) · Secondary `유튜브에서 보기` |
+| 01 / 무료 자료 (`id="free"`) | 제목 `AI로 만들 때 필요한 기준과 방법을 모았습니다` / ResourceCard 4개 (§4 슬러그 순, Badge=유형 칩 + 잠금 아이콘). **이 섹션에 EmailGate 없음** |
 | 02 / 이렇게 달라집니다 | BeforeAfter(캡션 `만들기 전` / `기준을 준 뒤`) / 캡션 `같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.` / 이미지는 `public/img/before.png`, `after.png` |
 | 03 / 클래스 | 제목 `직접 만들어봤다면, 이제 기준을 배워보세요` / ProductCard ×3 (§3.5, VOD primary · 워크숍·서비스 secondary) |
 | 04 / 만든 사람 | 프로필(4:5, `--surface-raised`) + `직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어`(Bold 20px) / `컴퓨터소프트웨어공학 석사` / `비전공자 대상 풀스택 개발 부트캠프 강사` / 소형 `유튜브 노디 AI 운영` |
-| 최종 CTA(중앙) | `무료 자료로 먼저 직접 만들어보세요` + EmailGate(제목 `한 번 등록하면 모든 자료가 열립니다`, 버튼 `받기`, extraField=§5.2) |
+| 최종 CTA(2열) | eyebrow `무료 자료` / 제목 `내 사업에 바로 써볼 무료 자료부터 시작해보세요.` / 설명 `노디 AI에서 소개한 프롬프트·가이드·체크리스트를 한곳에 정리했습니다.` + EmailGate(제목 `무료 자료 받아보기`, 서브 `이메일을 한 번 등록하면 모든 무료 자료를 확인할 수 있습니다.`, 버튼 `무료 자료 받기`, select 라벨 `지금 만들고 있는 것은 무엇인가요?`, extraField=§5.2). 데스크톱 좌 카피·우 폼 카드(~520px), ≤768px 1열 |
 
-### 3.2 `/free/[slug]` 자료 상세
-- 정적 경로: `generateStaticParams`로 API(또는 로컬 MDX) 슬러그 전부.
+### 3.2 `/free` 목록 · `/free/[slug]` 자료 상세
+- `/free`: 라벨 `무료 자료` / h1 `AI로 만들 때 필요한` / `기준과 방법을 모았습니다` / 서브 `더 나은 결과물을 만들고, 고치고, 반복해서 활용할 수 있도록 실전 프롬프트·가이드·체크리스트를 무료로 제공합니다.` / ResourceCard 그리드(유형 Badge + 잠금 상태는 쿠키).
+- `/free/[slug]` 정적 경로: `generateStaticParams`로 API(또는 로컬 MDX) 슬러그 전부.
 - 상단: 라벨(frontmatter `series`), h1(frontmatter `title`), 서브(frontmatter `summary`), 우측 VideoCard(frontmatter `youtube`).
 - 목차: 본문 `##` 헤딩을 파싱해 번호 리스트로 자동 생성.
 - 본문 게이트: frontmatter `freeParts: 1` 만큼(기본 Part 00 하나) 공개, 이후는 잠금.

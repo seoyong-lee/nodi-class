@@ -8,7 +8,8 @@ export type ResourceCardProps = {
   locked: boolean;
   thumbnail?: string;
   openLabel?: string;
-  fromVideo?: boolean;
+  /** Type chip e.g. 가이드북 / 프롬프트 / 체크리스트 / 요약본 */
+  badge?: string;
 };
 
 export function ResourceCard({
@@ -17,7 +18,7 @@ export function ResourceCard({
   locked,
   thumbnail,
   openLabel = '받기',
-  fromVideo = true,
+  badge,
 }: ResourceCardProps) {
   const href = `/free/${slug}`;
 
@@ -34,7 +35,7 @@ export function ResourceCard({
           {title}
         </h3>
         <div className="flex items-center gap-inline-tight flex-wrap">
-          {fromVideo ? <Badge>영상에서 소개</Badge> : null}
+          {badge ? <Badge>{badge}</Badge> : null}
           {locked ? (
             <span className="inline-flex items-center gap-[6px] text-caption text-muted">
               <Icon name="lock" size={14} />

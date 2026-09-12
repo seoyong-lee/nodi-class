@@ -137,8 +137,18 @@ export function KitShowcase() {
       <section className="flex flex-col gap-block-tight">
         <h2 className="m-0 text-h3 font-bold text-strong">ResourceCard · Thumb16x9</h2>
         <div className="grid grid-cols-2 gap-block-tight max-[800px]:grid-cols-1">
-          <ResourceCard title="클로드 디자인 가이드" slug="claude-design" locked />
-          <ResourceCard title="프롬프트 체크리스트" slug="prompt-checklist" locked={false} />
+          <ResourceCard
+            title="클로드 PPT 실전 가이드북"
+            slug="claude-ppt-guidebook"
+            locked
+            badge="가이드북"
+          />
+          <ResourceCard
+            title="클로드 랜딩페이지 디자인 체크리스트"
+            slug="claude-design-landing-checklist"
+            locked={false}
+            badge="체크리스트"
+          />
           <Thumb16x9 />
         </div>
       </section>

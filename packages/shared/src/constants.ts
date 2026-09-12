@@ -10,6 +10,21 @@ export const RESOURCE_SLUGS = [
   'ai-design-5-principles',
 ] as const;
 
+/** Card type chip for ResourceCard (not YouTube-gated). */
+export const RESOURCE_BADGE: Record<(typeof RESOURCE_SLUGS)[number], string> = {
+  'claude-ppt-guidebook': '가이드북',
+  'claude-prompt-set': '프롬프트',
+  'claude-design-landing-checklist': '체크리스트',
+  'ai-design-5-principles': '요약본',
+};
+
+export function resourceBadge(slug: string): string {
+  if ((RESOURCE_SLUGS as readonly string[]).includes(slug)) {
+    return RESOURCE_BADGE[slug as (typeof RESOURCE_SLUGS)[number]];
+  }
+  return '무료 자료';
+}
+
 export const BUILDING_OPTIONS = [
   { value: 'landing', label: '랜딩페이지' },
   { value: 'brand', label: '브랜드·로고' },
