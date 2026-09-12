@@ -1,0 +1,21 @@
+{
+  "name": "노디 AI 클래스",
+  "short_name": "노디 AI",
+  "description": "AI로 내 사업에 필요한 것을 직접 만들고, 더 나은 결과물로 다듬는 방법을 배웁니다.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0D1210",
+  "theme_color": "#39CD9B",
+  "icons": [
+    {
+      "src": "/brand/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/brand/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
