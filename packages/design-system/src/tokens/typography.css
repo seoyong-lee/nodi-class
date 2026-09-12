@@ -1,5 +1,7 @@
 :root{
 --font-sans:"Pretendard",-apple-system,BlinkMacSystemFont,system-ui,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+/* Hero h1 only — design/*.dc.html */
+--font-hero:"IBM Plex Sans KR","Pretendard",sans-serif;
 
 /* Two weights. Never a third. */
 --weight-regular:400;
@@ -15,12 +17,13 @@
 --size-caption:13px;
 --size-label:12px;
 
---leading-hero:1.15;
+--leading-hero:1.2;
+--leading-hero-mobile:1.26;
 --leading-heading:1.3;
 --leading-body:1.7;
 --leading-tight:1.45;
 
---tracking-hero:-0.02em;
+--tracking-hero:-0.035em;
 --tracking-heading:-0.015em;
 --tracking-body:-0.01em;
 --tracking-label:0.08em;

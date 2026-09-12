@@ -35,10 +35,11 @@ module.exports = {
       },
       fontFamily: {
         sans: 'var(--font-sans)',
+        hero: 'var(--font-hero)',
       },
       fontSize: {
         hero: ['var(--size-hero)', { lineHeight: 'var(--leading-hero)', letterSpacing: 'var(--tracking-hero)' }],
-        'hero-m': ['var(--size-hero-mobile)', { lineHeight: 'var(--leading-hero)', letterSpacing: 'var(--tracking-hero)' }],
+        'hero-m': ['var(--size-hero-mobile)', { lineHeight: 'var(--leading-hero-mobile)', letterSpacing: 'var(--tracking-hero)' }],
         h2: ['var(--size-h2)', { lineHeight: 'var(--leading-heading)', letterSpacing: 'var(--tracking-heading)' }],
         h3: ['var(--size-h3)', { lineHeight: 'var(--leading-tight)', letterSpacing: 'var(--tracking-heading)' }],
         body: ['var(--size-body)', { lineHeight: 'var(--leading-body)', letterSpacing: 'var(--tracking-body)' }],
@@ -51,15 +52,8 @@ module.exports = {
         bold: 'var(--weight-bold)',
       },
       spacing: {
-        1: 'var(--space-1)',
-        2: 'var(--space-2)',
-        3: 'var(--space-3)',
-        4: 'var(--space-4)',
-        5: 'var(--space-5)',
-        6: 'var(--space-6)',
-        8: 'var(--space-8)',
-        10: 'var(--space-10)',
-        15: 'var(--space-15)',
+        // Keep default Tailwind numeric scale (1=4px…). Remapping broke
+        // p-3/w-8 etc. Use semantic tokens for brand gaps.
         section: 'var(--gap-section)',
         block: 'var(--gap-block)',
         'block-tight': 'var(--gap-block-tight)',
