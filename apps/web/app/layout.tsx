@@ -74,9 +74,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             operator={OPERATOR}
             business={business}
             links={[
+              // 사업자등록 전까지 개인정보·환불 링크 숨김
               { label: '이용약관', href: '/terms' },
-              { label: '개인정보처리방침', href: '/privacy' },
-              { label: '환불 정책', href: '/refund' },
             ]}
             socialLinks={socialLinks}
           />

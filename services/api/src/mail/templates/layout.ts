@@ -52,7 +52,6 @@ export function listUnsubHeaders(
 export function footerText(ctx: FooterContext): string {
   return [
     `노디 AI 클래스 · 운영 ${OPERATOR}`,
-    `상호 ${OPERATOR}`,
     `문의 ${CONTACT_EMAIL}`,
     `수신거부: ${unsubUrl(ctx.siteUrl, ctx.unsubToken)}`,
   ].join('\n');
@@ -61,7 +60,6 @@ export function footerText(ctx: FooterContext): string {
 export function footerHtml(ctx: FooterContext): string {
   const rows = [
     `노디 AI 클래스 · 운영 ${OPERATOR}`,
-    `상호 ${OPERATOR}`,
     `문의 ${CONTACT_EMAIL}`,
   ];
   const url = unsubUrl(ctx.siteUrl, ctx.unsubToken);
