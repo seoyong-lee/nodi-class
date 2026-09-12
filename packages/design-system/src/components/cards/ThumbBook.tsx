@@ -6,19 +6,21 @@ export type ThumbBookProps = {
   children?: ReactNode;
 };
 
-/** Book cover thumb. Mild portrait so the mockup’s width (spine/shadow) still reads. */
+/** Book cover — natural aspect ratio, no crop/scale stretch. */
 export function ThumbBook({ src, alt = '', children }: ThumbBookProps) {
   return (
-    <div className="relative aspect-[4/4] w-full overflow-hidden bg-raised">
+    <div className="relative w-full overflow-hidden bg-raised">
       {src ? (
         <img
-          className="absolute inset-0 h-full w-full scale-100 object-cover object-center"
+          className="block w-full h-auto"
           src={src}
           alt={alt}
+          decoding="async"
+          loading="lazy"
         />
       ) : (
-        <span className="absolute inset-0 flex items-center justify-center text-label tracking-label-en text-disabled">
-          4:5
+        <span className="flex items-center justify-center aspect-[4/5] text-label tracking-label-en text-disabled">
+          cover
         </span>
       )}
       {children}

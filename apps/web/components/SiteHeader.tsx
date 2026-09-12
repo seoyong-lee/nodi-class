@@ -39,6 +39,7 @@ export function SiteHeader({ youtubeUrl }: { youtubeUrl: string }) {
             width={28}
             height={28}
             className="flex-none rounded-[6px] max-[720px]:w-6 max-[720px]:h-6"
+            quality={100}
             priority
           />
           <span className="flex items-baseline gap-[6px] max-[720px]:gap-[5px]">

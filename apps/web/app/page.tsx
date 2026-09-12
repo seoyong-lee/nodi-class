@@ -66,20 +66,24 @@ export default function HomePage() {
           afterCaption="After"
           before={
             <Image
-              className="rounded"
+              className="rounded object-cover"
               src="/img/before.png"
               alt="만들기 전"
               fill
               sizes="(max-width: 960px) 100vw, 560px"
+              quality={100}
+              priority
             />
           }
           after={
             <Image
-              className="rounded"
+              className="rounded object-cover"
               src="/img/after.png"
               alt="기준을 준 뒤"
               fill
               sizes="(max-width: 960px) 100vw, 560px"
+              quality={100}
+              priority
             />
           }
         />
@@ -112,13 +116,14 @@ export default function HomePage() {
               alt="nodi"
               fill
               sizes="240px"
+              quality={100}
             />
           </div>
           <div className="flex flex-col gap-6 pt-inline-tight">
             <ul className="list-none m-0 p-0 flex flex-col gap-y-0">
               <li className="text-h2 font-bold text-strong max-[720px]:text-[20px]">노디</li>
               <li className="text-body max-[720px]:text-body-sm pt-2">
-                직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어
+                직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어입니다.
               </li>
               <li className="text-body max-[720px]:text-body-sm">
                 시각디자인 학사, 컴퓨터소프트웨어공학 석사

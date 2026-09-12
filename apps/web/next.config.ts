@@ -2,6 +2,9 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@nodi/design-system', '@nodi/shared'],
+  images: {
+    qualities: [75, 100],
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

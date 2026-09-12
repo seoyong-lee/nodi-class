@@ -185,18 +185,8 @@ export function KitShowcase() {
 
       <SiteFooter
         operator="Cascades"
-        business={[
-          '상호 Cascades',
-          '대표 노디',
-          '사업자등록번호 000-00-00000',
-          '통신판매업신고 제0000-서울-0000호',
-          '문의 hello@nodiworks.com',
-        ]}
-        links={[
-          { label: '이용약관', href: '/terms' },
-          { label: '개인정보처리방침', href: '/privacy' },
-          { label: '환불 정책', href: '/refund' },
-        ]}
+        business={['문의 hello@nodiworks.com']}
+        links={[{ label: '이용약관', href: '/terms' }]}
         socialLinks={[
           {
             label: 'YouTube',

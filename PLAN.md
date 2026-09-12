@@ -106,7 +106,7 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 | BeforeAfter | content | `beforeCaption`, `afterCaption`, `before: ReactNode`, `after: ReactNode` | 375에서 1열. hover(leave 시 복귀)·터치 탭 토글만. 뷰포트 벗어나면 off. 스크롤 진입 리빌 없음. `--dur-reveal`. 그림자·파티클 없음 |
 | ProductCard | cards | `label`, `title`, `summary`, `rows: {label,value}[3]`, `ctaLabel`, `ctaHref?`, `ctaVariant?: 'primary'\|'secondary'` | rows는 정확히 3개. VOD CTA=primary, 워크숍·서비스 CTA=secondary |
 | ResourceCard | cards | `title`, `slug`, `thumbnail?` | 타이틀만(유형 Badge·자물쇠 없음). 썸네일은 ThumbBook(4:5). 그리드 3열 |
-| ThumbBook | cards | `src?`, `alt?` | 책 커버 4:5. mockup 여백은 scale로 크롭 |
+| ThumbBook | cards | `src?`, `alt?` | 책 커버. **원본 비율 유지**(`w-full h-auto`). 강제 크롭·스케일 없음 |
 | Thumb16x9 | cards | `src?`, `alt?` | 이미지 없으면 `--surface-raised` 플레이스홀더 |
 | VideoCard | cards | `title`, `note`, `href`, `thumbnail?` | 조회수 표시 없음. 유튜브 임베드는 클릭 후 로드(iframe 지연) |
 | EmailGate | blocks | `title`, `description?`, `buttonLabel`, `consent`, `consentDetail?`, `submittedLabel`, `submitted: boolean`, `onSubmit(email, extra)`, `extraField?`(select 1개), `layout?: 'inline'\|'stack'` | 동의 체크 기본 해제·필수. consent=한 줄 라벨, consentDetail=수집·목적·보관·해지(자료 페이지 닫힘)·처리방침 링크. stack=필드·버튼 전폭(홈 CTA). 375에서 입력 100% + 버튼 full width. **입력창이 카드 밖으로 넘치지 않게** |
@@ -249,7 +249,7 @@ downloads:            # 선택. 있으면 열림 상태에서 presigned 링크 �
 ```
 
 - 본문은 `## Part 00. 먼저 알아두기` 형식의 `##` 헤딩으로 파트를 나눈다. 목차와 게이트 분리는 이 헤딩 기준.
-- 기존 노션 페이지 2개를 MDX로 옮긴다: `cascades-studio.notion.site/PPT-3d540dc0dcc08009bc18cce26662df57`, `.../3cf40dc0dcc080db9593fb7631b44953`. 나머지 2개 슬러그는 frontmatter만 만들고 본문은 `준비 중` (카드는 노출하되 클릭 시 `/free/[slug]`에서 알림 게이트만).
+- 기존 노션 페이지 2개를 MDX로 옮긴다: `cascades-studio.notion.site/PPT-3d540dc0dcc08009bc18cce26662df57` → `claude-ppt-guidebook`, `.../3cf40dc0dcc080db9593fb7631b44953`(워크스페이스 동등본 `클로드 무료 프롬프트 세트`) → `claude-prompt-set`. 나머지 2개 슬러그는 frontmatter만 만들고 본문은 `준비 중` (카드는 노출하되 클릭 시 `/free/[slug]`에서 알림 게이트만).
 - 코드블록(프롬프트)은 복사 버튼 있는 컴포넌트로 렌더.
 - 웹은 `NEXT_PUBLIC_API_URL`이 있으면 API를 읽고, 없으면(로컬) MDX 폴백.
 
