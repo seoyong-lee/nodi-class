@@ -44,13 +44,11 @@ type ApiResource = {
   updatedAt: string;
 };
 
-function slugifyHeading(heading: string): string {
-  return heading
-    .replace(/^Part\s+\d+\.\s*/i, '')
-    .trim()
-    .toLowerCase()
-    .replace(/[^\w\uac00-\ud7a3]+/g, '-')
-    .replace(/^-|-$/g, '');
+function partIdFromHeading(heading: string, index: number): string {
+  const partNum = /^Part\s+(\d+)\./i.exec(heading);
+  if (partNum) return `part-${partNum[1]!.padStart(2, '0')}`;
+  if (/^부록/.test(heading)) return 'part-appendix';
+  return `part-${String(index).padStart(2, '0')}`;
 }
 
 export function splitParts(markdown: string): ResourcePart[] {
@@ -66,12 +64,14 @@ export function splitParts(markdown: string): ResourcePart[] {
   }
 
   for (const line of lines) {
-    const match = /^##\s+(.+)$/.exec(line);
-    if (match) {
+    const h2Jsx = /^<h2\s+id="([^"]+)">([^<]+)<\/h2>\s*$/.exec(line);
+    const h2Md = /^##\s+(.+)$/.exec(line);
+    if (h2Jsx || h2Md) {
       flush();
-      const heading = match[1]!.trim();
+      const id = h2Jsx?.[1]?.trim();
+      const heading = (h2Jsx?.[2] ?? h2Md?.[1]!).trim();
       current = {
-        id: slugifyHeading(heading) || `part-${parts.length}`,
+        id: id || partIdFromHeading(heading, parts.length),
         heading,
         body: '',
       };
