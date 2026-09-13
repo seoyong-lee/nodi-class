@@ -209,8 +209,9 @@ export class NodiClassStack extends Stack {
     });
 
     // --- API / Lambdas ---
-    const siteUrl = `https://${domain}`;
-    const siteUrlWww = `https://www.${domain}`;
+    const siteUrl = `https://www.${domain}`;
+    const siteUrlApex = `https://${domain}`;
+    const siteUrlWww = siteUrl;
     const mailFrom = `노디 AI 클래스 <hello@mail.${domain}>`;
     const gateSecretParam = ssmPath('GATE_SECRET');
     const turnstileSecretParam = ssmPath('TURNSTILE_SECRET');
@@ -332,7 +333,7 @@ export class NodiClassStack extends Stack {
       apiName: `${NAME_PREFIX}-api`,
       createDefaultStage: false,
       corsPreflight: {
-        allowOrigins: [siteUrl, siteUrlWww],
+        allowOrigins: [siteUrlApex, siteUrlWww],
         allowMethods: [
           CorsHttpMethod.GET,
           CorsHttpMethod.POST,

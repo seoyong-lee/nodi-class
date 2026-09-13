@@ -524,7 +524,7 @@ NodiClassStack (nodi-class) @ ap-northeast-2
 
 ### 9.2 호스팅 (Step 1)
 
-Amplify Hosting을 콘솔에서 GitHub 연결로 세팅한다 (모노레포 설정: appRoot `apps/web`, 빌드 `pnpm install --frozen-lockfile && pnpm --filter @nodi/web build`). 환경 변수는 §10. 커스텀 도메인 `<NODI_DOMAIN>` + `www` 리다이렉트. CDK로 옮기는 건 TODO.
+Amplify Hosting을 콘솔에서 GitHub 연결로 세팅한다 (모노레포 설정: appRoot `apps/web`, 빌드 `pnpm install --frozen-lockfile && pnpm --filter @nodi/web build`). 환경 변수는 §10. 커스텀 도메인: **`www.<NODI_DOMAIN>`가 정식(canonical)**, apex는 www로 리다이렉트. 웹 `SITE_URL`·메일 링크도 `https://www.<domain>`. CDK로 옮기는 건 TODO.
 
 ### 9.3 비용 가드
 

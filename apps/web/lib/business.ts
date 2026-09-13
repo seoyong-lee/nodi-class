@@ -1,6 +1,6 @@
 /** Public site constants — not env-driven. */
 
-export const SITE_URL = 'https://nodiworks.com';
+export const SITE_URL = 'https://www.nodiworks.com';
 export const YOUTUBE_URL = 'https://www.youtube.com/@nodiworks';
 export const THREADS_URL = 'https://www.threads.net/@nodiworks';
 export const CONTACT_EMAIL = 'contact@cascades.studio';

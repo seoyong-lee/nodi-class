@@ -16,7 +16,8 @@
     "infra:deploy": "bash scripts/cdk.sh deploy --all",
     "infra:destroy": "bash scripts/cdk.sh destroy --all",
     "report": "tsx scripts/report.ts",
-    "seed:resources": "tsx scripts/seed-resources.ts"
+    "seed:resources": "tsx scripts/seed-resources.ts",
+    "gen:favicon": "tsx scripts/gen-favicon.ts"
   },
   "devDependencies": {
     "@aws-sdk/client-dynamodb": "^3.1131.0",
@@ -27,6 +28,7 @@
     "eslint-plugin-nodi": "workspace:*",
     "globals": "^16.0.0",
     "gray-matter": "^4.0.3",
+    "png-to-ico": "^3.0.2",
     "prettier": "^3.5.3",
     "tsx": "^4.23.13",
     "typescript": "^5.8.2",

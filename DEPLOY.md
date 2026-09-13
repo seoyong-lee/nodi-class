@@ -40,7 +40,7 @@ API_URL=<ApiUrl> ADMIN_API_KEY=<ssm value> pnpm seed:resources
 ## Amplify Hosting
 1. Connect GitHub repo; monorepo `appRoot`: `apps/web` (see root `amplify.yml`)
 2. Build: `pnpm install --frozen-lockfile && pnpm --filter @nodi/web build`
-3. Custom domain + www redirect
+3. Custom domain: **`www` is primary (canonical)**; apex redirects to www
 4. Set env vars from `.env.example`
 
 ## After live
