@@ -669,6 +669,7 @@ NEXT_PUBLIC_AMPLITUDE_SR_SAMPLE_RATE=
 - [ ] **환불 정책·이용약관** 유료 조항 채우기.
 - [ ] **hello@mail.nodiworks.com Google Workspace 계정 + 프로필 사진** (Gmail 발신자 아바타, 답장 수신함).
 - [ ] **BIMI**: DMARC quarantine + VMC 필요, 발송량 커진 뒤 검토.
+- [ ] **Google Sheets 일일 리드 동기화**: `subscribers`(무료자료 `resource:*` / VOD `course-waitlist` tags) + `inquiries` → Sheets 탭 append, `syncedAt`·Scheduler(UTC 22:00)·SA Secrets Manager. (단일 LEADS 테이블 아님 — 기존 2테이블 스키마에 맞춰 설계)
 
 ## 14. TODO — Step 3 (조건부)
 
