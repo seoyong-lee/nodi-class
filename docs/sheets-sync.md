@@ -30,11 +30,18 @@ aws secretsmanager create-secret \
 
 ## 3. CDK 배포
 
+`googleSheetId` / `sheetsAlarmEmail`은 `infra/cdk.json` `context`에 둔다.
+`googleSaSecretName` 기본값은 `nodi-class/google-sheets-sa`다. 배포:
+
+```bash
+pnpm infra:deploy
+```
+
+선택 플래그:
+
 ```bash
 pnpm infra:deploy -- \
-  -c googleSheetId=<SPREADSHEET_ID> \
-  -c sheetsAlarmEmail=you@example.com \
-  -c enableInquirySheetStream=true   # 선택: 문의 실시간 스트림
+  -c enableInquirySheetStream=true   # 문의 실시간 스트림
 ```
 
 `enableInquirySheetStream=true`면 inquiries 테이블 스트림이 sync-sheets를 트리거합니다.

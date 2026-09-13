@@ -15,6 +15,8 @@
     ]
   },
   "context": {
-    "@aws-cdk/aws-lambda:recognizeLayerVersion": true
+    "@aws-cdk/aws-lambda:recognizeLayerVersion": true,
+    "googleSheetId": "1TaaobYVV1ksA7uofkN7Mf6TMwRZUr4TI4jZptfGRsDs",
+    "sheetsAlarmEmail": "contact@cascades.studio"
   }
 }
