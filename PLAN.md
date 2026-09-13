@@ -120,7 +120,7 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 | Thumb16x9      | cards   | `src?`, `alt?`                                                                                                                                                                                 | 이미지 없으면 `--surface-raised` 플레이스홀더                                                                                                                                                                            |
 | VideoCard      | cards   | `title`, `note`, `href`, `thumbnail?`                                                                                                                                                          | 조회수 표시 없음. 유튜브 임베드는 클릭 후 로드(iframe 지연)                                                                                                                                                              |
 | EmailGate      | blocks  | `title`, `description?`, `buttonLabel`, `consent`, `consentDetail?`, `submittedLabel`, `submitted: boolean`, `onSubmit(email, extra)`, `extraField?`(select 1개), `layout?: 'inline'\|'stack'` | 동의 체크 기본 해제·필수. consent=한 줄 라벨, consentDetail=수집·목적·보관·해지(자료 페이지 닫힘)·처리방침 링크. stack=필드·버튼 전폭(홈 CTA). 375에서 입력 100% + 버튼 full width. **입력창이 카드 밖으로 넘치지 않게** |
-| SiteFooter     | blocks  | `operator`, `business: string[]`, `links: {label,href}[]`, `socialLinks: {label,href,icon}[]`                                                                                                  | 사업자 정보 값은 env에서                                                                                                                                                                                                 |
+| SiteFooter     | blocks  | `operator`, `business: string[]`, `links: {label,href}[]`, `socialLinks: {label,href,icon}[]`, `trailing?`                                                                                      | 사업자 정보 값은 env에서. `trailing`=테마 토글 등                                                                                                                                                                          |
 
 ### 2.3 이관하면서 정리할 것 (디자인 파일에 남아 있는 결함)
 
@@ -145,7 +145,7 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 
 라우트는 App Router. 모든 페이지는 서버 컴포넌트 기본, 폼만 클라이언트 컴포넌트.
 
-공통 레이아웃: 상단 내비 [로고 마크 + `노디 AI`(Bold) + `클래스`(Regular) 워드마크](→`/`) · 무료 자료(`/free`) · 클래스(`/course`) · 서비스(`/service`) · [유튜브 ↗](secondary sm)`. 현재 페이지 항목만 `--accent`색. favicon·OG는`public/brand/*`. 푸터는 `SiteFooter`.
+공통 레이아웃: 상단 내비 [로고 마크 + `노디 AI`(Bold) + `클래스`(Regular, ≤720px에서 생략) 워드마크](→`/`) · 전자책(`/free`) · 클래스(`/course`) · 서비스(`/service`) · [유튜브](데스크톱만 secondary sm; 모바일 헤더 숨김, 히어로 CTA만). 데스크톱만 헤더 ThemeToggle. 현재 페이지 항목만 `--accent`색(+모바일 언더라인). favicon·OG는`public/brand/*`. 푸터는 `SiteFooter`(+`trailing` ThemeToggle).
 
 ### 3.1 `/` 홈
 
@@ -153,26 +153,26 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 
 | 블록                         | 내용                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 히어로(중앙)                 | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` / `이제 AI로 직접 만들 수 있습니다` (2줄, `<br>`, keep-all, 마침표 없음) / 서브 `노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.` + `내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.` / Primary `무료 자료 받기`(→ `/free`) · Secondary `유튜브에서 보기`                                                                                            |
-| 01 / 무료 자료 (`id="free"`) | 제목 `바로 써볼 수 있는 자료, 부담 없이 무료로 가져가세요` / ResourceCard 4개 (§4 슬러그 순). **이 섹션에 EmailGate 없음**                                                                                                                                                                                                                                                                                                      |
+| 히어로(중앙)                 | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` / `이제 AI로 직접 만들 수 있습니다` (2줄, `<br>`, keep-all, 마침표 없음) / 서브 `노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.` + `내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.` / Primary `전자책 받기`(→ `/free`) · Secondary `유튜브에서 보기`                                                                                            |
+| 01 / 전자책 (`id="free"`) | 제목 `바로 써볼 수 있는 자료, 부담 없이 무료로 가져가세요` / ResourceCard 4개 (§4 슬러그 순). **이 섹션에 EmailGate 없음**                                                                                                                                                                                                                                                                                                      |
 | 02 / 이렇게 달라집니다       | BeforeAfter(캡션 `만들기 전` / `기준을 준 뒤`) / 캡션 `같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.` / 이미지는 `public/img/before.png`, `after.png`                                                                                                                                                                                                                                                |
 | 03 / 클래스                  | 제목 `직접 만들어봤다면, 이제 기준을 배워보세요` / ProductCard ×3 (§3.5, VOD primary · 워크숍·서비스 secondary)                                                                                                                                                                                                                                                                                                                 |
 | 04 / 만든 사람               | 프로필(4:5, `--surface-raised`) + `직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어`(Bold 20px) / `컴퓨터소프트웨어공학 석사` / `비전공자 대상 풀스택 개발 부트캠프 강사` / 소형 `유튜브 노디 AI 운영`                                                                                                                                                                                                                      |
-| 최종 CTA(2열)                | eyebrow `무료 자료` / 제목 `내 사업에 바로 써볼 무료 자료부터 시작해보세요.` / 설명 `노디 AI에서 소개한 프롬프트·가이드·체크리스트를 한곳에 정리했습니다.` + EmailGate(제목 `무료 자료 받아보기`, 서브 `이메일을 한 번 등록하면 모든 무료 자료를 확인할 수 있습니다.`, 버튼 `무료 자료 받기`, select 라벨 `지금 만들고 있는 것은 무엇인가요?`, extraField=§5.2, **동의=§3.7**). 데스크톱 좌 카피·우 폼 카드(~520px), ≤768px 1열 |
+| 최종 CTA(2열)                | eyebrow `전자책` / 제목 `내 사업에 바로 써볼 전자책부터 시작해보세요.` / 설명 `노디 AI에서 소개한 프롬프트·가이드·체크리스트를 한곳에 정리했습니다.` + EmailGate(제목 `전자책 받아보기`, 서브 `이메일을 한 번 등록하면 모든 전자책을 확인할 수 있습니다.`, 버튼 `전자책 받기`, select 라벨 `지금 만들고 있는 것은 무엇인가요?`, extraField=§5.2, **동의=§3.7**). 데스크톱 좌 카피·우 폼 카드(~520px), ≤768px 1열 |
 
 ### 3.2 `/free` 목록 · `/free/[slug]` 자료 상세
 
-- `/free`: 라벨 `무료 자료` / h1 `바로 써볼 수 있는 자료,` `부담 없이 무료로 가져가세요` / 서브 `AI 활용에 도움이 되는 프롬프트·가이드·체크리스트를 모았습니다.` + `필요한 자료를 골라 무료로 받아보세요.` / ResourceCard 그리드.
+- `/free`: 라벨 `전자책` / h1 `바로 써볼 수 있는 자료,` `부담 없이 무료로 가져가세요` / 서브 `AI 활용에 도움이 되는 프롬프트·가이드·체크리스트를 모았습니다.` + `필요한 자료를 골라 무료로 받아보세요.` / ResourceCard 그리드.
 - `/free/[slug]` 정적 경로: `generateStaticParams`로 API(또는 로컬 MDX) 슬러그 전부. **자료별 if/switch 카피 분기 금지** — 자료 차이는 frontmatter `title` / `summary` / `included`만.
-- 페이지 구조(공통): Hero → 소개(공통 카피) → `이 자료에는`(`included[]`) → 대상(고정 4항) → 가치·제작 배경(공통) → `02 / 들어 있는 내용`(MDX 파트 Toc) → EmailGate(+잠금/본문) → `03 / 만든 사람` → `다른 무료 자료도 둘러보세요`.
-- Hero: `series` + Badge · h1=`title` · `summary` · Primary `무료 자료 바로 열기`(데스크톱만, 모바일은 하단 스티키) · 소형 `이메일 등록 후 바로 열립니다 · 무료` · 우측 책 커버. youtube 있으면 Secondary `영상으로 보기`.
+- 페이지 구조(공통): Hero → 소개(공통 카피) → `이 자료에는`(`included[]`) → 대상(고정 4항) → 가치·제작 배경(공통) → `02 / 들어 있는 내용`(MDX 파트 Toc) → EmailGate(+잠금/본문) → `03 / 만든 사람` → `다른 전자책도 둘러보세요`.
+- Hero: `series` + Badge · h1=`title` · `summary` · Primary `전자책 바로 열기`(데스크톱만, 모바일은 하단 스티키) · 소형 `이메일 등록 후 바로 열립니다 · 무료` · 우측 책 커버. youtube 있으면 Secondary `영상으로 보기`.
 - 소개(전 자료 공통, `apps/web/lib/copy.ts`): 도입 4문단 · `이 자료에는`+`included`(3~6) · 이어지는 2문단 · `이런 분이라면 특히 유용합니다`+고정 4항 · 가치 설명 · 제작 배경. **공통 UI에 PPT·클로드·디자인·프롬프트·직업·개수 등 자료 종속 표현 금지.**
 - 본문 게이트: frontmatter `freeParts`만큼 공개, 이후 잠금.
   - 잠금(쿠키 없음·`free`): **EmailGate**(§3.2 카피) → blur 잠금.
   - 잠금(쿠키 없음·`free-until-course`): 동일 EmailGate + 배지 `기간 한정 무료` + 소형 `무료 공개 종료 일정은 강의 출시 전에 이 페이지와 이메일로 미리 안내드립니다.` → blur 잠금.
   - 열림: 체크 + `메일로도 보냈습니다` → 본문 전체.
 - `03 / 만든 사람`(공통): 프로필 + `노디` / `5년차 프로덕트 엔지니어로 일하며 직접 제품을 만들고 운영해왔습니다.` / 소형 `유튜브 노디 AI 운영`.
-- 하단: `다른 무료 자료도 둘러보세요` ResourceCard 2개.
+- 하단: `다른 전자책도 둘러보세요` ResourceCard 2개.
 - 게이트 성공 시 `/unlock` 쿠키 발급. 메일 링크는 `pending→active`만.
 
 ### 3.3 `/course` 클래스
@@ -353,7 +353,7 @@ GSI `gsi1` (`gsi1pk`, `gsi1sk`) — 발송 대상 조회용.
 
 `pk` = `EMAILHASH#<sha256>`, `sk` = `<ts>#<event>` — `subscribe.requested`, `subscribe.confirmed`, `gate.opened(slug)`, `mail.sent(template)`, `unsubscribe`. 대시보드 없음. 전환율은 이 테이블을 스크립트로 집계(§10).
 
-### 5.5 `nodi-class-resources` (무료 자료)
+### 5.5 `nodi-class-resources` (전자책)
 
 | 속성                                                                                               | 타입 | 설명                   |
 | -------------------------------------------------------------------------------------------------- | ---- | ---------------------- |
@@ -459,7 +459,7 @@ export const ResourceUpsertInput = z
 | 키                        | 제목                                      | 본문 골자                                                                                                                                                                                      |
 | ------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `resource`                | `<자료 제목> — 링크` 또는 `… 프롬프트 N종` | **(광고) 없음**. frontmatter 기반 공통 템플릿. `/confirm?t=` 버튼 + `access`/`promptCount`/`mailNote` 조건부 문단 + 푸터. |
-| `waitlist`                | `「<강의 제목>」 출시 알림을 등록했습니다` | 출시·얼리버드 안내 + 무료 자료 보기 버튼 + 푸터 |
+| `waitlist`                | `「<강의 제목>」 출시 알림을 등록했습니다` | 출시·얼리버드 안내 + 전자책 보기 버튼 + 푸터 |
 | `inquiry-notify` (나에게) | `[검토 요청] <이름> · <결과물 도메인>`    | 폼 내용 전문 + DynamoDB 키. 같은 내용을 Slack Incoming Webhook(`/nodi-class/SLACK_INQUIRY_WEBHOOK_URL`)에도 전송(실패해도 메일·202은 유지)                                                     |
 | `inquiry-ack` (신청자)    | `검토 요청을 받았습니다` | 2영업일 회신 안내 + 사업자 푸터(수신거부 줄·헤더 없음, 거래성) |
 

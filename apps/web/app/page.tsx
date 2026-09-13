@@ -50,7 +50,7 @@ export default function HomePage() {
           </p>
           <div className="flex gap-inline justify-center mt-inline-tight flex-wrap max-[720px]:flex-col max-[720px]:w-full max-[720px]:[&_a]:w-full max-[720px]:[&_button]:w-full">
             <Button variant="primary" href="/free">
-              무료 자료 받기
+              전자책 받기
             </Button>
             <TrackYouTubeButton placement="hero" href={youtube} />
           </div>
@@ -60,7 +60,7 @@ export default function HomePage() {
       <section id="free" className={section}>
         <SectionHeading
           index="01"
-          label="무료 자료"
+          label="전자책"
           title="바로 써볼 수 있는 자료, 무료로 가져가세요"
         />
         <Suspense fallback={<div className="mt-block min-h-[280px] max-[720px]:mt-block-tight" />}>
@@ -155,7 +155,7 @@ export default function HomePage() {
       <section className="max-w-page mx-auto pt-32 pb-24 px-gutter break-keep max-[768px]:pt-12 max-[768px]:pb-12">
         <div className="grid grid-cols-2 gap-20 items-start max-[768px]:grid-cols-1 max-[768px]:gap-8">
           <div className="flex flex-col gap-6 min-w-0">
-            <span className="text-label text-muted">무료 자료</span>
+            <span className="text-label text-muted">전자책</span>
             <h2 className="m-0 text-h2 font-bold text-strong max-w-[14em] max-[768px]:text-[26px] max-[768px]:max-w-[18em]">
               바로 사용 가능한 프롬프트와 가이드를 무료로 받아보세요.
             </h2>
@@ -166,9 +166,9 @@ export default function HomePage() {
           <div className="w-full max-w-[520px] justify-self-end max-[768px]:max-w-none max-[768px]:justify-self-stretch">
             <Suspense fallback={null}>
               <EmailGateForm
-                title="무료 자료 받아보기"
+                title="전자책 받아보기"
                 description="이메일을 한 번 등록하면 모든 자료를 확인할 수 있습니다."
-                buttonLabel="무료 자료 받기"
+                buttonLabel="전자책 받기"
                 slug={HOME_GATE_SLUG}
                 placement="home_bottom"
                 layout="stack"

@@ -7,7 +7,7 @@
 | 탭 | 출처 |
 | --- | --- |
 | `VOD사전예약` | `subscribers.tags`에 `course-waitlist` |
-| `무료자료` | `subscribers.tags`에 `resource:*` |
+| `전자책` | `subscribers.tags`에 `resource:*` |
 | `서비스문의` | `nodi-class-inquiries` |
 
 헤더 권장: `생성일시, 이메일, 이름/추가필드, 출처`

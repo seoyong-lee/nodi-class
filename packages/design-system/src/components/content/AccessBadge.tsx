@@ -10,7 +10,7 @@ export function AccessBadge({ access }: AccessBadgeProps) {
       ? '기간 한정 무료'
       : access === 'paid'
         ? '유료 전환됨 · 기존 등록자 무료'
-        : '무료 자료';
+        : '전자책';
 
   return <Badge tone="current">{label}</Badge>;
 }

@@ -16,7 +16,7 @@ import { COURSE_WAITLIST_SLUG } from '@nodi/shared';
 import { emailHashField, log } from '../lib/log.js';
 
 const SHEET_VOD = 'VOD사전예약';
-const SHEET_FREE = '무료자료';
+const SHEET_FREE = '전자책';
 const SHEET_INQUIRY = '서비스문의';
 
 type SaJson = {

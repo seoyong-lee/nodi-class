@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { SiteFooter } from '@nodi/design-system';
 import '@nodi/design-system/tokens/fonts.css';
@@ -12,6 +12,7 @@ import '@nodi/design-system/tokens/styles.css';
 import '@nodi/design-system/mdx.css';
 import './globals.css';
 import { SiteHeader } from '../components/SiteHeader';
+import { ThemeToggle } from '../components/ThemeToggle';
 import { AnalyticsProvider } from '../components/AnalyticsProvider';
 import {
   OPERATOR,
@@ -36,6 +37,12 @@ try {
   document.documentElement.dataset.theme = 'dark';
 }
 `;
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -147,6 +154,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               { label: '이용약관', href: '/terms' },
             ]}
             socialLinks={socialLinks}
+            trailing={<ThemeToggle />}
           />
         </div>
       </body>

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Icon } from '../core/Icon';
 
 export type SiteFooterLink = {
@@ -16,6 +17,8 @@ export type SiteFooterProps = {
   business: string[];
   links: SiteFooterLink[];
   socialLinks: SiteFooterSocialLink[];
+  /** Optional trailing control (e.g. theme toggle) at the end of the right column. */
+  trailing?: ReactNode;
 };
 
 export function SiteFooter({
@@ -23,6 +26,7 @@ export function SiteFooter({
   business,
   links,
   socialLinks,
+  trailing,
 }: SiteFooterProps) {
   const year = new Date().getFullYear();
 
@@ -64,9 +68,12 @@ export function SiteFooter({
               </li>
             ))}
           </ul>
-          <span className="text-label text-disabled">
-            © {year} {operator}
-          </span>
+          <div className="flex flex-wrap items-center gap-inline w-full justify-between">
+            <span className="text-label text-disabled">
+              © {year} {operator}
+            </span>
+            {trailing}
+          </div>
         </div>
       </div>
     </footer>

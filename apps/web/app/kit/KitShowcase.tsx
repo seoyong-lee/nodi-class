@@ -60,7 +60,7 @@ export function KitShowcase() {
 
       <section className="flex flex-col gap-block-tight">
         <h2 className="m-0 text-h3 font-bold text-strong">SectionHeading</h2>
-        <SectionHeading index="01" label="무료 자료" title="영상에서 쓴 자료, 그대로 드립니다" />
+        <SectionHeading index="01" label="전자책" title="영상에서 쓴 자료, 그대로 드립니다" />
         <SectionHeading
           index="02"
           label="RESOURCES"

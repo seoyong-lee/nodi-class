@@ -40,9 +40,9 @@ exports[`other templates > waitlist copy 1`] = `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;">
   <tr><td align="center" style="padding:24px;">
     <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:560px;max-width:100%;font-family:sans-serif;color:#1A1A1A;font-size:16px;line-height:1.7;">
-      <tr><td style="padding:0;"><p style="margin:0 0 16px 0;">안녕하세요, 노디입니다.</p><p style="margin:0 0 16px 0;">「클로드 디자인 실전 가이드」이 나오면 이 주소로 먼저 알려드리고, 얼리버드 가격도 알림 신청자에게 먼저 안내합니다.</p><p style="margin:0 0 16px 0;">그동안 무료 자료는 사이트에서 계속 보실 수 있습니다.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr><td style="padding:0;"><p style="margin:0 0 16px 0;">안녕하세요, 노디입니다.</p><p style="margin:0 0 16px 0;">「클로드 디자인 실전 가이드」이 나오면 이 주소로 먼저 알려드리고, 얼리버드 가격도 알림 신청자에게 먼저 안내합니다.</p><p style="margin:0 0 16px 0;">그동안 전자책은 사이트에서 계속 보실 수 있습니다.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
   <tr><td style="background:#39CD9B;border-radius:8px;">
-    <a href="https://nodi.example/#free" style="display:inline-block;padding:14px 24px;font-family:sans-serif;font-size:16px;font-weight:bold;line-height:1.2;color:#0B1512;text-decoration:none;">무료 자료 보기</a>
+    <a href="https://nodi.example/#free" style="display:inline-block;padding:14px 24px;font-family:sans-serif;font-size:16px;font-weight:bold;line-height:1.2;color:#0B1512;text-decoration:none;">전자책 보기</a>
   </td></tr>
 </table><p style="margin:0 0 16px 0;">노디 드림</p><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;border-top:1px solid #E5E7EB;">
   <tr><td style="padding-top:16px;font-size:13px;line-height:1.6;color:#6B7280;">
@@ -58,7 +58,7 @@ exports[`other templates > waitlist copy 1`] = `
 
 「클로드 디자인 실전 가이드」이 나오면 이 주소로 먼저 알려드리고, 얼리버드 가격도 알림 신청자에게 먼저 안내합니다.
 
-그동안 무료 자료는 사이트에서 계속 보실 수 있습니다.
+그동안 전자책은 사이트에서 계속 보실 수 있습니다.
 
 https://nodi.example/#free
 
@@ -79,11 +79,11 @@ exports[`resourceMail snapshots > free with promptCount 1`] = `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;">
   <tr><td align="center" style="padding:24px;">
     <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:560px;max-width:100%;font-family:sans-serif;color:#1A1A1A;font-size:16px;line-height:1.7;">
-      <tr><td style="padding:0;"><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">무료 자료 신청이 완료되었습니다</p><p style="margin:0 0 16px 0;">아래 버튼을 누르면 바로 확인할 수 있습니다.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr><td style="padding:0;"><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">전자책 신청이 완료되었습니다</p><p style="margin:0 0 16px 0;">아래 버튼을 누르면 바로 확인할 수 있습니다.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
   <tr><td style="background:#39CD9B;border-radius:8px;">
     <a href="https://api.example/confirm?t=abc" style="display:inline-block;padding:14px 24px;font-family:sans-serif;font-size:16px;font-weight:bold;line-height:1.2;color:#0B1512;text-decoration:none;">AI 티를 줄이는 디자인 5원칙 열기</a>
   </td></tr>
-</table><p style="margin:0 0 16px 0;">프롬프트는 부록에서 그대로 복사해 쓰시면 됩니다.</p><p style="margin:0 0 16px 0;">한 번 등록하면 다른 무료 자료도 별도 입력 없이 확인할 수 있습니다.</p><p style="margin:0 0 8px 0;">앞으로 이메일로 이런 실전 자료를 계속 공유드려요</p><ul style="margin:0 0 16px 0;padding-left:20px;"><li style="margin:0 0 8px 0;">회사 양식에 맞춰 AI로 PPT 만드는 방법</li><li style="margin:0 0 8px 0;">반복 업무에 쓰는 클로드 설정과 실전 프롬프트</li><li style="margin:0 0 8px 0;">AI로 만든 디자인을 직접 판단하고 고치는 기준</li></ul><p style="margin:0 0 16px 0;">새로운 무료 자료와 클래스가 준비되면<br>이메일로 먼저 알려드리겠습니다.</p><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">AI로 직접 만드는 방법을 쉽게 정리합니다.</p><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;border-top:1px solid #E5E7EB;">
+</table><p style="margin:0 0 16px 0;">프롬프트는 부록에서 그대로 복사해 쓰시면 됩니다.</p><p style="margin:0 0 16px 0;">한 번 등록하면 다른 전자책도 별도 입력 없이 확인할 수 있습니다.</p><p style="margin:0 0 8px 0;">앞으로 이메일로 이런 실전 자료를 계속 공유드려요</p><ul style="margin:0 0 16px 0;padding-left:20px;"><li style="margin:0 0 8px 0;">회사 양식에 맞춰 AI로 PPT 만드는 방법</li><li style="margin:0 0 8px 0;">반복 업무에 쓰는 클로드 설정과 실전 프롬프트</li><li style="margin:0 0 8px 0;">AI로 만든 디자인을 직접 판단하고 고치는 기준</li></ul><p style="margin:0 0 16px 0;">새로운 전자책과 클래스가 준비되면<br>이메일로 먼저 알려드리겠습니다.</p><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">AI로 직접 만드는 방법을 쉽게 정리합니다.</p><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;border-top:1px solid #E5E7EB;">
   <tr><td style="padding-top:16px;font-size:13px;line-height:1.6;color:#6B7280;">
     노디 AI 클래스 · 운영 Cascades<br>대표 홍길동 · 사업자등록번호 000-00-00000 · 서울특별시<br>문의 contact@cascades.studio<br>수신거부: <a href="https://nodi.example/unsubscribe?t=token" style="color:#6B7280;text-decoration:underline;">https://nodi.example/unsubscribe?t=token</a><br>
   </td></tr>
@@ -95,7 +95,7 @@ exports[`resourceMail snapshots > free with promptCount 1`] = `
   "subject": "AI 티를 줄이는 디자인 5원칙 — 링크와 프롬프트 6종",
   "text": "노디 AI 클래스
 
-무료 자료 신청이 완료되었습니다
+전자책 신청이 완료되었습니다
 
 아래 버튼을 누르면 바로 확인할 수 있습니다.
 
@@ -103,14 +103,14 @@ https://api.example/confirm?t=abc
 
 프롬프트는 부록에서 그대로 복사해 쓰시면 됩니다.
 
-한 번 등록하면 다른 무료 자료도 별도 입력 없이 확인할 수 있습니다.
+한 번 등록하면 다른 전자책도 별도 입력 없이 확인할 수 있습니다.
 
 앞으로 이메일로 이런 실전 자료를 계속 공유드려요
 - 회사 양식에 맞춰 AI로 PPT 만드는 방법
 - 반복 업무에 쓰는 클로드 설정과 실전 프롬프트
 - AI로 만든 디자인을 직접 판단하고 고치는 기준
 
-새로운 무료 자료와 클래스가 준비되면
+새로운 전자책과 클래스가 준비되면
 이메일로 먼저 알려드리겠습니다.
 
 노디 AI 클래스
@@ -132,11 +132,11 @@ exports[`resourceMail snapshots > free without promptCount 1`] = `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;">
   <tr><td align="center" style="padding:24px;">
     <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:560px;max-width:100%;font-family:sans-serif;color:#1A1A1A;font-size:16px;line-height:1.7;">
-      <tr><td style="padding:0;"><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">무료 자료 신청이 완료되었습니다</p><p style="margin:0 0 16px 0;">아래 버튼을 누르면 바로 확인할 수 있습니다.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr><td style="padding:0;"><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">전자책 신청이 완료되었습니다</p><p style="margin:0 0 16px 0;">아래 버튼을 누르면 바로 확인할 수 있습니다.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
   <tr><td style="background:#39CD9B;border-radius:8px;">
     <a href="https://api.example/confirm?t=abc" style="display:inline-block;padding:14px 24px;font-family:sans-serif;font-size:16px;font-weight:bold;line-height:1.2;color:#0B1512;text-decoration:none;">요약본 열기</a>
   </td></tr>
-</table><p style="margin:0 0 16px 0;">한 번 등록하면 다른 무료 자료도 별도 입력 없이 확인할 수 있습니다.</p><p style="margin:0 0 8px 0;">앞으로 이메일로 이런 실전 자료를 계속 공유드려요</p><ul style="margin:0 0 16px 0;padding-left:20px;"><li style="margin:0 0 8px 0;">회사 양식에 맞춰 AI로 PPT 만드는 방법</li><li style="margin:0 0 8px 0;">반복 업무에 쓰는 클로드 설정과 실전 프롬프트</li><li style="margin:0 0 8px 0;">AI로 만든 디자인을 직접 판단하고 고치는 기준</li></ul><p style="margin:0 0 16px 0;">새로운 무료 자료와 클래스가 준비되면<br>이메일로 먼저 알려드리겠습니다.</p><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">AI로 직접 만드는 방법을 쉽게 정리합니다.</p><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;border-top:1px solid #E5E7EB;">
+</table><p style="margin:0 0 16px 0;">한 번 등록하면 다른 전자책도 별도 입력 없이 확인할 수 있습니다.</p><p style="margin:0 0 8px 0;">앞으로 이메일로 이런 실전 자료를 계속 공유드려요</p><ul style="margin:0 0 16px 0;padding-left:20px;"><li style="margin:0 0 8px 0;">회사 양식에 맞춰 AI로 PPT 만드는 방법</li><li style="margin:0 0 8px 0;">반복 업무에 쓰는 클로드 설정과 실전 프롬프트</li><li style="margin:0 0 8px 0;">AI로 만든 디자인을 직접 판단하고 고치는 기준</li></ul><p style="margin:0 0 16px 0;">새로운 전자책과 클래스가 준비되면<br>이메일로 먼저 알려드리겠습니다.</p><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">AI로 직접 만드는 방법을 쉽게 정리합니다.</p><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;border-top:1px solid #E5E7EB;">
   <tr><td style="padding-top:16px;font-size:13px;line-height:1.6;color:#6B7280;">
     노디 AI 클래스 · 운영 Cascades<br>대표 홍길동 · 사업자등록번호 000-00-00000 · 서울특별시<br>문의 contact@cascades.studio<br>수신거부: <a href="https://nodi.example/unsubscribe?t=token" style="color:#6B7280;text-decoration:underline;">https://nodi.example/unsubscribe?t=token</a><br>
   </td></tr>
@@ -148,20 +148,20 @@ exports[`resourceMail snapshots > free without promptCount 1`] = `
   "subject": "요약본 — 링크",
   "text": "노디 AI 클래스
 
-무료 자료 신청이 완료되었습니다
+전자책 신청이 완료되었습니다
 
 아래 버튼을 누르면 바로 확인할 수 있습니다.
 
 https://api.example/confirm?t=abc
 
-한 번 등록하면 다른 무료 자료도 별도 입력 없이 확인할 수 있습니다.
+한 번 등록하면 다른 전자책도 별도 입력 없이 확인할 수 있습니다.
 
 앞으로 이메일로 이런 실전 자료를 계속 공유드려요
 - 회사 양식에 맞춰 AI로 PPT 만드는 방법
 - 반복 업무에 쓰는 클로드 설정과 실전 프롬프트
 - AI로 만든 디자인을 직접 판단하고 고치는 기준
 
-새로운 무료 자료와 클래스가 준비되면
+새로운 전자책과 클래스가 준비되면
 이메일로 먼저 알려드리겠습니다.
 
 노디 AI 클래스
@@ -183,11 +183,11 @@ exports[`resourceMail snapshots > free-until-course with promptCount 1`] = `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;">
   <tr><td align="center" style="padding:24px;">
     <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:560px;max-width:100%;font-family:sans-serif;color:#1A1A1A;font-size:16px;line-height:1.7;">
-      <tr><td style="padding:0;"><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">무료 자료 신청이 완료되었습니다</p><p style="margin:0 0 16px 0;">아래 버튼을 누르면 바로 확인할 수 있습니다.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr><td style="padding:0;"><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">전자책 신청이 완료되었습니다</p><p style="margin:0 0 16px 0;">아래 버튼을 누르면 바로 확인할 수 있습니다.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
   <tr><td style="background:#39CD9B;border-radius:8px;">
     <a href="https://api.example/confirm?t=abc" style="display:inline-block;padding:14px 24px;font-family:sans-serif;font-size:16px;font-weight:bold;line-height:1.2;color:#0B1512;text-decoration:none;">클로드 PPT 실전 가이드북 열기</a>
   </td></tr>
-</table><p style="margin:0 0 16px 0;">프롬프트는 부록에서 그대로 복사해 쓰시면 됩니다.</p><p style="margin:0 0 16px 0;">이 자료는 강의 「클로드 디자인 실전」 교재로 들어갈 예정입니다. 강의가 나오면 무료 공개는 끝나지만, 이 주소로 등록하신 분은 그 뒤에도 계속 보실 수 있습니다.</p><p style="margin:0 0 16px 0;">한 번 등록하면 다른 무료 자료도 별도 입력 없이 확인할 수 있습니다.</p><p style="margin:0 0 8px 0;">앞으로 이메일로 이런 실전 자료를 계속 공유드려요</p><ul style="margin:0 0 16px 0;padding-left:20px;"><li style="margin:0 0 8px 0;">회사 양식에 맞춰 AI로 PPT 만드는 방법</li><li style="margin:0 0 8px 0;">반복 업무에 쓰는 클로드 설정과 실전 프롬프트</li><li style="margin:0 0 8px 0;">AI로 만든 디자인을 직접 판단하고 고치는 기준</li></ul><p style="margin:0 0 16px 0;">새로운 무료 자료와 클래스가 준비되면<br>이메일로 먼저 알려드리겠습니다.</p><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">AI로 직접 만드는 방법을 쉽게 정리합니다.</p><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;border-top:1px solid #E5E7EB;">
+</table><p style="margin:0 0 16px 0;">프롬프트는 부록에서 그대로 복사해 쓰시면 됩니다.</p><p style="margin:0 0 16px 0;">이 자료는 강의 「클로드 디자인 실전」 교재로 들어갈 예정입니다. 강의가 나오면 무료 공개는 끝나지만, 이 주소로 등록하신 분은 그 뒤에도 계속 보실 수 있습니다.</p><p style="margin:0 0 16px 0;">한 번 등록하면 다른 전자책도 별도 입력 없이 확인할 수 있습니다.</p><p style="margin:0 0 8px 0;">앞으로 이메일로 이런 실전 자료를 계속 공유드려요</p><ul style="margin:0 0 16px 0;padding-left:20px;"><li style="margin:0 0 8px 0;">회사 양식에 맞춰 AI로 PPT 만드는 방법</li><li style="margin:0 0 8px 0;">반복 업무에 쓰는 클로드 설정과 실전 프롬프트</li><li style="margin:0 0 8px 0;">AI로 만든 디자인을 직접 판단하고 고치는 기준</li></ul><p style="margin:0 0 16px 0;">새로운 전자책과 클래스가 준비되면<br>이메일로 먼저 알려드리겠습니다.</p><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">AI로 직접 만드는 방법을 쉽게 정리합니다.</p><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;border-top:1px solid #E5E7EB;">
   <tr><td style="padding-top:16px;font-size:13px;line-height:1.6;color:#6B7280;">
     노디 AI 클래스 · 운영 Cascades<br>대표 홍길동 · 사업자등록번호 000-00-00000 · 서울특별시<br>문의 contact@cascades.studio<br>수신거부: <a href="https://nodi.example/unsubscribe?t=token" style="color:#6B7280;text-decoration:underline;">https://nodi.example/unsubscribe?t=token</a><br>
   </td></tr>
@@ -199,7 +199,7 @@ exports[`resourceMail snapshots > free-until-course with promptCount 1`] = `
   "subject": "클로드 PPT 실전 가이드북 — 링크와 프롬프트 7종",
   "text": "노디 AI 클래스
 
-무료 자료 신청이 완료되었습니다
+전자책 신청이 완료되었습니다
 
 아래 버튼을 누르면 바로 확인할 수 있습니다.
 
@@ -209,14 +209,14 @@ https://api.example/confirm?t=abc
 
 이 자료는 강의 「클로드 디자인 실전」 교재로 들어갈 예정입니다. 강의가 나오면 무료 공개는 끝나지만, 이 주소로 등록하신 분은 그 뒤에도 계속 보실 수 있습니다.
 
-한 번 등록하면 다른 무료 자료도 별도 입력 없이 확인할 수 있습니다.
+한 번 등록하면 다른 전자책도 별도 입력 없이 확인할 수 있습니다.
 
 앞으로 이메일로 이런 실전 자료를 계속 공유드려요
 - 회사 양식에 맞춰 AI로 PPT 만드는 방법
 - 반복 업무에 쓰는 클로드 설정과 실전 프롬프트
 - AI로 만든 디자인을 직접 판단하고 고치는 기준
 
-새로운 무료 자료와 클래스가 준비되면
+새로운 전자책과 클래스가 준비되면
 이메일로 먼저 알려드리겠습니다.
 
 노디 AI 클래스
@@ -238,11 +238,11 @@ exports[`resourceMail snapshots > free-until-course without promptCount 1`] = `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FFFFFF;">
   <tr><td align="center" style="padding:24px;">
     <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="width:560px;max-width:100%;font-family:sans-serif;color:#1A1A1A;font-size:16px;line-height:1.7;">
-      <tr><td style="padding:0;"><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">무료 자료 신청이 완료되었습니다</p><p style="margin:0 0 16px 0;">아래 버튼을 누르면 바로 확인할 수 있습니다.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+      <tr><td style="padding:0;"><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">전자책 신청이 완료되었습니다</p><p style="margin:0 0 16px 0;">아래 버튼을 누르면 바로 확인할 수 있습니다.</p><table role="presentation" cellpadding="0" cellspacing="0" style="margin:24px 0;">
   <tr><td style="background:#39CD9B;border-radius:8px;">
     <a href="https://api.example/confirm?t=abc" style="display:inline-block;padding:14px 24px;font-family:sans-serif;font-size:16px;font-weight:bold;line-height:1.2;color:#0B1512;text-decoration:none;">클로드 랜딩페이지 디자인 체크리스트 열기</a>
   </td></tr>
-</table><p style="margin:0 0 16px 0;">이 자료는 강의 「클로드 디자인 실전」 교재로 들어갈 예정입니다. 강의가 나오면 무료 공개는 끝나지만, 이 주소로 등록하신 분은 그 뒤에도 계속 보실 수 있습니다.</p><p style="margin:0 0 16px 0;">한 번 등록하면 다른 무료 자료도 별도 입력 없이 확인할 수 있습니다.</p><p style="margin:0 0 8px 0;">앞으로 이메일로 이런 실전 자료를 계속 공유드려요</p><ul style="margin:0 0 16px 0;padding-left:20px;"><li style="margin:0 0 8px 0;">회사 양식에 맞춰 AI로 PPT 만드는 방법</li><li style="margin:0 0 8px 0;">반복 업무에 쓰는 클로드 설정과 실전 프롬프트</li><li style="margin:0 0 8px 0;">AI로 만든 디자인을 직접 판단하고 고치는 기준</li></ul><p style="margin:0 0 16px 0;">새로운 무료 자료와 클래스가 준비되면<br>이메일로 먼저 알려드리겠습니다.</p><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">AI로 직접 만드는 방법을 쉽게 정리합니다.</p><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;border-top:1px solid #E5E7EB;">
+</table><p style="margin:0 0 16px 0;">이 자료는 강의 「클로드 디자인 실전」 교재로 들어갈 예정입니다. 강의가 나오면 무료 공개는 끝나지만, 이 주소로 등록하신 분은 그 뒤에도 계속 보실 수 있습니다.</p><p style="margin:0 0 16px 0;">한 번 등록하면 다른 전자책도 별도 입력 없이 확인할 수 있습니다.</p><p style="margin:0 0 8px 0;">앞으로 이메일로 이런 실전 자료를 계속 공유드려요</p><ul style="margin:0 0 16px 0;padding-left:20px;"><li style="margin:0 0 8px 0;">회사 양식에 맞춰 AI로 PPT 만드는 방법</li><li style="margin:0 0 8px 0;">반복 업무에 쓰는 클로드 설정과 실전 프롬프트</li><li style="margin:0 0 8px 0;">AI로 만든 디자인을 직접 판단하고 고치는 기준</li></ul><p style="margin:0 0 16px 0;">새로운 전자책과 클래스가 준비되면<br>이메일로 먼저 알려드리겠습니다.</p><p style="margin:0 0 16px 0;">노디 AI 클래스</p><p style="margin:0 0 16px 0;">AI로 직접 만드는 방법을 쉽게 정리합니다.</p><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;border-top:1px solid #E5E7EB;">
   <tr><td style="padding-top:16px;font-size:13px;line-height:1.6;color:#6B7280;">
     노디 AI 클래스 · 운영 Cascades<br>대표 홍길동 · 사업자등록번호 000-00-00000 · 서울특별시<br>문의 contact@cascades.studio<br>수신거부: <a href="https://nodi.example/unsubscribe?t=token" style="color:#6B7280;text-decoration:underline;">https://nodi.example/unsubscribe?t=token</a><br>
   </td></tr>
@@ -254,7 +254,7 @@ exports[`resourceMail snapshots > free-until-course without promptCount 1`] = `
   "subject": "클로드 랜딩페이지 디자인 체크리스트 — 링크",
   "text": "노디 AI 클래스
 
-무료 자료 신청이 완료되었습니다
+전자책 신청이 완료되었습니다
 
 아래 버튼을 누르면 바로 확인할 수 있습니다.
 
@@ -262,14 +262,14 @@ https://api.example/confirm?t=abc
 
 이 자료는 강의 「클로드 디자인 실전」 교재로 들어갈 예정입니다. 강의가 나오면 무료 공개는 끝나지만, 이 주소로 등록하신 분은 그 뒤에도 계속 보실 수 있습니다.
 
-한 번 등록하면 다른 무료 자료도 별도 입력 없이 확인할 수 있습니다.
+한 번 등록하면 다른 전자책도 별도 입력 없이 확인할 수 있습니다.
 
 앞으로 이메일로 이런 실전 자료를 계속 공유드려요
 - 회사 양식에 맞춰 AI로 PPT 만드는 방법
 - 반복 업무에 쓰는 클로드 설정과 실전 프롬프트
 - AI로 만든 디자인을 직접 판단하고 고치는 기준
 
-새로운 무료 자료와 클래스가 준비되면
+새로운 전자책과 클래스가 준비되면
 이메일로 먼저 알려드리겠습니다.
 
 노디 AI 클래스

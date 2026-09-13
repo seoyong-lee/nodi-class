@@ -30,7 +30,7 @@ export function StickyUnlockBar({
   if (!visible) return null;
 
   return (
-    <div className="hidden max-[720px]:flex fixed inset-x-0 bottom-0 z-30 bg-card border-t border-line px-gutter py-3 [&_a]:w-full">
+    <div className="hidden max-[720px]:flex fixed inset-x-0 bottom-0 z-30 bg-card border-t border-line px-gutter pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] [&_a]:w-full">
       <Button variant="primary" href={href}>
         {label}
       </Button>

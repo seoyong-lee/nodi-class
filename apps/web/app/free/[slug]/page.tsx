@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!doc) {
     return pageMetadata({
       title: '자료를 찾을 수 없습니다',
-      description: '요청한 무료 자료를 찾을 수 없습니다.',
+      description: '요청한 전자책을 찾을 수 없습니다.',
       path: `/free/${slug}`,
       noIndex: true,
     });

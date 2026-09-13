@@ -21,7 +21,7 @@ export const GATE_MAIL_THROTTLED_LABEL = '이미 보낸 메일을 확인해 주�
 export const GATE_ACTIVE_LABEL = '메일로도 보냈습니다';
 
 /** `/free/[slug]` common conversion copy — PLAN §3.2 (resource-agnostic) */
-export const RESOURCE_HERO_CTA = '무료 자료 바로 열기';
+export const RESOURCE_HERO_CTA = '전자책 바로 열기';
 export const RESOURCE_HERO_UNLOCKED_CTA = '구입 완료';
 export const RESOURCE_HERO_HELPER = '이메일 등록 후 바로 열립니다 · 무료';
 
@@ -55,8 +55,8 @@ export const RESOURCE_ORIGIN_BODY =
 
 export const RESOURCE_GATE_TITLE = '지금 무료로 공개합니다';
 export const RESOURCE_GATE_DESCRIPTION =
-  '아래에서 이메일을 등록하면 전체 자료를 바로 확인할 수 있습니다. 한 번 등록하면 다른 무료 자료도 별도 입력 없이 계속 보실 수 있습니다.';
-export const RESOURCE_GATE_BUTTON = '무료 자료 바로 열기';
+  '아래에서 이메일을 등록하면 전체 자료를 바로 확인할 수 있습니다. 한 번 등록하면 다른 전자책도 별도 입력 없이 계속 보실 수 있습니다.';
+export const RESOURCE_GATE_BUTTON = '전자책 바로 열기';
 export const RESOURCE_GATE_HELPER =
   '등록 즉시 열립니다 · 비용이 발생하지 않습니다';
 export const RESOURCE_GATE_NOTICE =
@@ -66,7 +66,7 @@ export const RESOURCE_AUTHOR_NAME = '노디';
 export const RESOURCE_AUTHOR_BODY =
   '5년차 프로덕트 엔지니어로 일하며\n직접 제품을 만들고 운영해왔습니다.';
 export const RESOURCE_AUTHOR_SMALL = '유튜브 노디 AI 운영';
-export const RESOURCE_RELATED_HEADING = '다른 무료 자료도 둘러보세요';
+export const RESOURCE_RELATED_HEADING = '다른 전자책도 둘러보세요';
 
 export const GATE_ACTIVE_RESUBSCRIBE_LABEL =
   '이미 등록된 주소입니다. 메일로 링크를 다시 보냈습니다.';

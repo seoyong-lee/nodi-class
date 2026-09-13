@@ -31,7 +31,7 @@ export function resourceMail(input: ResourceMailInput): MailContent {
 
   const paragraphs: string[] = [
     '노디 AI 클래스',
-    '무료 자료 신청이 완료되었습니다',
+    '전자책 신청이 완료되었습니다',
     '아래 버튼을 누르면 바로 확인할 수 있습니다.',
     buttonParagraph(input.confirmUrl, `${input.resourceTitle} 열기`),
   ];
@@ -49,12 +49,12 @@ export function resourceMail(input: ResourceMailInput): MailContent {
   }
 
   paragraphs.push(
-    '한 번 등록하면 다른 무료 자료도 별도 입력 없이 확인할 수 있습니다.',
+    '한 번 등록하면 다른 전자책도 별도 입력 없이 확인할 수 있습니다.',
     listParagraph(
       '앞으로 이메일로 이런 실전 자료를 계속 공유드려요',
       [...FUTURE_RESOURCE_ITEMS],
     ),
-    '새로운 무료 자료와 클래스가 준비되면\n이메일로 먼저 알려드리겠습니다.',
+    '새로운 전자책과 클래스가 준비되면\n이메일로 먼저 알려드리겠습니다.',
     '노디 AI 클래스',
     'AI로 직접 만드는 방법을 쉽게 정리합니다.',
   );
