@@ -1,4 +1,8 @@
-import type { ChangeEventHandler, InputHTMLAttributes } from 'react';
+import type {
+  ChangeEventHandler,
+  FocusEventHandler,
+  InputHTMLAttributes,
+} from 'react';
 import { useId } from 'react';
 import { cn } from '../../lib/cn';
 
@@ -14,6 +18,7 @@ export type InputProps = {
   rows?: number;
   value?: string;
   onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  onFocus?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   /** Extra classes on the control (e.g. amp-mask for Session Replay). */
   className?: string;
 };
@@ -30,6 +35,7 @@ export function Input({
   rows = 5,
   value,
   onChange,
+  onFocus,
   className,
 }: InputProps) {
   const id = useId();
@@ -66,6 +72,7 @@ export function Input({
           required={required}
           value={value}
           onChange={onChange}
+          onFocus={onFocus}
           rows={rows}
           aria-describedby={descriptionId}
           aria-invalid={error ? true : undefined}
@@ -80,6 +87,7 @@ export function Input({
           required={required}
           value={value}
           onChange={onChange}
+          onFocus={onFocus}
           aria-describedby={descriptionId}
           aria-invalid={error ? true : undefined}
         />

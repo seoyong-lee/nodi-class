@@ -4,8 +4,14 @@ import { useRef, useState, type FormEvent } from 'react';
 import { Button, Input } from '@nodi/design-system';
 import { postInquiry } from '../lib/api';
 import { track } from '../lib/analytics/track';
-import { FORM_ERROR_LABEL, INQUIRY_CONSENT_LABEL, INQUIRY_DONE_LABEL } from '../lib/copy';
-import { getTurnstileToken } from '../lib/turnstile';
+import {
+  FORM_ERROR_LABEL,
+  GATE_REGISTERING_LABEL,
+  GATE_VERIFYING_LABEL,
+  INQUIRY_CONSENT_LABEL,
+  INQUIRY_DONE_LABEL,
+} from '../lib/copy';
+import { getTurnstileToken, prewarmTurnstile } from '../lib/turnstile';
 
 const honeypotClass =
   'absolute opacity-0 left-0 top-0 h-px w-px overflow-hidden pointer-events-none';
@@ -20,7 +26,17 @@ export function InquiryForm() {
   const [blocked, setBlocked] = useState('');
   const [consent, setConsent] = useState(false);
   const [website, setWebsite] = useState('');
+  const [phase, setPhase] = useState<'idle' | 'verifying' | 'submitting'>('idle');
   const turnstileRef = useRef<HTMLDivElement>(null);
+  const prewarmed = useRef(false);
+
+  function handleEmailFocus() {
+    if (prewarmed.current) return;
+    const container = turnstileRef.current;
+    if (!container) return;
+    prewarmed.current = true;
+    prewarmTurnstile(container);
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -33,7 +49,9 @@ export function InquiryForm() {
         setError(FORM_ERROR_LABEL);
         return;
       }
+      setPhase('verifying');
       const turnstile = await getTurnstileToken(container);
+      setPhase('submitting');
       const result = await postInquiry({
         name,
         email,
@@ -56,6 +74,7 @@ export function InquiryForm() {
       setError(FORM_ERROR_LABEL);
     } finally {
       setSubmitting(false);
+      setPhase('idle');
     }
   }
 
@@ -95,6 +114,7 @@ export function InquiryForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          onFocus={handleEmailFocus}
           className="amp-mask"
         />
       </div>
@@ -134,7 +154,11 @@ export function InquiryForm() {
       ) : null}
       <div className="self-start max-[720px]:self-stretch max-[720px]:[&_button]:w-full">
         <Button variant="primary" type="submit" disabled={submitting} loading={submitting}>
-          프로젝트 검토 요청하기
+          {phase === 'verifying'
+            ? GATE_VERIFYING_LABEL
+            : phase === 'submitting'
+              ? GATE_REGISTERING_LABEL
+              : '프로젝트 검토 요청하기'}
         </Button>
       </div>
       <p className="m-0 text-label text-muted">계약과 세금계산서는 Cascades 명의로 진행합니다.</p>

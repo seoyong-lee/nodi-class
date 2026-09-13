@@ -321,7 +321,7 @@ export default async function FreeResourcePage({ params }: Props) {
       ) : null}
 
       {unlocked && !isPlaceholder ? (
-        <section className={section}>
+        <section className={section} id="unlocked-content">
           <div className={`flex flex-col gap-block ${bodyCol}`}>
             <div id="gate" className="scroll-mt-24 flex items-center gap-inline-tight text-link">
               <Icon name="check" size={18} />

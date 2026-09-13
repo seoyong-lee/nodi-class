@@ -15,6 +15,7 @@ export type AnalyticsEvent =
         resource_slug?: string;
         building?: 'landing' | 'brand' | 'ppt' | 'app' | 'none';
         result: 'new' | 'existing' | 'error';
+        duration_ms?: number;
       };
     }
   | { name: 'Unlocked Resource'; props: { resource_slug: string } }

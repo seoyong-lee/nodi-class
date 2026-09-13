@@ -41,6 +41,8 @@ export async function GET(req: NextRequest) {
   const access = createAccessTokenFromHash(gate.h, secret);
   const destination = isSafeNextPath(nextRaw) ? nextRaw : '/';
 
+  // Same-origin fetch({ redirect: 'manual', credentials: 'same-origin' })
+  // still applies Set-Cookie on this 307; the client then router.refresh().
   const res = NextResponse.redirect(new URL(destination, req.url));
   res.cookies.set(COOKIE_NAME, access, {
     httpOnly: true,

@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useState, type ReactNode } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useCallback, useRef, useState, type ReactNode } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { COURSE_WAITLIST_SLUG } from '@nodi/shared/constants';
 import { EmailGate, type EmailGateExtraField } from '@nodi/design-system';
 import { postSubscribe } from '../lib/api';
@@ -11,14 +11,18 @@ import {
   GATE_ACTIVE_RESUBSCRIBE_LABEL,
   GATE_MAIL_THROTTLED_LABEL,
   GATE_NOT_REGISTERED_LABEL,
+  GATE_OPENING_LABEL,
+  GATE_REGISTERING_LABEL,
   GATE_SUBMITTED_LABEL,
+  GATE_VERIFYING_LABEL,
   SUBSCRIBE_CONSENT_LABEL,
 } from '../lib/copy';
-import { getTurnstileToken } from '../lib/turnstile';
+import { getTurnstileToken, prewarmTurnstile } from '../lib/turnstile';
 import { SubscribeConsentDetail } from './SubscribeConsentDetail';
 import { markUnlockPending } from './TrackUnlockedResource';
 
 type GatePlacement = 'home_top' | 'home_bottom' | 'resource' | 'course';
+type GatePhase = 'idle' | 'verifying' | 'submitting' | 'opening';
 
 type Props = {
   title: string;
@@ -54,6 +58,44 @@ function subscribeSource(searchParams: URLSearchParams): string {
   return 'direct';
 }
 
+function phaseLabel(phase: GatePhase, idle: string): string {
+  if (phase === 'verifying') return GATE_VERIFYING_LABEL;
+  if (phase === 'submitting') return GATE_REGISTERING_LABEL;
+  if (phase === 'opening') return GATE_OPENING_LABEL;
+  return idle;
+}
+
+async function applyUnlockCookie(unlockPath: string): Promise<void> {
+  await fetch(unlockPath, {
+    redirect: 'manual',
+    credentials: 'same-origin',
+  });
+}
+
+function waitForUnlockedContent(timeoutMs = 4000): Promise<HTMLElement | null> {
+  const existing = document.getElementById('unlocked-content');
+  if (existing) return Promise.resolve(existing);
+
+  return new Promise((resolve) => {
+    const started = Date.now();
+    const observer = new MutationObserver(() => {
+      const el = document.getElementById('unlocked-content');
+      if (el) {
+        observer.disconnect();
+        resolve(el);
+      } else if (Date.now() - started > timeoutMs) {
+        observer.disconnect();
+        resolve(null);
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    window.setTimeout(() => {
+      observer.disconnect();
+      resolve(document.getElementById('unlocked-content'));
+    }, timeoutMs);
+  });
+}
+
 export function EmailGateForm({
   title,
   description,
@@ -68,28 +110,42 @@ export function EmailGateForm({
   notice,
   helper,
 }: Props) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [submitted, setSubmitted] = useState(false);
   const [submittedLabel, setSubmittedLabel] = useState(GATE_SUBMITTED_LABEL);
-  const [submitting, setSubmitting] = useState(false);
+  const [phase, setPhase] = useState<GatePhase>('idle');
   const [error, setError] = useState<string | null>(null);
   const [website, setWebsite] = useState('');
   const turnstileRef = useRef<HTMLDivElement>(null);
+  const prewarmed = useRef(false);
+  const busy = phase !== 'idle';
+
+  const handleEmailFocus = useCallback(() => {
+    if (prewarmed.current) return;
+    const container = turnstileRef.current;
+    if (!container) return;
+    prewarmed.current = true;
+    prewarmTurnstile(container);
+  }, []);
 
   async function handleSubmit(email: string, extra?: string) {
     setError(null);
-    setSubmitting(true);
     const normalizedEmail = email.trim().toLowerCase();
     const building =
       extraField && extra
         ? (extra as 'landing' | 'brand' | 'ppt' | 'app' | 'none')
         : undefined;
-    const gateProps = (result: 'new' | 'existing' | 'error') => ({
+    const gateProps = (
+      result: 'new' | 'existing' | 'error',
+      duration_ms?: number,
+    ) => ({
       email: normalizedEmail,
       placement,
       resource_slug: placement === 'resource' ? slug : undefined,
       building,
       result,
+      ...(duration_ms !== undefined ? { duration_ms } : {}),
     });
     try {
       const container = turnstileRef.current;
@@ -101,8 +157,10 @@ export function EmailGateForm({
         });
         return;
       }
+      setPhase('verifying');
       const turnstile = await getTurnstileToken(container);
 
+      setPhase('submitting');
       const result = await postSubscribe({
         email: normalizedEmail,
         slug,
@@ -133,10 +191,6 @@ export function EmailGateForm({
           subscriber_status: result.state === 'active' ? 'active' : 'pending',
         });
       }
-      track({
-        name: 'Submitted Email Gate',
-        props: gateProps(result.state === 'active' ? 'existing' : 'new'),
-      });
 
       if (result.resent === false) {
         setSubmittedLabel(GATE_MAIL_THROTTLED_LABEL);
@@ -145,12 +199,30 @@ export function EmailGateForm({
       } else {
         setSubmittedLabel(GATE_SUBMITTED_LABEL);
       }
+      setSubmitted(true);
 
       const next = unlockNextPath(slug);
       const unlock = `/unlock?t=${encodeURIComponent(result.gateToken)}&next=${encodeURIComponent(next)}`;
-      setSubmitted(true);
       markUnlockPending(slug);
-      window.location.assign(unlock);
+
+      setPhase('opening');
+      const openStarted = performance.now();
+      try {
+        await applyUnlockCookie(unlock);
+        router.refresh();
+        if (placement === 'resource') {
+          const unlocked = await waitForUnlockedContent();
+          unlocked?.scrollIntoView({ behavior: 'smooth' });
+        }
+      } finally {
+        track({
+          name: 'Submitted Email Gate',
+          props: gateProps(
+            result.state === 'active' ? 'existing' : 'new',
+            Math.round(performance.now() - openStarted),
+          ),
+        });
+      }
     } catch {
       track({
         name: 'Submitted Email Gate',
@@ -158,7 +230,7 @@ export function EmailGateForm({
       });
       setError(FORM_ERROR_LABEL);
     } finally {
-      setSubmitting(false);
+      setPhase('idle');
     }
   }
 
@@ -178,14 +250,15 @@ export function EmailGateForm({
       <EmailGate
         title={title}
         description={description}
-        buttonLabel={buttonLabel}
+        buttonLabel={phaseLabel(phase, buttonLabel)}
         buttonVariant={buttonVariant}
         consent={intent === 'subscribe' ? SUBSCRIBE_CONSENT_LABEL : undefined}
         consentDetail={intent === 'subscribe' ? <SubscribeConsentDetail /> : undefined}
         submittedLabel={submittedLabel}
         submitted={submitted}
-        submitting={submitting}
+        submitting={busy}
         onSubmit={handleSubmit}
+        onEmailFocus={handleEmailFocus}
         extraField={intent === 'subscribe' ? extraField : undefined}
         layout={layout}
         requireConsent={intent === 'subscribe'}

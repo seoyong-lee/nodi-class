@@ -16,7 +16,7 @@
 | Viewed Resource Page | `resource_slug`, `access_state` (`locked`/`unlocked`) | `/free/[slug]` |
 | Viewed Course Page | — | `/course` |
 | Viewed Service Page | — | `/service` |
-| Submitted Email Gate | `email`, `placement` (`home_top`/`home_bottom`/`resource`/`course`), `resource_slug?`, `building?`, `result` (`new`/`existing`/`error`) | EmailGate |
+| Submitted Email Gate | `email`, `placement` (`home_top`/`home_bottom`/`resource`/`course`), `resource_slug?`, `building?`, `result` (`new`/`existing`/`error`), `duration_ms?` (opening) | EmailGate |
 | Unlocked Resource | `resource_slug` | after `/unlock` (sessionStorage) |
 | Clicked VOD Waitlist CTA | `placement` (`home_card`/`course_card`) | ProductCard VOD |
 | Clicked Inquiry CTA | `placement` (`home_card`/`course_card`/`service_hero`) | service CTAs |

@@ -33,6 +33,8 @@ export type EmailGateProps = {
   layout?: 'inline' | 'stack';
   /** Small line under the submit button. */
   helper?: string;
+  /** Email field focus — used to prewarm Turnstile. */
+  onEmailFocus?: () => void;
 };
 
 export function EmailGate({
@@ -50,6 +52,7 @@ export function EmailGate({
   submitting = false,
   layout = 'inline',
   helper,
+  onEmailFocus,
 }: EmailGateProps) {
   const [email, setEmail] = useState('');
   const [extra, setExtra] = useState(extraField?.options[0]?.value ?? '');
@@ -109,6 +112,7 @@ export function EmailGate({
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onFocus={onEmailFocus}
               className="amp-mask"
             />
           </div>
@@ -178,7 +182,7 @@ export function EmailGate({
               disabled={submitting}
               loading={submitting}
             >
-              {submitting ? '보내는 중' : buttonLabel}
+              {buttonLabel}
             </Button>
             {helper ? (
               <p className="m-0 text-[13px] text-muted break-keep text-center max-[480px]:text-left">

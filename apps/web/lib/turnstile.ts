@@ -6,6 +6,9 @@
  *
  * When NEXT_PUBLIC_TURNSTILE_SITE_KEY is unset (local), skip the widget and
  * send `dev-turnstile-token` so forms work without keys — NODE_ENV=development only.
+ *
+ * Tokens are cached after prewarm (email focus) and discarded after one use —
+ * server verification is single-use. Cache TTL is 4 minutes.
  */
 
 const SCRIPT_SRC =
@@ -13,6 +16,8 @@ const SCRIPT_SRC =
 
 /** Fixed dummy; length >= 10 to satisfy SubscribeInput / InquiryInput. */
 export const DEV_TURNSTILE_TOKEN = 'dev-turnstile-token';
+
+const TOKEN_TTL_MS = 4 * 60 * 1000;
 
 type TurnstileApi = {
   render: (
@@ -37,7 +42,10 @@ declare global {
   }
 }
 
+type CachedToken = { token: string; issuedAt: number };
+
 let scriptPromise: Promise<void> | null = null;
+let cachedPromise: Promise<CachedToken> | null = null;
 
 function loadTurnstileScript(): Promise<void> {
   if (typeof window === 'undefined') {
@@ -70,13 +78,15 @@ function loadTurnstileScript(): Promise<void> {
   return scriptPromise;
 }
 
-export async function getTurnstileToken(
-  container: HTMLElement,
-): Promise<string> {
+function isFresh(issuedAt: number): boolean {
+  return Date.now() - issuedAt < TOKEN_TTL_MS;
+}
+
+async function executeTurnstile(container: HTMLElement): Promise<CachedToken> {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
   if (!siteKey) {
     if (process.env.NODE_ENV === 'development') {
-      return DEV_TURNSTILE_TOKEN;
+      return { token: DEV_TURNSTILE_TOKEN, issuedAt: Date.now() };
     }
     throw new Error('turnstile: missing site key');
   }
@@ -102,7 +112,7 @@ export async function getTurnstileToken(
         finish(() => {
           api.remove(widgetId);
           container.replaceChildren();
-          resolve(token);
+          resolve({ token, issuedAt: Date.now() });
         });
       },
       'error-callback': () => {
@@ -123,4 +133,46 @@ export async function getTurnstileToken(
 
     api.execute(widgetId);
   });
+}
+
+function startExecute(container: HTMLElement): Promise<CachedToken> {
+  const run = executeTurnstile(container).catch((err) => {
+    if (cachedPromise === run) cachedPromise = null;
+    throw err;
+  });
+  cachedPromise = run;
+  return run;
+}
+
+/** Render + execute on email focus. Safe to call repeatedly. */
+export function prewarmTurnstile(container: HTMLElement): void {
+  if (cachedPromise) {
+    void cachedPromise.then((cached) => {
+      if (!isFresh(cached.issuedAt)) {
+        startExecute(container);
+      }
+    });
+    return;
+  }
+  startExecute(container);
+}
+
+/** Cached token if issued within 4 minutes; otherwise execute. Consumes cache. */
+export async function getTurnstileToken(
+  container: HTMLElement,
+): Promise<string> {
+  if (cachedPromise) {
+    try {
+      const cached = await cachedPromise;
+      if (isFresh(cached.issuedAt)) {
+        cachedPromise = null;
+        return cached.token;
+      }
+    } catch {
+      /* execute again below */
+    }
+  }
+  const issued = await startExecute(container);
+  cachedPromise = null;
+  return issued.token;
 }
