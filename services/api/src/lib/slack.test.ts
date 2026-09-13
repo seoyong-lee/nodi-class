@@ -9,6 +9,7 @@ describe('notifyInquirySlack', () => {
 
   it('no-ops when webhook url is empty', async () => {
     const fetchMock = vi.fn();
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     vi.stubGlobal('fetch', fetchMock);
     await notifyInquirySlack(undefined, {
       name: 'a',
@@ -18,6 +19,9 @@ describe('notifyInquirySlack', () => {
       inquiryPk: 'INQ#1',
     });
     expect(fetchMock).not.toHaveBeenCalled();
+    expect(warn).toHaveBeenCalled();
+    const line = String(warn.mock.calls[0]?.[0] ?? '');
+    expect(line).toContain('inquiry.slack_unconfigured');
   });
 
   it('posts Block Kit payload to Incoming Webhook', async () => {

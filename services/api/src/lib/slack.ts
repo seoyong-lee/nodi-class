@@ -22,7 +22,10 @@ export async function notifyInquirySlack(
   opts: InquirySlackPayload,
 ): Promise<void> {
   const url = webhookUrl?.trim();
-  if (!url) return;
+  if (!url) {
+    log('warn', 'inquiry.slack_unconfigured');
+    return;
+  }
 
   const domain = resultDomain(opts.resultUrl);
   const text = `[검토 요청] ${opts.name} · ${domain}`;
