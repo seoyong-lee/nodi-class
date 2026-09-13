@@ -79,29 +79,32 @@ export function EmailGateForm({
   async function handleSubmit(email: string, extra?: string) {
     setError(null);
     setSubmitting(true);
+    const normalizedEmail = email.trim().toLowerCase();
     const building =
       extraField && extra
         ? (extra as 'landing' | 'brand' | 'ppt' | 'app' | 'none')
         : undefined;
+    const gateProps = (result: 'new' | 'existing' | 'error') => ({
+      email: normalizedEmail,
+      placement,
+      resource_slug: placement === 'resource' ? slug : undefined,
+      building,
+      result,
+    });
     try {
       const container = turnstileRef.current;
       if (!container) {
         setError(FORM_ERROR_LABEL);
         track({
           name: 'Submitted Email Gate',
-          props: {
-            placement,
-            resource_slug: placement === 'resource' ? slug : undefined,
-            building,
-            result: 'error',
-          },
+          props: gateProps('error'),
         });
         return;
       }
       const turnstile = await getTurnstileToken(container);
 
       const result = await postSubscribe({
-        email,
+        email: normalizedEmail,
         slug,
         source: subscribeSource(searchParams),
         building,
@@ -114,12 +117,7 @@ export function EmailGateForm({
       if (!result.ok) {
         track({
           name: 'Submitted Email Gate',
-          props: {
-            placement,
-            resource_slug: placement === 'resource' ? slug : undefined,
-            building,
-            result: 'error',
-          },
+          props: gateProps('error'),
         });
         if (result.error === 'not_registered') {
           setError(GATE_NOT_REGISTERED_LABEL);
@@ -137,12 +135,7 @@ export function EmailGateForm({
       }
       track({
         name: 'Submitted Email Gate',
-        props: {
-          placement,
-          resource_slug: placement === 'resource' ? slug : undefined,
-          building,
-          result: result.state === 'active' ? 'existing' : 'new',
-        },
+        props: gateProps(result.state === 'active' ? 'existing' : 'new'),
       });
 
       if (result.resent === false) {
@@ -161,12 +154,7 @@ export function EmailGateForm({
     } catch {
       track({
         name: 'Submitted Email Gate',
-        props: {
-          placement,
-          resource_slug: placement === 'resource' ? slug : undefined,
-          building,
-          result: 'error',
-        },
+        props: gateProps('error'),
       });
       setError(FORM_ERROR_LABEL);
     } finally {

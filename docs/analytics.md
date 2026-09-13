@@ -4,7 +4,7 @@
 
 ## 규칙
 
-- 이메일 원문을 Amplitude 이벤트·속성·Identify·세션 리플레이에 넣지 않는다. 구독 후 `user_id` = `sha256(email)` hex (`subscriberHash`).
+- `Submitted Email Gate`만 `email`(소문자) + `placement`(입력 위치)를 이벤트 속성으로 보낸다. Identify `user_id`는 계속 `sha256(email)` hex (`subscriberHash`). 쿠키·URL·서버 로그에는 원문을 넣지 않는다.
 - 이벤트명 Title Case 과거형, 속성명 snake_case. 아래 12개 외 추가 금지 (`packages/shared/src/analytics.ts`).
 - Session Replay: `amp-mask` on email/inquiry inputs; `NEXT_PUBLIC_AMPLITUDE_SR_SAMPLE_RATE` (default `1`, lower after launch e.g. `0.2`).
 
@@ -16,7 +16,7 @@
 | Viewed Resource Page | `resource_slug`, `access_state` (`locked`/`unlocked`) | `/free/[slug]` |
 | Viewed Course Page | — | `/course` |
 | Viewed Service Page | — | `/service` |
-| Submitted Email Gate | `placement`, `resource_slug?`, `building?`, `result` (`new`/`existing`/`error`) | EmailGate |
+| Submitted Email Gate | `email`, `placement` (`home_top`/`home_bottom`/`resource`/`course`), `resource_slug?`, `building?`, `result` (`new`/`existing`/`error`) | EmailGate |
 | Unlocked Resource | `resource_slug` | after `/unlock` (sessionStorage) |
 | Clicked VOD Waitlist CTA | `placement` (`home_card`/`course_card`) | ProductCard VOD |
 | Clicked Inquiry CTA | `placement` (`home_card`/`course_card`/`service_hero`) | service CTAs |

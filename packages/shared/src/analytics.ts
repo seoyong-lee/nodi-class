@@ -10,6 +10,7 @@ export type AnalyticsEvent =
   | {
       name: 'Submitted Email Gate';
       props: {
+        email: string;
         placement: 'home_top' | 'home_bottom' | 'resource' | 'course';
         resource_slug?: string;
         building?: 'landing' | 'brand' | 'ppt' | 'app' | 'none';
