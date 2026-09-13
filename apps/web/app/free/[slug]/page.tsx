@@ -2,14 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import {
-  AccessBadge,
-  Button,
-  Icon,
-  ResourceCard,
-  SectionHeading,
-  Toc,
-} from '@nodi/design-system';
+import { AccessBadge, Button, Icon, ResourceCard, SectionHeading, Toc } from '@nodi/design-system';
 import { resourceCardBadges, resourceThumbnail } from '@nodi/shared';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -143,11 +136,7 @@ export default async function FreeResourcePage({ params }: Props) {
             </p>
             <div className="flex flex-col gap-inline-tight max-[720px]:hidden">
               <div className="flex flex-wrap gap-inline">
-                <Button
-                  variant="primary"
-                  href={unlocked ? undefined : '#gate'}
-                  disabled={unlocked}
-                >
+                <Button variant="primary" href={unlocked ? undefined : '#gate'} disabled={unlocked}>
                   {unlocked ? RESOURCE_HERO_UNLOCKED_CTA : RESOURCE_HERO_CTA}
                 </Button>
                 {youtube ? (
@@ -306,9 +295,7 @@ export default async function FreeResourcePage({ params }: Props) {
               </Suspense>
             </div>
             {access === 'free-until-course' ? (
-              <p className="m-0 text-[13px] text-muted break-keep">
-                {RESOURCE_GATE_NOTICE}
-              </p>
+              <p className="m-0 text-[13px] text-muted break-keep">{RESOURCE_GATE_NOTICE}</p>
             ) : null}
             <LockedParts
               parts={restParts.map((p) => ({
@@ -357,7 +344,7 @@ export default async function FreeResourcePage({ params }: Props) {
             03 / 만든 사람
           </span>
           <div className="h-block-tight" />
-          <div className="flex gap-10 items-start max-[960px]:flex-col max-[960px]:gap-6">
+          <div className="flex gap-10  max-[960px]:items-center max-[960px]:flex-col max-[960px]:gap-6">
             <div className="flex-none w-[240px] aspect-[1/1] rounded-full overflow-hidden bg-raised border-hairline relative isolate max-[960px]:w-full max-[960px]:max-w-[240px] max-[960px]:mx-auto">
               <Image
                 className="object-cover object-center rounded"
