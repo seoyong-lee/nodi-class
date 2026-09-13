@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'node:crypto';
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { ResourceUpsertInput } from '@nodi/shared';
 import { upsertResource } from '../db/resources.js';
@@ -6,6 +7,13 @@ import { json, internalError } from '../lib/response.js';
 import { log } from '../lib/log.js';
 import { parseJsonBody } from '../lib/request.js';
 
+function safeEqualString(a: string, b: string): boolean {
+  const left = Buffer.from(a, 'utf8');
+  const right = Buffer.from(b, 'utf8');
+  if (left.length !== right.length) return false;
+  return timingSafeEqual(left, right);
+}
+
 async function adminAuthorized(event: APIGatewayProxyEventV2): Promise<boolean> {
   const { adminApiKey } = await getEnv();
   if (!adminApiKey) return false;
@@ -13,7 +21,7 @@ async function adminAuthorized(event: APIGatewayProxyEventV2): Promise<boolean> 
     event.headers['x-admin-key'] ??
     event.headers['X-Admin-Key'] ??
     event.headers['X-ADMIN-KEY'];
-  return typeof header === 'string' && header === adminApiKey;
+  return typeof header === 'string' && safeEqualString(header, adminApiKey);
 }
 
 export async function handler(

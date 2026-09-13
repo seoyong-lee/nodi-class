@@ -16,7 +16,7 @@ import { getResourceBySlug } from '../db/resources.js';
 import { putEvent } from '../db/events.js';
 import { getEnv, type ApiEnv } from '../lib/env.js';
 import { emailHashField, log } from '../lib/log.js';
-import { checkRateLimit } from '../lib/rate-limit.js';
+import { checkRateLimit, REOPEN_RATE_LIMIT } from '../lib/rate-limit.js';
 import {
   clientIp,
   isHoneypot,
@@ -125,6 +125,12 @@ export async function handler(
     const parsed = SubscribeInput.safeParse(body);
     if (!parsed.success) {
       return badRequest({ error: 'invalid' });
+    }
+
+    if (parsed.data.intent === 'reopen') {
+      if (!(await checkRateLimit(ip, REOPEN_RATE_LIMIT))) {
+        return tooManyRequests();
+      }
     }
 
     const env = await getEnv();

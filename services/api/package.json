@@ -11,13 +11,16 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.758.0",
+    "@aws-sdk/client-secrets-manager": "^3.1131.0",
     "@aws-sdk/client-sesv2": "^3.758.0",
     "@aws-sdk/client-ssm": "^3.758.0",
     "@aws-sdk/lib-dynamodb": "^3.758.0",
-    "@nodi/shared": "workspace:*"
+    "@nodi/shared": "workspace:*",
+    "googleapis": "^180.0.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.147",
+    "@types/node": "^22.13.10",
     "typescript": "^5.8.2"
   }
 }

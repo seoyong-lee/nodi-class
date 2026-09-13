@@ -6,3 +6,5 @@ export { handler as sesEvents } from './handlers/ses-events.js';
 export { handler as resourcesList } from './handlers/resources-list.js';
 export { handler as resourcesGet } from './handlers/resources-get.js';
 export { handler as resourcesPut } from './handlers/resources-put.js';
+export { handler as syncSheets } from './handlers/sync-sheets.js';
+export { handler as privacyCleanup } from './handlers/privacy-cleanup.js';

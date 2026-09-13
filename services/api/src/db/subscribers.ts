@@ -22,6 +22,8 @@ export type Subscriber = {
   unsubToken: string;
   /** ISO timestamp of last transactional resource/waitlist mail. */
   lastMailAt?: string;
+  /** ISO — set after Google Sheets sync. */
+  syncedAt?: string;
   ip?: string;
   ua?: string;
   createdAt: string;

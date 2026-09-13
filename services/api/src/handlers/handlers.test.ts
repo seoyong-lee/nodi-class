@@ -102,7 +102,7 @@ function httpEvent(
     routeKey: 'POST /subscribe',
     rawPath: '/subscribe',
     rawQueryString: '',
-    headers: { 'content-type': 'application/json', 'x-forwarded-for': '1.2.3.4' },
+    headers: { 'content-type': 'application/json' },
     requestContext: {
       accountId: '1',
       apiId: 'api',

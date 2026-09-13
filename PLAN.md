@@ -490,7 +490,6 @@ Base: `https://api.<NODI_DOMAIN>` (커스텀 도메인, ACM 인증서 us-east-1 
 | GET    | `/confirm`             | `confirm.ts`     | `?t=`                 | `302` → `/free/<slug>`(active 전환) / `302` → `/free/<slug>?expired=1`                 |
 | POST   | `/inquiry`             | `inquiry.ts`     | `InquiryInput`        | `202 {ok}`                                                                             |
 | POST   | `/unsubscribe`         | `unsubscribe.ts` | `{t}`                 | `200 {ok}` (토큰 불일치도 200 — 열거 방지)                                             |
-| POST   | `/internal/ses-events` | `ses-events.ts`  | SNS                   | SNS 구독, 외부 노출 안 함                                                              |
 
 공통:
 
@@ -669,7 +668,9 @@ NEXT_PUBLIC_AMPLITUDE_SR_SAMPLE_RATE=
 - [ ] **환불 정책·이용약관** 유료 조항 채우기.
 - [ ] **hello@mail.nodiworks.com Google Workspace 계정 + 프로필 사진** (Gmail 발신자 아바타, 답장 수신함).
 - [ ] **BIMI**: DMARC quarantine + VMC 필요, 발송량 커진 뒤 검토.
-- [ ] **Google Sheets 일일 리드 동기화**: `subscribers`(무료자료 `resource:*` / VOD `course-waitlist` tags) + `inquiries` → Sheets 탭 append, `syncedAt`·Scheduler(UTC 22:00)·SA Secrets Manager. (단일 LEADS 테이블 아님 — 기존 2테이블 스키마에 맞춰 설계)
+- [x] **Google Sheets 일일 리드 동기화**: `subscribers` tags + `inquiries` → Sheets (`docs/sheets-sync.md`). `syncedAt`, Scheduler UTC 22:00, SA Secrets Manager, 문의 스트림 옵션. 광고성 메일은 `active`만 (`campaign-guard`).
+- [x] **개인정보 정리 배치**: 주 1회 IP/UA 90일 제거 · 해지 3년 가명 · 문의 1년 삭제.
+- [x] **보안 핫픽스(2026-09-13)**: ses-events HTTP 제거, sourceIp-only 레이트리밋, SES IAM 축소, 스로틀 50/100, inquiry 병렬·15s, admin timingSafeEqual.
 
 ## 14. TODO — Step 3 (조건부)
 

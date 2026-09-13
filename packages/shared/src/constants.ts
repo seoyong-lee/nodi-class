@@ -4,7 +4,7 @@ export const GATE_TTL_SEC = 5 * 60;
 export const ACCESS_TTL_SEC = 90 * 24 * 3600;
 
 /** Privacy policy / consent copy version stamped on subscribe (`consentVersion`). */
-export const CONSENT_VERSION = '2026-09-12';
+export const CONSENT_VERSION = '2026-09-13';
 
 export const RESOURCE_SLUGS = [
   'claude-ppt-guidebook',

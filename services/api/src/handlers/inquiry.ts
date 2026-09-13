@@ -74,44 +74,50 @@ export async function handler(
       meta: { pk: inquiry.pk },
     });
 
-    await sendMail({
-      to: env.notifyEmail,
-      content: inquiryNotifyMail({
+    const footer: FooterContext = {
+      siteUrl: env.siteUrl,
+      biz: env.bizInfo,
+    };
+
+    const settled = await Promise.allSettled([
+      sendMail({
+        to: env.notifyEmail,
+        content: inquiryNotifyMail({
+          name,
+          email,
+          resultUrl,
+          blocked,
+          inquiryPk: inquiry.pk,
+        }),
+        template: 'inquiry-notify',
+        skipListUnsub: true,
+      }),
+      notifyInquirySlack(env.slackInquiryWebhookUrl, {
         name,
         email,
         resultUrl,
         blocked,
         inquiryPk: inquiry.pk,
       }),
-      template: 'inquiry-notify',
-      skipListUnsub: true,
-    });
+      sendMail({
+        to: email.trim().toLowerCase(),
+        content: inquiryAckMail({ footer }),
+        template: 'inquiry-ack',
+        skipListUnsub: true,
+      }),
+    ]);
 
-    try {
-      await notifyInquirySlack(env.slackInquiryWebhookUrl, {
-        name,
-        email,
-        resultUrl,
-        blocked,
-        inquiryPk: inquiry.pk,
-      });
-    } catch (err) {
-      log('warn', 'inquiry.slack_fail', {
-        err: err instanceof Error ? err.message : 'unknown',
-        pk: inquiry.pk,
-      });
-    }
-
-    const footer: FooterContext = {
-      siteUrl: env.siteUrl,
-      biz: env.bizInfo,
-    };
-
-    await sendMail({
-      to: email.trim().toLowerCase(),
-      content: inquiryAckMail({ footer }),
-      template: 'inquiry-ack',
-      skipListUnsub: true,
+    const labels = ['notify_mail', 'slack', 'ack_mail'] as const;
+    settled.forEach((result, index) => {
+      if (result.status === 'rejected') {
+        log('warn', `inquiry.${labels[index]!}_fail`, {
+          err:
+            result.reason instanceof Error
+              ? result.reason.message
+              : 'unknown',
+          pk: inquiry.pk,
+        });
+      }
     });
 
     log('info', 'inquiry.ok', { ...emailHashField(email), pk: inquiry.pk });

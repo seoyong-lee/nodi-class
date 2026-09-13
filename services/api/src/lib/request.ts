@@ -1,12 +1,9 @@
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
 
+/** API Gateway HTTP API source IP only — never trust X-Forwarded-For. */
 export function clientIp(event: APIGatewayProxyEventV2): string | undefined {
-  const fromHeader =
-    event.headers['x-forwarded-for'] ?? event.headers['X-Forwarded-For'];
-  if (fromHeader) {
-    return fromHeader.split(',')[0]?.trim();
-  }
-  return event.requestContext.http?.sourceIp;
+  const ip = event.requestContext.http?.sourceIp?.trim();
+  return ip && ip.length > 0 ? ip : undefined;
 }
 
 export function userAgent(event: APIGatewayProxyEventV2): string | undefined {

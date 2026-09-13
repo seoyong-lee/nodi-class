@@ -20,6 +20,19 @@ const notifyEmail =
   (app.node.tryGetContext('notifyEmail') as string | undefined) ??
   process.env.NOTIFY_EMAIL ??
   'contact@cascades.studio';
+const googleSheetId =
+  (app.node.tryGetContext('googleSheetId') as string | undefined) ??
+  process.env.GOOGLE_SHEET_ID ??
+  '';
+const googleSaSecretName =
+  (app.node.tryGetContext('googleSaSecretName') as string | undefined) ??
+  `${NAME_PREFIX}/google-sheets-sa`;
+const sheetsAlarmEmail =
+  (app.node.tryGetContext('sheetsAlarmEmail') as string | undefined) ??
+  process.env.SHEETS_ALARM_EMAIL;
+const enableInquirySheetStream =
+  app.node.tryGetContext('enableInquirySheetStream') === true ||
+  app.node.tryGetContext('enableInquirySheetStream') === 'true';
 
 const account = process.env.CDK_DEFAULT_ACCOUNT;
 const stackEnv =
@@ -33,6 +46,10 @@ new NodiClassStack(app, 'NodiClassStack', {
   hostedZoneId,
   enableCustomDomain,
   notifyEmail,
+  googleSheetId,
+  googleSaSecretName,
+  sheetsAlarmEmail,
+  enableInquirySheetStream,
   env: stackEnv,
   description: `Nodi class infra (${NAME_PREFIX}, ${AWS_REGION})`,
 });

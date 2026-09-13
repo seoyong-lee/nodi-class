@@ -20,13 +20,29 @@ import {
   Certificate,
   CertificateValidation,
 } from 'aws-cdk-lib/aws-certificatemanager';
+import { Alarm, ComparisonOperator, TreatMissingData } from 'aws-cdk-lib/aws-cloudwatch';
+import { SnsAction } from 'aws-cdk-lib/aws-cloudwatch-actions';
 import {
   AttributeType,
   BillingMode,
+  StreamViewType,
   Table,
 } from 'aws-cdk-lib/aws-dynamodb';
-import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
-import { Architecture, Runtime, Tracing } from 'aws-cdk-lib/aws-lambda';
+import {
+  Effect,
+  PolicyStatement,
+  Role,
+  ServicePrincipal,
+} from 'aws-cdk-lib/aws-iam';
+import {
+  Architecture,
+  FilterCriteria,
+  FilterRule,
+  Runtime,
+  StartingPosition,
+  Tracing,
+} from 'aws-cdk-lib/aws-lambda';
+import { DynamoEventSource } from 'aws-cdk-lib/aws-lambda-event-sources';
 import { NodejsFunction, OutputFormat } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import {
@@ -38,6 +54,8 @@ import {
   TxtRecord,
 } from 'aws-cdk-lib/aws-route53';
 import { ApiGatewayv2DomainProperties } from 'aws-cdk-lib/aws-route53-targets';
+import { CfnSchedule } from 'aws-cdk-lib/aws-scheduler';
+import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
 import {
   ConfigurationSet,
   DkimIdentity,
@@ -47,7 +65,10 @@ import {
   Identity,
 } from 'aws-cdk-lib/aws-ses';
 import { Topic } from 'aws-cdk-lib/aws-sns';
-import { LambdaSubscription } from 'aws-cdk-lib/aws-sns-subscriptions';
+import {
+  EmailSubscription,
+  LambdaSubscription,
+} from 'aws-cdk-lib/aws-sns-subscriptions';
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import type { Construct } from 'constructs';
 import { NAME_PREFIX, ssmPath } from '../config';
@@ -70,6 +91,14 @@ export interface NodiClassStackProps extends StackProps {
   /** When set with hostedZoneId, enables api.<domain> custom domain. */
   enableCustomDomain?: boolean;
   notifyEmail?: string;
+  /** Google Spreadsheet ID for daily lead sync. Empty skips schedule wiring. */
+  googleSheetId?: string;
+  /** Secrets Manager secret name (JSON service account). */
+  googleSaSecretName?: string;
+  /** Email for sync/cleanup CloudWatch alarm SNS. */
+  sheetsAlarmEmail?: string;
+  /** Attach inquiries DynamoDB stream → sync-sheets for near-realtime. */
+  enableInquirySheetStream?: boolean;
 }
 
 export class NodiClassStack extends Stack {
@@ -83,6 +112,10 @@ export class NodiClassStack extends Stack {
       hostedZoneId,
       enableCustomDomain = Boolean(hostedZoneId),
       notifyEmail = 'contact@cascades.studio',
+      googleSheetId = '',
+      googleSaSecretName = `${NAME_PREFIX}/google-sheets-sa`,
+      sheetsAlarmEmail,
+      enableInquirySheetStream = false,
     } = props;
 
     // --- DynamoDB ---
@@ -107,6 +140,7 @@ export class NodiClassStack extends Stack {
       billingMode: BillingMode.PAY_PER_REQUEST,
       removalPolicy: RemovalPolicy.RETAIN,
       pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: true },
+      stream: StreamViewType.NEW_IMAGE,
     });
     inquiriesTable.addGlobalSecondaryIndex({
       indexName: 'gsi1',
@@ -262,7 +296,11 @@ export class NodiClassStack extends Stack {
       BIZ_INFO_PARAM: bizInfoParam,
     };
 
-    const makeFn = (name: string, file: string): NodejsFunction => {
+    const makeFn = (
+      name: string,
+      file: string,
+      opts?: { timeout?: Duration; memorySize?: number },
+    ): NodejsFunction => {
       const logGroup = new LogGroup(this, `${name}Logs`, {
         retention: logRetention,
         removalPolicy: RemovalPolicy.RETAIN,
@@ -277,8 +315,8 @@ export class NodiClassStack extends Stack {
         handler: 'handler',
         runtime: Runtime.NODEJS_22_X,
         architecture: Architecture.ARM_64,
-        memorySize: 256,
-        timeout: Duration.seconds(10),
+        memorySize: opts?.memorySize ?? 256,
+        timeout: opts?.timeout ?? Duration.seconds(10),
         tracing: Tracing.ACTIVE,
         logGroup,
         environment: { ...commonEnv },
@@ -303,7 +341,14 @@ export class NodiClassStack extends Stack {
         new PolicyStatement({
           effect: Effect.ALLOW,
           actions: ['ses:SendEmail', 'ses:SendRawEmail'],
-          resources: ['*'],
+          resources: [
+            emailIdentity.emailIdentityArn,
+            Stack.of(this).formatArn({
+              service: 'ses',
+              resource: 'configuration-set',
+              resourceName: configurationSet.configurationSetName,
+            }),
+          ],
         }),
       );
       return fn;
@@ -311,7 +356,9 @@ export class NodiClassStack extends Stack {
 
     const subscribeFn = makeFn('SubscribeFn', 'subscribe.ts');
     const confirmFn = makeFn('ConfirmFn', 'confirm.ts');
-    const inquiryFn = makeFn('InquiryFn', 'inquiry.ts');
+    const inquiryFn = makeFn('InquiryFn', 'inquiry.ts', {
+      timeout: Duration.seconds(15),
+    });
     inquiryFn.addEnvironment(
       'SLACK_INQUIRY_WEBHOOK_URL_PARAM',
       slackInquiryWebhookParam,
@@ -340,7 +387,7 @@ export class NodiClassStack extends Stack {
           CorsHttpMethod.PUT,
           CorsHttpMethod.OPTIONS,
         ],
-        allowHeaders: ['content-type', 'x-admin-key'],
+        allowHeaders: ['content-type'],
         maxAge: Duration.days(1),
       },
     });
@@ -366,11 +413,6 @@ export class NodiClassStack extends Stack {
       integration: new HttpLambdaIntegration('UnsubscribeInt', unsubscribeFn),
     });
     httpApi.addRoutes({
-      path: '/internal/ses-events',
-      methods: [HttpMethod.POST],
-      integration: new HttpLambdaIntegration('SesEventsInt', sesEventsFn),
-    });
-    httpApi.addRoutes({
       path: '/resources',
       methods: [HttpMethod.GET],
       integration: new HttpLambdaIntegration('ResourcesListInt', resourcesListFn),
@@ -390,7 +432,7 @@ export class NodiClassStack extends Stack {
       httpApi,
       stageName: '$default',
       autoDeploy: true,
-      throttle: { rateLimit: 5, burstLimit: 10 },
+      throttle: { rateLimit: 50, burstLimit: 100 },
     });
 
     let baseUrl = stage.url.replace(/\/$/, '');
@@ -428,6 +470,161 @@ export class NodiClassStack extends Stack {
 
     this.apiUrl = baseUrl;
 
+    // --- Sheets sync + privacy cleanup (ops) ---
+    const googleSaSecret = Secret.fromSecretNameV2(
+      this,
+      'GoogleSheetsSa',
+      googleSaSecretName,
+    );
+
+    const syncSheetsFn = new NodejsFunction(this, 'SyncSheetsFn', {
+      functionName: `${NAME_PREFIX}-sync-sheets`,
+      entry: path.join(handlersDir, 'sync-sheets.ts'),
+      handler: 'handler',
+      runtime: Runtime.NODEJS_20_X,
+      architecture: Architecture.ARM_64,
+      memorySize: 512,
+      timeout: Duration.minutes(2),
+      tracing: Tracing.ACTIVE,
+      logGroup: new LogGroup(this, 'SyncSheetsFnLogs', {
+        retention: logRetention,
+        removalPolicy: RemovalPolicy.RETAIN,
+      }),
+      environment: {
+        SUBSCRIBERS_TABLE: subscribersTable.tableName,
+        INQUIRIES_TABLE: inquiriesTable.tableName,
+        EVENTS_TABLE: eventsTable.tableName,
+        RESOURCES_TABLE: resourcesTable.tableName,
+        SITE_URL: siteUrl,
+        MAIL_FROM: mailFrom,
+        NOTIFY_EMAIL: notifyEmail,
+        GATE_SECRET: 'sheets-sync',
+        TURNSTILE_SECRET: 'sheets-sync',
+        ADMIN_API_KEY: '',
+        GOOGLE_SHEET_ID: googleSheetId,
+        GOOGLE_SA_SECRET_ARN: googleSaSecret.secretArn,
+      },
+      projectRoot: repoRoot,
+      depsLockFilePath: path.join(repoRoot, 'pnpm-lock.yaml'),
+      bundling: {
+        minify: true,
+        sourceMap: true,
+        target: 'node20',
+        format: OutputFormat.CJS,
+        mainFields: ['module', 'main'],
+        nodeModules: ['googleapis'],
+      },
+    });
+    subscribersTable.grantReadWriteData(syncSheetsFn);
+    inquiriesTable.grantReadWriteData(syncSheetsFn);
+    googleSaSecret.grantRead(syncSheetsFn);
+
+    const privacyCleanupFn = new NodejsFunction(this, 'PrivacyCleanupFn', {
+      functionName: `${NAME_PREFIX}-privacy-cleanup`,
+      entry: path.join(handlersDir, 'privacy-cleanup.ts'),
+      handler: 'handler',
+      runtime: Runtime.NODEJS_22_X,
+      architecture: Architecture.ARM_64,
+      memorySize: 512,
+      timeout: Duration.minutes(2),
+      tracing: Tracing.ACTIVE,
+      logGroup: new LogGroup(this, 'PrivacyCleanupFnLogs', {
+        retention: logRetention,
+        removalPolicy: RemovalPolicy.RETAIN,
+      }),
+      environment: {
+        SUBSCRIBERS_TABLE: subscribersTable.tableName,
+        INQUIRIES_TABLE: inquiriesTable.tableName,
+        EVENTS_TABLE: eventsTable.tableName,
+        RESOURCES_TABLE: resourcesTable.tableName,
+        SITE_URL: siteUrl,
+        MAIL_FROM: mailFrom,
+        NOTIFY_EMAIL: notifyEmail,
+        GATE_SECRET: 'unused',
+        TURNSTILE_SECRET: 'unused',
+        ADMIN_API_KEY: 'unused',
+      },
+      projectRoot: repoRoot,
+      depsLockFilePath: path.join(repoRoot, 'pnpm-lock.yaml'),
+      bundling: {
+        minify: true,
+        sourceMap: true,
+        target: 'node22',
+        format: OutputFormat.CJS,
+        mainFields: ['module', 'main'],
+      },
+    });
+    subscribersTable.grantReadWriteData(privacyCleanupFn);
+    inquiriesTable.grantReadWriteData(privacyCleanupFn);
+
+    const schedulerRole = new Role(this, 'SchedulerInvokeRole', {
+      assumedBy: new ServicePrincipal('scheduler.amazonaws.com'),
+    });
+    syncSheetsFn.grantInvoke(schedulerRole);
+    privacyCleanupFn.grantInvoke(schedulerRole);
+
+    if (googleSheetId) {
+      new CfnSchedule(this, 'SyncSheetsDaily', {
+        name: `${NAME_PREFIX}-sync-sheets-daily`,
+        flexibleTimeWindow: { mode: 'OFF' },
+        scheduleExpression: 'cron(0 22 * * ? *)',
+        scheduleExpressionTimezone: 'UTC',
+        target: {
+          arn: syncSheetsFn.functionArn,
+          roleArn: schedulerRole.roleArn,
+        },
+      });
+    }
+
+    new CfnSchedule(this, 'PrivacyCleanupWeekly', {
+      name: `${NAME_PREFIX}-privacy-cleanup-weekly`,
+      flexibleTimeWindow: { mode: 'OFF' },
+      scheduleExpression: 'cron(0 15 ? * SUN *)',
+      scheduleExpressionTimezone: 'UTC',
+      target: {
+        arn: privacyCleanupFn.functionArn,
+        roleArn: schedulerRole.roleArn,
+      },
+    });
+
+    if (enableInquirySheetStream && googleSheetId) {
+      syncSheetsFn.addEventSource(
+        new DynamoEventSource(inquiriesTable, {
+          startingPosition: StartingPosition.LATEST,
+          batchSize: 25,
+          retryAttempts: 2,
+          filters: [
+            FilterCriteria.filter({
+              eventName: FilterRule.or('INSERT', 'MODIFY'),
+            }),
+          ],
+        }),
+      );
+    }
+
+    const opsAlarmTopic = new Topic(this, 'OpsAlarmTopic', {
+      topicName: `${NAME_PREFIX}-ops-alarms`,
+      displayName: 'Nodi class ops alarms',
+    });
+    if (sheetsAlarmEmail) {
+      opsAlarmTopic.addSubscription(
+        new EmailSubscription(sheetsAlarmEmail),
+      );
+    }
+
+    const syncErrors = syncSheetsFn.metricErrors({
+      period: Duration.minutes(5),
+      statistic: 'Sum',
+    });
+    new Alarm(this, 'SyncSheetsErrors', {
+      metric: syncErrors,
+      threshold: 1,
+      evaluationPeriods: 1,
+      comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+      treatMissingData: TreatMissingData.NOT_BREACHING,
+      alarmDescription: 'sync-sheets Lambda errors',
+    }).addAlarmAction(new SnsAction(opsAlarmTopic));
+
     new CfnOutput(this, 'SubscribersTableName', {
       value: subscribersTable.tableName,
     });
@@ -448,5 +645,11 @@ export class NodiClassStack extends Stack {
       value: bounceComplaintTopic.topicArn,
     });
     new CfnOutput(this, 'ApiUrl', { value: this.apiUrl });
+    new CfnOutput(this, 'SyncSheetsFunctionName', {
+      value: syncSheetsFn.functionName,
+    });
+    new CfnOutput(this, 'PrivacyCleanupFunctionName', {
+      value: privacyCleanupFn.functionName,
+    });
   }
 }

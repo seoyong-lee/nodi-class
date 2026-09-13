@@ -14,6 +14,8 @@ export type Inquiry = {
   blocked: string;
   status: InquiryStatus;
   createdAt: string;
+  /** ISO — set after Google Sheets sync. */
+  syncedAt?: string;
   ip?: string;
   ua?: string;
   gsi1pk: string;
