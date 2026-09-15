@@ -1,4 +1,10 @@
 export const COOKIE_NAME = 'nodi_access';
+/**
+ * Readable-by-script companion to `COOKIE_NAME`, value `'1'`. Carries no secret
+ * and grants nothing — it only lets a statically rendered page know it should
+ * hand off to the unlocked route. Access is still decided by `COOKIE_NAME`.
+ */
+export const ACCESS_HINT_COOKIE = 'nodi_access_hint';
 export const CONFIRM_TTL_SEC = 7 * 24 * 3600;
 export const GATE_TTL_SEC = 5 * 60;
 export const ACCESS_TTL_SEC = 90 * 24 * 3600;

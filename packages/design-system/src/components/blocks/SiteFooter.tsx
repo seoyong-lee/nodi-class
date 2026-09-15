@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { SmartLink } from '../../lib/SmartLink';
 import { Icon } from '../core/Icon';
 
 export type SiteFooterLink = {
@@ -47,9 +48,9 @@ export function SiteFooter({
           <ul className="list-none m-0 p-0 flex gap-block-tight flex-wrap">
             {links.map((link) => (
               <li key={link.label}>
-                <a className="text-caption text-body" href={link.href}>
+                <SmartLink className="text-caption text-body" href={link.href}>
                   {link.label}
-                </a>
+                </SmartLink>
               </li>
             ))}
           </ul>

@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
   images: {
     qualities: [75, 100],
   },
+  // `/free/[slug]/read` renders per request and reads image dimensions off disk,
+  // so the covers and body images have to travel with the server bundle.
+  outputFileTracingIncludes: {
+    '/free/[slug]/read': ['./public/img/**/*'],
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

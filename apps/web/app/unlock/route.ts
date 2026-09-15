@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
+  ACCESS_HINT_COOKIE,
   ACCESS_TTL_SEC,
   COOKIE_NAME,
   createAccessTokenFromHash,
@@ -47,6 +48,13 @@ export async function GET(req: NextRequest) {
   res.cookies.set(COOKIE_NAME, access, {
     httpOnly: true,
     // Secure required in prod; off on localhost http so unlock works in dev.
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: ACCESS_TTL_SEC,
+  });
+  res.cookies.set(ACCESS_HINT_COOKIE, '1', {
+    httpOnly: false,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',

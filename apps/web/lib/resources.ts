@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { cache } from 'react';
 import matter from 'gray-matter';
 import { RESOURCE_SLUGS, type ResourceAccess } from '@nodi/shared';
 
@@ -232,22 +233,27 @@ async function fetchJson<T>(pathSuffix: string): Promise<T | null> {
   }
 }
 
-/** Prefer DynamoDB via API; fall back to content/resources MDX for local/dev. */
-export async function getResource(slug: string): Promise<ResourceDoc | null> {
-  const data = await fetchJson<{ ok: boolean; resource?: ApiResource }>(
-    `/resources/${slug}`,
-  );
-  if (data?.ok && data.resource) {
-    return fromApiResource(data.resource);
-  }
+/**
+ * Prefer DynamoDB via API; fall back to content/resources MDX for local/dev.
+ * Memoized per request so the page and `generateMetadata` share one round-trip.
+ */
+export const getResource = cache(
+  async (slug: string): Promise<ResourceDoc | null> => {
+    const data = await fetchJson<{ ok: boolean; resource?: ApiResource }>(
+      `/resources/${slug}`,
+    );
+    if (data?.ok && data.resource) {
+      return fromApiResource(data.resource);
+    }
 
-  const localPath = path.join(CONTENT_ROOT, slug, 'index.mdx');
-  if (fs.existsSync(localPath)) {
-    const local = getLocalResource(slug);
-    return isPublished(local) ? local : null;
-  }
-  return null;
-}
+    const localPath = path.join(CONTENT_ROOT, slug, 'index.mdx');
+    if (fs.existsSync(localPath)) {
+      const local = getLocalResource(slug);
+      return isPublished(local) ? local : null;
+    }
+    return null;
+  },
+);
 
 export async function listResourceSlugs(): Promise<string[]> {
   const data = await fetchJson<{
@@ -264,7 +270,7 @@ export async function listResourceSlugs(): Promise<string[]> {
   });
 }
 
-export async function listResources(): Promise<ResourceDoc[]> {
+export const listResources = cache(async (): Promise<ResourceDoc[]> => {
   const data = await fetchJson<{
     ok: boolean;
     resources?: Omit<ApiResource, 'body'>[];
@@ -298,7 +304,7 @@ export async function listResources(): Promise<ResourceDoc[]> {
 
   const slugs = await listResourceSlugs();
   return slugs.map((slug) => getLocalResource(slug)).filter(isPublished);
-}
+});
 
 export async function getOtherResources(
   currentSlug: string,

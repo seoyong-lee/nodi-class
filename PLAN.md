@@ -430,12 +430,14 @@ export const ResourceUpsertInput = z
 ### 6.1 흐름
 
 1. 폼 제출 → `POST /subscribe` → Turnstile·허니팟·형식 검사 → `subscribers` upsert(`active`면 유지, 아니면 `pending`) → `tags`에 `resource:<slug>` 누적 → **자료/대기 메일 1통**(10분 스로틀, `lastMailAt`) → `202 { ok, state, gateToken, resent }` + `gate.opened(slug)` 이벤트
-2. 프론트는 `gateToken`으로 즉시 `/unlock?t=&next=/free/<slug>`(또는 `/course`) → 쿠키 발급 → **그 자리에서 열림**. `resent === false`면 "이미 보낸 메일을 확인해 주세요"를 표시한 뒤 해금은 그대로 진행한다.
+2. 프론트는 `gateToken`으로 즉시 `/unlock?t=&next=/free/<slug>`(또는 `/course`) → 쿠키 발급 → **그 자리에서 열림**(자료는 `/free/<slug>/read`로 클라이언트 전환). `resent === false`면 "이미 보낸 메일을 확인해 주세요"를 표시한 뒤 해금은 그대로 진행한다.
 3. 메일의 링크 → `GET /confirm?t=` → `status=active`, `confirmedAt` → `302` → `/free/<slug>`(또는 `/course`). **해금이 아니라 리스트 품질용 active 전환.** 쿠키가 없는 기기에서는 잠금 UI가 남을 수 있고, 그때는 폼을 다시 내면 쿠키가 발급된다.
 4. 이후 다른 자료는 쿠키(90일)로 폼 없이 바로 열림. 어떤 자료를 열었는지는 `gate.opened(slug)`(이메일 해시)로 집계.
 5. **캠페인·새 자료 안내·VOD 알림은 `active`만.** `pending`에는 보내지 않는다(바운스·평판).
 
 즉시 해금(전환)과 메일 클릭 active(리스트 품질)를 분리한다. 자료 메일은 DynamoDB resource 메타(`access`/`promptCount`/`courseTitle`/`mailNote`)로 공통 템플릿을 렌더한다. `course-waitlist`는 waitlist 템플릿을 쓴다.
+
+**렌더 분리 (성능):** `/free/<slug>`는 잠금 화면만 담아 프리렌더한다(쿠키를 읽지 않으므로 CDN 캐시 가능, 정식 URL·색인 대상). 열린 본문은 `/free/<slug>/read`가 요청마다 쿠키를 검증해 렌더하며 `noindex` + canonical은 `/free/<slug>`다. 쿠키가 없거나 만료면 **리다이렉트하지 않고** 잠금 화면을 그대로 렌더한다(왕복 루프 방지). 재방문자는 `nodi_access_hint`(값 `'1'`, `HttpOnly` 아님, 비밀·권한 없음)를 보고 `/read`로 넘어간다. 접근 판정은 언제나 `nodi_access` 서명이며, 잠긴 파트 본문은 잠금 응답에 포함되지 않는다.
 
 ### 6.2 토큰 (`packages/shared/src/token.ts`, HMAC-SHA256)
 
@@ -443,6 +445,7 @@ export const ResourceUpsertInput = z
 - confirm 토큰 payload: `{ t:'c', e:<email>, s:<slug>, x:<exp unix> }` — 만료 7일, 1회용 아님(재클릭 허용, 멱등)
 - gate 토큰 payload: `{ t:'g', h:<sha256(email)>, x:<exp> }` — 만료 5분(URL에 노출되는 시간 최소화)
 - 쿠키 `nodi_access` 값: `v1.<{ t:'k', h, x }>.<sig>` — 만료 90일, `HttpOnly; Secure; SameSite=Lax; Path=/`
+- 쿠키 `nodi_access_hint` 값: `'1'` — 같은 만료·경로, `HttpOnly`만 해제. 프리렌더된 잠금 페이지가 `/read`로 넘길지 판단하는 힌트일 뿐이고 접근 권한을 주지 않는다. `nodi_access`와 함께 발급·삭제한다.
 - 비밀키 `GATE_SECRET`: SSM SecureString. Lambda와 Next 양쪽에 같은 값. **Next는 DynamoDB에 접근하지 않는다** — 쿠키 검증은 서명만으로 끝낸다.
 - 이메일 원문은 쿠키·URL에 넣지 않는다 (해시만).
 
@@ -671,6 +674,7 @@ NEXT_PUBLIC_AMPLITUDE_SR_SAMPLE_RATE=
 - [x] **Google Sheets 일일 리드 동기화**: `subscribers` tags + `inquiries` → Sheets (`docs/sheets-sync.md`). `syncedAt`, Scheduler UTC 22:00, SA Secrets Manager, 문의 스트림 옵션. 광고성 메일은 `active`만 (`campaign-guard`).
 - [x] **개인정보 정리 배치**: 주 1회 IP/UA 90일 제거 · 해지 3년 가명 · 문의 1년 삭제.
 - [x] **보안 핫픽스(2026-09-13)**: ses-events HTTP 제거, sourceIp-only 레이트리밋, SES IAM 축소, 스로틀 50/100, inquiry 병렬·15s, admin timingSafeEqual.
+- [x] **성능 핫픽스(2026-09-15)**: 내부 링크 `next/link`(prefetch·전체 새로고침 제거), 커버·본문·썸네일 `next/image` 경유(이미지 5.0MB → 0.27MB), `/free/[slug]` 프리렌더 + `/read` 분리(TTFB 0.5s·콜드 4s → 캐시), `getResource`·`listResources` 요청 단위 메모이즈.
 
 ## 14. TODO — Step 3 (조건부)
 

@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/kit', '/unlock', '/unsubscribe'],
+      disallow: ['/kit', '/unlock', '/unsubscribe', '/access', '/free/*/read'],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,

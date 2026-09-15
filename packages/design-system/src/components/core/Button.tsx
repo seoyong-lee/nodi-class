@@ -4,6 +4,7 @@ import type {
   ReactNode,
 } from 'react';
 import { cn } from '../../lib/cn';
+import { SmartLink } from '../../lib/SmartLink';
 import { Icon } from './Icon';
 
 export type ButtonProps = {
@@ -61,7 +62,7 @@ export function Button({
 
   if (href && !isDisabled) {
     return (
-      <a
+      <SmartLink
         className={className}
         href={href}
         target={target}
@@ -72,7 +73,7 @@ export function Button({
         onClick={onClick as AnchorHTMLAttributes<HTMLAnchorElement>['onClick']}
       >
         {content}
-      </a>
+      </SmartLink>
     );
   }
 

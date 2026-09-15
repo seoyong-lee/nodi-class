@@ -17,6 +17,7 @@ import {
   GATE_VERIFYING_LABEL,
   SUBSCRIBE_CONSENT_LABEL,
 } from '../lib/copy';
+import { resourceReadPath } from '../lib/resourcePath';
 import { getTurnstileToken, prewarmTurnstile } from '../lib/turnstile';
 import { SubscribeConsentDetail } from './SubscribeConsentDetail';
 import { markUnlockPending } from './TrackUnlockedResource';
@@ -209,10 +210,13 @@ export function EmailGateForm({
       const openStarted = performance.now();
       try {
         await applyUnlockCookie(unlock);
-        router.refresh();
         if (placement === 'resource') {
+          // The locked view is prerendered, so the unlocked body lives on ./read.
+          router.replace(resourceReadPath(slug));
           const unlocked = await waitForUnlockedContent();
           unlocked?.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          router.refresh();
         }
       } finally {
         track({
