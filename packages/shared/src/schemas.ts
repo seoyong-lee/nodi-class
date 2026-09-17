@@ -5,7 +5,9 @@ export const SubscribeInput = z
     email: z.string().email().max(254).transform((s) => s.trim().toLowerCase()),
     slug: z.string().regex(/^[a-z0-9-]{3,64}$/),
     source: z.string().regex(/^[a-z0-9-]{0,64}$/).optional(),
-    building: z.enum(['landing', 'brand', 'ppt', 'app', 'none']).optional(),
+    building: z
+      .enum(['landing', 'brand', 'ppt', 'gemini', 'app', 'none'])
+      .optional(),
     consent: z.literal(true).optional(),
     /** `reopen` = existing subscriber only (paid textbook gate). */
     intent: z.enum(['subscribe', 'reopen']).default('subscribe'),

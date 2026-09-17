@@ -14,8 +14,8 @@ export type ThumbBookProps = {
   children?: ReactNode;
 };
 
-/** Cards sit in a 3-up grid on desktop and full width below 720. */
-const SIZES = '(max-width: 720px) 100vw, 420px';
+/** Cards sit in a 4-up grid on desktop and full width below 720. */
+const SIZES = '(max-width: 720px) 100vw, (max-width: 960px) 50vw, 280px';
 
 /** Book cover — natural aspect ratio, no crop/scale stretch. */
 export function ThumbBook({ src, alt = '', size, children }: ThumbBookProps) {

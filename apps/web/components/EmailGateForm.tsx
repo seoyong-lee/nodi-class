@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState, type ReactNode } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { COURSE_WAITLIST_SLUG } from '@nodi/shared/constants';
+import { COURSE_WAITLIST_SLUG, type BuildingValue } from '@nodi/shared/constants';
 import { EmailGate, type EmailGateExtraField } from '@nodi/design-system';
 import { postSubscribe } from '../lib/api';
 import { identifySubscriber, track } from '../lib/analytics/track';
@@ -134,9 +134,7 @@ export function EmailGateForm({
     setError(null);
     const normalizedEmail = email.trim().toLowerCase();
     const building =
-      extraField && extra
-        ? (extra as 'landing' | 'brand' | 'ppt' | 'app' | 'none')
-        : undefined;
+      extraField && extra ? (extra as BuildingValue) : undefined;
     const gateProps = (
       result: 'new' | 'existing' | 'error',
       duration_ms?: number,

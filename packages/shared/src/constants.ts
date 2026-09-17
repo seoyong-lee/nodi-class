@@ -17,12 +17,13 @@ export const RESOURCE_SLUGS = [
   'claude-prompt-set',
   'claude-design-landing-checklist',
   'ai-design-5-principles',
+  'gemini-business-guidebook',
 ] as const;
 
 /** Category chips on ResourceCard — label + Badge tone. */
 export type ResourceCardBadgeDef = {
   label: string;
-  tone: 'claude' | 'ppt' | 'design';
+  tone: 'claude' | 'ppt' | 'design' | 'default';
 };
 
 export const RESOURCE_CARD_BADGES: Record<
@@ -36,6 +37,7 @@ export const RESOURCE_CARD_BADGES: Record<
   'claude-prompt-set': [{ label: '클로드', tone: 'claude' }],
   'claude-design-landing-checklist': [{ label: '클로드 디자인', tone: 'design' }],
   'ai-design-5-principles': [{ label: '클로드 디자인', tone: 'design' }],
+  'gemini-business-guidebook': [{ label: '제미나이', tone: 'default' }],
 };
 
 export function resourceCardBadges(slug: string): ResourceCardBadgeDef[] {
@@ -48,6 +50,7 @@ export function resourceCardBadges(slug: string): ResourceCardBadgeDef[] {
 const PPT_THUMB = '/img/book-ppt.png';
 const PROMPT_THUMB = '/img/book-prompt.png';
 const PRINCIPLES_THUMB = '/img/book-design-principle.png';
+const GEMINI_THUMB = '/img/book-gemini.png';
 const PLACEHOLDER_THUMB = '/img/book-placeholder.png';
 
 const RESOURCE_THUMB: Partial<
@@ -56,6 +59,7 @@ const RESOURCE_THUMB: Partial<
   'claude-ppt-guidebook': PPT_THUMB,
   'claude-prompt-set': PROMPT_THUMB,
   'ai-design-5-principles': PRINCIPLES_THUMB,
+  'gemini-business-guidebook': GEMINI_THUMB,
 };
 
 /** Book-cover thumbnail per slug; unknown slugs use the placeholder. */
@@ -73,8 +77,11 @@ export const BUILDING_OPTIONS = [
   { value: 'landing', label: '랜딩페이지' },
   { value: 'brand', label: '브랜드·로고' },
   { value: 'ppt', label: 'PPT' },
+  { value: 'gemini', label: '제미나이' },
   { value: 'app', label: '서비스·앱' },
   { value: 'none', label: '아직 없음' },
 ] as const;
+
+export type BuildingValue = (typeof BUILDING_OPTIONS)[number]['value'];
 
 export const COURSE_WAITLIST_SLUG = 'course-waitlist';

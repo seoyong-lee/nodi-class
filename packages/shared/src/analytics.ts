@@ -13,7 +13,7 @@ export type AnalyticsEvent =
         email: string;
         placement: 'home_top' | 'home_bottom' | 'resource' | 'course';
         resource_slug?: string;
-        building?: 'landing' | 'brand' | 'ppt' | 'app' | 'none';
+        building?: 'landing' | 'brand' | 'ppt' | 'gemini' | 'app' | 'none';
         result: 'new' | 'existing' | 'error';
         duration_ms?: number;
       };

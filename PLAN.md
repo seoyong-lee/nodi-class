@@ -115,7 +115,7 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 | SectionHeading | content | `index: '01'`, `label`, `title?`, `align?: 'left'\|'center'`                                                                                                                                   | 라벨 12px 0.08em은 영문에만. 한글 라벨은 자간 0. title 없으면 라벨만                                                                                                                                                     |
 | BeforeAfter    | content | `beforeCaption`, `afterCaption`, `before: ReactNode`, `after: ReactNode`                                                                                                                       | 375에서 1열. hover(leave 시 복귀)·터치 탭 토글만. 뷰포트 벗어나면 off. 스크롤 진입 리빌 없음. `--dur-reveal`. 그림자·파티클 없음                                                                                         |
 | ProductCard    | cards   | `label`, `title`, `summary`, `rows: {label,value}[3]`, `ctaLabel`, `ctaHref?`, `ctaVariant?: 'primary'\|'secondary'`                                                                           | rows는 정확히 3개. VOD CTA=primary, 워크숍·서비스 CTA=secondary                                                                                                                                                          |
-| ResourceCard   | cards   | `title`, `slug`, `thumbnail?`                                                                                                                                                                  | 타이틀만(유형 Badge·자물쇠 없음). 썸네일은 ThumbBook(4:5). 그리드 3열                                                                                                                                                    |
+| ResourceCard   | cards   | `title`, `slug`, `thumbnail?`                                                                                                                                                                  | 타이틀만(유형 Badge·자물쇠 없음). 썸네일은 ThumbBook(**원본 비율 유지**). 그리드 4열                                                                                                                                                    |
 | ThumbBook      | cards   | `src?`, `alt?`                                                                                                                                                                                 | 책 커버. **원본 비율 유지**(`w-full h-auto`). 강제 크롭·스케일 없음                                                                                                                                                      |
 | Thumb16x9      | cards   | `src?`, `alt?`                                                                                                                                                                                 | 이미지 없으면 `--surface-raised` 플레이스홀더                                                                                                                                                                            |
 | VideoCard      | cards   | `title`, `note`, `href`, `thumbnail?`                                                                                                                                                          | 조회수 표시 없음. 유튜브 임베드는 클릭 후 로드(iframe 지연)                                                                                                                                                              |
@@ -154,7 +154,7 @@ Pretendard는 jsDelivr CDN이 아니라 **`apps/web/public/fonts/`에 woff2를 �
 | 블록                         | 내용                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 히어로(중앙)                 | 라벨 `노디 AI 클래스` / **h1** `코딩 몰라도,` / `이제 AI로 직접 만들 수 있습니다` (2줄, `<br>`, keep-all, 마침표 없음) / 서브 `노디 AI 유튜브에서 소개한 프롬프트 · 가이드를 한곳에 정리했습니다.` + `내 사업에 바로 써볼 수 있는 자료부터 무료로 시작해보세요.` / Primary `전자책 받기`(→ `/free`) · Secondary `유튜브에서 보기`                                                                                            |
-| 01 / 전자책 (`id="free"`) | 제목 `바로 써볼 수 있는 자료, 부담 없이 무료로 가져가세요` / ResourceCard 4개 (§4 슬러그 순). **이 섹션에 EmailGate 없음**                                                                                                                                                                                                                                                                                                      |
+| 01 / 전자책 (`id="free"`) | 제목 `바로 써볼 수 있는 자료, 부담 없이 무료로 가져가세요` / ResourceCard published 목록 (§4 슬러그 순, draft 제외). **이 섹션에 EmailGate 없음**                                                                                                                                                                                                                                                                                                      |
 | 02 / 이렇게 달라집니다       | BeforeAfter(캡션 `만들기 전` / `기준을 준 뒤`) / 캡션 `같은 클로드라도, 어떤 레퍼런스와 기준을 주느냐에 따라 결과가 달라집니다.` / 이미지는 `public/img/before.png`, `after.png`                                                                                                                                                                                                                                                |
 | 03 / 클래스                  | 제목 `직접 만들어봤다면, 이제 기준을 배워보세요` / ProductCard ×3 (§3.5, VOD primary · 워크숍·서비스 secondary)                                                                                                                                                                                                                                                                                                                 |
 | 04 / 만든 사람               | 프로필(4:5, `--surface-raised`) + `직접 제품을 만들고 운영해 온 5년차 프로덕트 엔지니어`(Bold 20px) / `컴퓨터소프트웨어공학 석사` / `비전공자 대상 풀스택 개발 부트캠프 강사` / 소형 `유튜브 노디 AI 운영`                                                                                                                                                                                                                      |
@@ -266,7 +266,8 @@ content/resources/
 │   └── thumb.png
 ├── claude-prompt-set/
 ├── claude-design-landing-checklist/
-└── ai-design-5-principles/
+├── ai-design-5-principles/
+└── gemini-business-guidebook/
 ```
 
 API:
@@ -337,7 +338,7 @@ GSI `gsi1` (`gsi1pk`, `gsi1sk`) — 발송 대상 조회용.
 
 ### 5.2 `building` select 값 (폼 extraField, 필수 아님)
 
-`landing`(랜딩페이지) · `brand`(브랜드·로고) · `ppt`(PPT) · `app`(서비스·앱) · `none`(아직 없음)
+`landing`(랜딩페이지) · `brand`(브랜드·로고) · `ppt`(PPT) · `gemini`(제미나이) · `app`(서비스·앱) · `none`(아직 없음)
 필드는 **이 하나만**. 이름·전화·업종은 받지 않는다.
 
 ### 5.3 `nodi-class-inquiries`
@@ -385,7 +386,7 @@ export const SubscribeInput = z.object({
     .string()
     .regex(/^[a-z0-9-]{0,64}$/)
     .optional(),
-  building: z.enum(['landing', 'brand', 'ppt', 'app', 'none']).optional(),
+  building: z.enum(['landing', 'brand', 'ppt', 'gemini', 'app', 'none']).optional(),
   consent: z.literal(true),
   website: z.string().max(0).optional(), // 허니팟: 채워지면 거절
   turnstile: z.string().min(10),
@@ -675,6 +676,7 @@ NEXT_PUBLIC_AMPLITUDE_SR_SAMPLE_RATE=
 - [x] **개인정보 정리 배치**: 주 1회 IP/UA 90일 제거 · 해지 3년 가명 · 문의 1년 삭제.
 - [x] **보안 핫픽스(2026-09-13)**: ses-events HTTP 제거, sourceIp-only 레이트리밋, SES IAM 축소, 스로틀 50/100, inquiry 병렬·15s, admin timingSafeEqual.
 - [x] **성능 핫픽스(2026-09-15)**: 내부 링크 `next/link`(prefetch·전체 새로고침 제거), 커버·본문·썸네일 `next/image` 경유(이미지 5.0MB → 0.27MB), `/free/[slug]` 프리렌더 + `/read` 분리(TTFB 0.5s·콜드 4s → 캐시), `getResource`·`listResources` 요청 단위 메모이즈.
+- [ ] **Quick Prompt `id` 소급**: 기존 MDX의 `kind="quick"` Prompt에 고유 `id` 부여 (`prompt-undefined` 앵커·복사 이벤트 id 빈칸 방지). `gemini-business-guidebook`는 이미 적용됨.
 
 ## 14. TODO — Step 3 (조건부)
 
